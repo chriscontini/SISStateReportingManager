@@ -171,3 +171,40 @@ class RankingsResponse(BaseModel):
     """Schema for rankings list."""
     rankings: list[StateRankingResponse]
     factors: list[RankingFactorResponse]
+
+
+# ============ State Detail Response ============
+
+class ScoreWithFactor(BaseModel):
+    """Score with its associated factor details."""
+    factor_name: str
+    factor_weight: float
+    score: float
+    weighted_score: float
+    notes: Optional[str] = None
+
+
+class StateDetailResponse(BaseModel):
+    """Comprehensive state detail including NCES data and scores."""
+    model_config = ConfigDict(from_attributes=True)
+
+    # Basic info
+    id: int
+    name: str
+    abbreviation: str
+    doe_website: Optional[str] = None
+    reporting_system_name: Optional[str] = None
+    certification_required: bool = False
+    created_at: datetime
+    updated_at: datetime
+
+    # NCES data
+    nces_data: Optional[NCESDataResponse] = None
+
+    # Scoring
+    total_score: float = 0.0
+    rank: Optional[int] = None
+    scores: list[ScoreWithFactor] = []
+
+    # Requirements (if any)
+    requirements: list[StateRequirementResponse] = []

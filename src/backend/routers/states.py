@@ -6,8 +6,9 @@ Endpoints for managing US states and their reporting requirements.
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
-from .. import crud, schemas
+from .. import crud, schemas, models
 from ..database import get_db
 
 router = APIRouter(prefix="/api/states", tags=["states"])
@@ -92,3 +93,108 @@ async def delete_state(
     success = await crud.delete_state(db, state_id)
     if not success:
         raise HTTPException(status_code=404, detail="State not found")
+
+
+@router.get("/{state_id}/detail", response_model=schemas.StateDetailResponse)
+async def get_state_detail(
+    state_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Get comprehensive state details including NCES data and all scores.
+
+    Returns:
+    - Basic state info (name, abbreviation, DOE website)
+    - NCES data (districts, schools, students)
+    - All ranking factor scores with weights
+    - Total weighted score and rank
+    - Any stored requirements
+    """
+    # Get the state
+    state = await crud.get_state(db, state_id)
+    if state is None:
+        raise HTTPException(status_code=404, detail="State not found")
+
+    # Get NCES data
+    nces_result = await db.execute(
+        select(models.NCESData).where(models.NCESData.state_id == state_id)
+    )
+    nces_data = nces_result.scalar_one_or_none()
+
+    # Get all scores with their factors
+    scores_result = await db.execute(
+        select(models.StateScore, models.RankingFactor)
+        .join(models.RankingFactor)
+        .where(models.StateScore.state_id == state_id)
+    )
+    score_rows = scores_result.all()
+
+    # Build score list with factor info
+    scores_with_factors = []
+    total_score = 0.0
+
+    for score, factor in score_rows:
+        weighted = score.score * factor.weight
+        total_score += weighted
+        scores_with_factors.append(schemas.ScoreWithFactor(
+            factor_name=factor.name,
+            factor_weight=factor.weight,
+            score=score.score,
+            weighted_score=weighted,
+            notes=score.notes,
+        ))
+
+    # Get requirements
+    reqs_result = await db.execute(
+        select(models.StateRequirement).where(
+            models.StateRequirement.state_id == state_id
+        )
+    )
+    requirements = reqs_result.scalars().all()
+
+    # Calculate rank (position among all states)
+    rank = await _calculate_state_rank(db, state_id, total_score)
+
+    return schemas.StateDetailResponse(
+        id=state.id,
+        name=state.name,
+        abbreviation=state.abbreviation,
+        doe_website=state.doe_website,
+        reporting_system_name=getattr(state, 'reporting_system_name', None),
+        certification_required=getattr(state, 'certification_required', False),
+        created_at=state.created_at,
+        updated_at=state.updated_at,
+        nces_data=schemas.NCESDataResponse.model_validate(nces_data) if nces_data else None,
+        total_score=total_score,
+        rank=rank,
+        scores=scores_with_factors,
+        requirements=[schemas.StateRequirementResponse.model_validate(r) for r in requirements],
+    )
+
+
+async def _calculate_state_rank(
+    db: AsyncSession,
+    state_id: int,
+    state_total_score: float,
+) -> int:
+    """Calculate the rank of a state based on its total score."""
+    # Count how many states have a higher score
+    factors = await crud.get_ranking_factors(db, active_only=True)
+    result = await db.execute(select(models.State))
+    all_states = result.scalars().all()
+
+    higher_count = 0
+    for s in all_states:
+        if s.id == state_id:
+            continue
+        scores = await crud.get_state_scores(db, s.id)
+        scores_dict = {sc.factor_id: sc for sc in scores}
+        total = sum(
+            scores_dict[f.id].score * f.weight
+            for f in factors
+            if f.id in scores_dict
+        )
+        if total > state_total_score:
+            higher_count += 1
+
+    return higher_count + 1

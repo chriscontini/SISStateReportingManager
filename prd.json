@@ -218,7 +218,7 @@
       "title": "Add state detail API endpoint",
       "description": "Add GET /api/states/{id}/detail endpoint returning full state data including NCES data, all scores, and requirements.",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "GET /api/states/{id}/detail endpoint exists",
         "Returns state with NCES data",
