@@ -484,7 +484,7 @@
       "title": "Add radar chart component",
       "description": "Create radar chart component using Recharts to visualize state scores across all 9 factors.",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "RadarChart component created",
         "Uses Recharts library",
@@ -498,7 +498,7 @@
       "title": "Add bar chart for rankings",
       "description": "Create bar chart showing top 10 state scores on dashboard. Horizontal bars with state names and scores.",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "BarChart component created",
         "Shows top 10 states",
@@ -512,7 +512,7 @@
       "title": "Add charts to state detail page",
       "description": "Add radar chart to state detail page showing score breakdown. Add comparison to NJ/LA baselines.",
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Radar chart on detail page",
         "Shows state vs NJ baseline",
@@ -526,7 +526,7 @@
       "title": "Implement simple password authentication",
       "description": "Add /api/auth/login endpoint with simple password check from config. Return session token. Add middleware for protected routes.",
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "POST /api/auth/login endpoint",
         "Password from environment variable",
@@ -540,7 +540,7 @@
       "title": "Create login page",
       "description": "Create /login page with password input. Redirect to dashboard on success. Store token in localStorage.",
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "/login page exists",
         "Password input field",
@@ -554,7 +554,7 @@
       "title": "Protect pages with auth check",
       "description": "Add auth check to all pages except login. Redirect to login if not authenticated. Show loading state during check.",
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Auth wrapper component",
         "Checks token validity",

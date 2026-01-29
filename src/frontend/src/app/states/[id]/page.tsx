@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import TierBadge from "@/components/TierBadge";
+
+// Dynamic import for radar chart
+const ScoreRadarChart = dynamic(() => import("@/components/ScoreRadarChart"), {
+  ssr: false,
+  loading: () => <div className="h-64 flex items-center justify-center text-zinc-500">Loading chart...</div>,
+});
 
 interface ScoreWithFactor {
   factor_name: string;
@@ -229,6 +236,29 @@ export default function StateDetailPage() {
 
       {activeTab === "overview" && (
         <>
+          {/* Radar Chart */}
+          {state.scores.length > 0 && (
+            <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-6">
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
+                Score Visualization
+              </h2>
+              <ScoreRadarChart
+                states={[
+                  {
+                    name: state.name,
+                    abbreviation: state.abbreviation,
+                    scores: state.scores.map(s => ({
+                      factor_name: s.factor_name,
+                      score: s.score,
+                    })),
+                    color: '#3b82f6',
+                  },
+                ]}
+                height={350}
+              />
+            </div>
+          )}
+
           {/* Scores Breakdown */}
           <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-6">
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">

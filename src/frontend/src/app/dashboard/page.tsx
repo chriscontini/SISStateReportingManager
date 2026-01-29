@@ -2,6 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+// Dynamic import to avoid SSR issues with Recharts
+const TopStatesBarChart = dynamic(() => import('@/components/TopStatesBarChart'), {
+  ssr: false,
+  loading: () => <div className="h-64 flex items-center justify-center text-zinc-500">Loading chart...</div>,
+});
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -178,7 +185,21 @@ export default function DashboardPage() {
             </div>
             <div className="p-6">
               {stats?.topStates && stats.topStates.length > 0 ? (
-                <div className="space-y-3">
+                <>
+                  {/* Bar Chart */}
+                  <div className="mb-6">
+                    <TopStatesBarChart
+                      states={stats.topStates.map(item => ({
+                        name: item.state.name,
+                        abbreviation: item.state.abbreviation,
+                        total_score: item.total_score,
+                      }))}
+                      height={300}
+                    />
+                  </div>
+
+                  {/* List */}
+                  <div className="space-y-3">
                   {stats.topStates.map((item, index) => (
                     <Link
                       key={item.state.id}
@@ -208,7 +229,8 @@ export default function DashboardPage() {
                       </div>
                     </Link>
                   ))}
-                </div>
+                  </div>
+                </>
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <p>No rankings calculated yet.</p>
