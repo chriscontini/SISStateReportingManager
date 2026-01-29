@@ -1,9 +1,9 @@
 # Product Requirements Document (PRD)
 # SISStateReportingManager
 
-**Version**: 0.3 (Draft)
+**Version**: 1.0
 **Last Updated**: 2026-01-29
-**Status**: Discovery Phase - Requirements Gathering
+**Status**: Discovery Complete - Ready for Development Planning
 
 ---
 
@@ -17,6 +17,12 @@ SISStateReportingManager is an AI-powered strategic expansion planning tool for 
 - Geographic concentration: NJ (60%), LA (37%), DC/GA (3%)
 - Active M&A process creates urgency for demonstrating credible expansion roadmap
 - Louisiana expansion model (6x ARPU vs NJ) proves geographic expansion value
+
+**Project Scope**:
+- **Timeline**: 1-3 months to demonstrate value
+- **Budget**: No constraints
+- **Build Approach**: Custom development (team/contractor/AI-assisted)
+- **MVP**: State rankings + gap analysis + knowledge base + AI chatbot for top 3 states
 
 ## 2. Problem Statement
 
@@ -32,14 +38,16 @@ SISStateReportingManager is an AI-powered strategic expansion planning tool for 
 
 ### 2.2 Target Users
 
-| User Role | Primary Use Case | Frequency |
-|-----------|------------------|-----------|
-| **Executive Leadership** (CEO, Partners) | Strategic state prioritization; M&A geographic synergies; investor discussions on growth runway | Weekly/Monthly |
-| **Product Management** | Roadmap planning for state compliance modules; feature prioritization by market size | Weekly |
-| **Development Team** | Implementation guidance on state requirements; engineering effort estimation | Per-project |
-| **Sales Team** | Competitive positioning; target district identification; incumbent vendor analysis | Daily |
+| User Role | Primary Use Case | Tool Component | Frequency |
+|-----------|------------------|----------------|-----------|
+| **Executive Leadership** (CEO, Partners) | Strategic state prioritization; M&A discussions | Dashboard, Reports | Weekly/Monthly |
+| **Development Team** | Technical requirements; implementation guidance | AI Chatbot, Knowledge Base | Daily (post-state selection) |
+| **Product Management** | Roadmap planning; feature prioritization | Gap Analysis, Roadmap | Weekly |
+| **Sales Team** | Competitive positioning; target districts | Competitive Intel | As needed |
 
-**Primary User**: Executive leadership for strategic planning, with cascading benefits to product and sales teams.
+**Primary Users**:
+- **Phase 1 (Ranking)**: Executive leadership
+- **Phase 2 (Implementation)**: Development team (AI chatbot users)
 
 ## 3. Product Vision & Goals
 
@@ -47,7 +55,14 @@ SISStateReportingManager is an AI-powered strategic expansion planning tool for 
 
 Enable OnCourse to make data-driven state expansion decisions by providing comprehensive intelligence on state reporting requirements, competitive landscapes, and development effort—transforming a 2-3 year research process into weeks.
 
-### 3.2 Success Metrics
+### 3.2 Success Definition
+
+> *"This tool is exactly what we needed"* when:
+> 1. AI determines the optimal states for expansion based on development effort analysis
+> 2. AI chatbot becomes a deep expert on all things state reporting for chosen states
+> 3. Rankings are validated against NJ and LA experience with specific data thresholds
+
+### 3.3 Success Metrics
 
 | Metric | Target | Rationale |
 |--------|--------|-----------|
@@ -56,39 +71,45 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 | **Development Estimation Accuracy** | Gap analysis within 20% of actual effort | Better resource planning |
 | **M&A Readiness** | Documented expansion roadmap for top 3-5 states | Support valuation discussions |
 | **Louisiana-like Opportunity Identification** | Identify states with similar ARPU potential | Replicate 6x ARPU success |
+| **Dev Team Productivity** | Faster answers to state reporting questions | AI chatbot accelerates development |
 
-### 3.3 Strategic Context
+### 3.4 Strategic Context
 
 **M&A Timeline Consideration**: OnCourse is preparing for potential transaction with PE or strategic buyers. Key value drivers:
 - Demonstrating credible multi-state expansion roadmap impacts valuation
-- Revenue multiple arbitrage between regional ($X) and national ($X+) platforms
+- Revenue multiple arbitrage between regional and national platforms
 - Capital deployment plan ready for Day 1 post-close
+- **Timeline**: 1-3 months to show demonstrable value
 
 ## 4. User Personas
 
-### 4.1 Strategic Decision Maker (Primary)
+### 4.1 Strategic Decision Maker (Primary - Phase 1)
 - **Role**: CEO / Managing Partner (Chris Contini)
 - **Goals**: Identify highest-ROI expansion states; build investor-ready growth story
 - **Pain Points**: Lack of data-driven framework; time constraints; risk of wrong state choice
 - **Success Criteria**: Confident, defensible expansion recommendations with clear rationale
+- **Tool Usage**: Dashboard for rankings; PDF/PowerPoint for presentations
 
 ### 4.2 Technical/Financial Leader
 - **Role**: CFO/CTO (Mark Yelcick)
 - **Goals**: Assess technical feasibility; approve budget; validate ROI assumptions
 - **Pain Points**: Unknown development costs for new states; infrastructure implications
 - **Success Criteria**: Clear cost estimates; technical risk assessment
+- **Tool Usage**: Gap analysis reports; effort estimates
 
-### 4.3 Infrastructure Leader
-- **Role**: CIO (Diego Gallicchio)
-- **Goals**: Understand infrastructure implications; plan data architecture
-- **Pain Points**: Scaling considerations; data management complexity
-- **Success Criteria**: Infrastructure requirements documented; integration path clear
+### 4.3 Development Team Member (Primary - Phase 2)
+- **Role**: Engineer on state reporting implementation
+- **Goals**: Quickly understand new state requirements; find answers to technical questions
+- **Pain Points**: Scattered documentation; no single source of truth for state specs
+- **Success Criteria**: AI chatbot answers questions accurately with citations
+- **Tool Usage**: AI chatbot for Q&A; knowledge base for deep research
 
 ### 4.4 Technical Architect
 - **Role**: Lead Systems Architect (Joe Geary)
 - **Goals**: Estimate complexity; plan technical implementation
 - **Pain Points**: Scattered state specs; unknown integration requirements
-- **Success Criteria**: Comprehensive technical requirements; AI assistant for ongoing questions
+- **Success Criteria**: Comprehensive technical requirements; validated effort estimates
+- **Tool Usage**: Gap analysis; AI chatbot for technical deep-dives
 
 ## 5. Functional Requirements
 
@@ -97,6 +118,11 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 **Purpose**: Aggregate and analyze K-12 state reporting requirements across all 50 states.
 
 **Key Insight from Discovery**: OnCourse's field mappings exist in code but there's no consolidated external dictionary. The tool must research new state requirements from external DOE sources, not rely on pre-built mappings.
+
+**Research Approach**: Tiered
+- **Tier 1 (All 50 states)**: Shallow analysis for initial ranking
+- **Tier 2 (Top 10 states)**: Deeper analysis for refined ranking
+- **Tier 3 (Top 3 states)**: Comprehensive knowledge base for implementation
 
 **Data Sources to Aggregate**:
 - State Department of Education websites
@@ -139,18 +165,23 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 
 **Purpose**: Rank all 50 states by expansion viability using weighted criteria.
 
-**Ranking Factors** (refined from discovery):
+**PRIMARY RANKING FACTOR**: Development effort required to build state reporting requirements and validation. This is the key driver for all prioritization decisions.
+
+**Ranking Factors**:
 
 | Factor | Weight | Description | Data Source |
 |--------|--------|-------------|-------------|
+| **Development Effort** | **Critical** | Amount of work to build state reporting/validation | DOE documentation analysis |
 | **District Structure** | High | Parish/county model (like LA) vs fragmented districts (like NJ) | NCES data |
 | **Average District Size** | High | Larger districts = higher ARPU potential | NCES data |
 | **Technical Fit** | High | How closely existing NJ/LA code matches state requirements | DOE documentation |
 | **Certification Complexity** | Medium | Formal vendor certification vs. open market | DOE documentation |
-| **Competitive Landscape** | Medium | Density of established competitors | Market research |
+| **Competitive Landscape** | Medium | Density of national/regional competitors | Market research |
 | **Market Opportunity** | Medium | Total addressable market; growth potential | NCES data |
 | **Regulatory Complexity** | Medium | Compliance burden beyond core reporting | DOE documentation |
 | **Geographic Proximity** | Low | Ease of support and relationship building | Geography |
+
+**Validation Requirement**: Rankings must be validated against NJ and LA experience with specific data thresholds to ensure model accuracy.
 
 **"Louisiana-like" Profile to Identify**:
 - Consolidated district structure (county/parish model)
@@ -174,6 +205,7 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 | **Integration Standards** | SIF, Ed-Fi, state-specific APIs | EdLink compliance |
 
 **Effort Estimation Framework** (based on LA timeline):
+
 | Phase | Duration | Activities |
 |-------|----------|------------|
 | Market Research & Decision | ~6 months | Target assessment, go/no-go |
@@ -198,7 +230,7 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 
 ### 5.6 Knowledge Base Builder
 
-**Purpose**: Create comprehensive knowledge repositories for target states.
+**Purpose**: Create comprehensive knowledge repositories for target states (Top 3).
 
 **Content Aggregation**:
 - Official state documentation
@@ -216,9 +248,15 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 - Source attribution and reliability scoring
 - Comparison views across states
 
-### 5.7 AI Development Assistant
+**Maintenance Model**: Combination of Knowledge Management team (9 staff) and development team responsibility.
+
+### 5.7 AI Development Assistant (Chatbot)
 
 **Purpose**: Support the development team with AI-powered Q&A about state requirements.
+
+**Key Design Principle**: The chatbot is a **deep expert on chosen states** (1-2 states post-ranking), not a shallow generalist across all 50 states. It should know "all things state reporting" for the selected expansion targets.
+
+**Users**: Development team only (not executives or sales)
 
 **Capabilities**:
 - Answer questions about state-specific requirements
@@ -226,20 +264,38 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 - Compare requirements across states (NJ vs LA vs target)
 - Provide implementation guidance based on LA experience
 - Track new/changed requirements
-- Surface relevant knowledge base content
+- Surface relevant knowledge base content with citations
 
-**Key Use Case**: Help the 8-person dev team (10+ year average tenure) leverage their NJ/LA expertise when evaluating new states.
+**Example Queries**:
+- "What data elements does [State] require for special education reporting?"
+- "How does [State]'s submission process compare to Louisiana's?"
+- "What changed in [State]'s requirements this year?"
+- "Estimate development effort for [State] based on our LA experience"
+
+**Technology**: Claude (Anthropic) - preferred LLM
+
+**Trust Level**: High - AI recommendations with citations are sufficient for technical decisions
 
 ### 5.8 Competitive Intelligence Module
 
 **Purpose**: Analyze competitive landscape in target states.
 
-**Analysis Areas**:
-- National SIS vendors present (PowerSchool, Infinite Campus, etc.)
-- Regional competitors and market share
-- Vendor strengths and weaknesses
-- Customer satisfaction indicators
-- Contract renewal cycles (where discoverable)
+**Competitor Scope**: Both national and regional players
+
+**National Competitors to Track**:
+- PowerSchool
+- Infinite Campus
+- Tyler Technologies
+- Follett
+- Others as identified
+
+**Analysis Areas** (all requested):
+- Market share estimates by state
+- Known customer lists
+- Pricing intelligence (where available)
+- Product feature comparisons
+- Contract renewal timing (where discoverable)
+- Customer satisfaction / NPS data
 - Partnership/integration ecosystems
 
 **Key Context**: OnCourse has lost <$12K annual revenue to national competitors—strong regional moat. Need to identify states where regional advantages translate.
@@ -267,20 +323,24 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 ## 6. Non-Functional Requirements
 
 ### 6.1 Performance
-*To be defined*
+- Dashboard should load within 3 seconds
+- AI chatbot should respond within 10 seconds for most queries
+- Knowledge base search should return results within 2 seconds
 
 ### 6.2 Security & Compliance
 - Must handle potentially sensitive competitive intelligence data
 - No direct integration with student data (this tool analyzes requirements, not student records)
 - Standard security practices for internal business tool
+- Authentication required for all users
 
 ### 6.3 Scalability
 - Initial scope: 50 US states
+- Deep knowledge base for top 3 states (expandable)
 - Potential future scope: International markets (if acquirer has global presence)
 
 ## 7. Technical Architecture
 
-### 7.1 Current OnCourse Tech Stack (Context)
+### 7.1 Current OnCourse Tech Stack (Context Only)
 
 | Layer | Technology | Notes |
 |-------|------------|-------|
@@ -292,86 +352,201 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 | **Integrations** | SIF, Ed-Fi, State APIs | Standards-compliant data exchange |
 | **AI/ML** | None in production | Roadmap opportunities identified |
 
-### 7.2 Expansion Planning Tool Architecture (TBD)
+### 7.2 Expansion Planning Tool Architecture
 
-**Key Decision**: This tool operates independently from the production SIS. It's a strategic planning application, not a transactional system.
+**Key Decision**: This tool operates **independently** from the production SIS. It's a strategic planning application, not a transactional system.
 
-**Recommended Approach** (to be validated):
-- Modern cloud-native architecture (AWS/Azure/GCP)
-- Python backend for AI/ML capabilities
-- Vector database for knowledge base (RAG)
-- React/Next.js frontend for data visualization
-- Independent from Oracle/Sencha stack
+**Recommended Stack**:
+
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| **Backend** | Python (FastAPI) | Strong AI/ML ecosystem; rapid development |
+| **Database** | PostgreSQL | Relational data with JSON support |
+| **Vector DB** | Pinecone / pgvector | Knowledge base embeddings for RAG |
+| **LLM** | Claude (Anthropic) | Stakeholder preference |
+| **Frontend** | React / Next.js | Modern web framework; data visualization |
+| **Hosting** | Cloud (AWS/Azure/GCP) | Independent from OnCourse infrastructure |
+| **Search** | Hybrid (semantic + keyword) | Best results for technical documentation |
+
+### 7.3 AI Architecture
+
+**RAG (Retrieval-Augmented Generation) Implementation**:
+- Chunk state documentation appropriately for technical content
+- Maintain source attribution for all content
+- Implement version tracking for requirement changes
+- Require citations in all AI responses
+- Hybrid search (semantic + keyword) for best retrieval
+
+**Grounding Requirements**:
+- All AI responses must cite sources from knowledge base
+- Confidence scoring for responses
+- Clear indication when information may be outdated
+- Comparison capabilities across states
 
 ## 8. UI/UX Requirements
 
-*To be defined in Interview Part 3*
+### 8.1 Interface Approach
+
+**Combination Interface**:
+1. **Executive Dashboard**: State rankings with drill-down capability
+2. **AI Chatbot**: Conversational interface for technical questions
+3. **Report Generation**: PDF/PowerPoint for board/investor presentations
+
+### 8.2 Dashboard Requirements
+
+**State Rankings View**:
+- Sortable/filterable list of all 50 states
+- Composite score with factor breakdown
+- Visual indicators (color coding by tier)
+- Drill-down to detailed state profile
+- Comparison view (side-by-side states)
+
+**Gap Analysis View**:
+- Visual representation of gaps vs. NJ/LA baseline
+- Effort estimation breakdown
+- Timeline projection
+- Risk indicators
+
+### 8.3 Output Formats
+
+| Format | Use Case | Priority |
+|--------|----------|----------|
+| **Interactive Web Dashboard** | Day-to-day exploration and analysis | High |
+| **PDF/PowerPoint Reports** | Board meetings, investor presentations, M&A materials | High |
+| **Exportable Data (CSV/Excel)** | Custom analysis, spreadsheet modeling | Medium |
+
+### 8.4 Chatbot Interface
+
+**Design Principles**:
+- Simple text input with conversation history
+- Clear citation display for sources
+- Ability to ask follow-up questions
+- Export conversation to documentation
+- Code snippet formatting for technical content
 
 ## 9. Integration Requirements
 
 ### 9.1 Required Integrations
-- State DOE websites (web scraping/research)
-- NCES (National Center for Education Statistics) data
-- CEDS standards documentation
-- Competitive intelligence sources
+
+| Integration | Purpose | Priority |
+|-------------|---------|----------|
+| State DOE websites | Primary data source for requirements | Critical |
+| NCES data | District demographics, market sizing | Critical |
+| CEDS standards | Common data element mappings | High |
+| Claude API | LLM for AI chatbot | Critical |
 
 ### 9.2 Optional Integrations
-- OnCourse SIS (for capability baseline documentation)
-- CRM system (for sales team competitive intel)
+
+| Integration | Purpose | Priority |
+|-------------|---------|----------|
+| OnCourse SIS | Capability baseline documentation (if accessible) | Low |
+| CRM system | Competitive intel for sales team | Low |
 
 ## 10. Risks & Constraints
 
 ### 10.1 Known Constraints
-- **Budget**: Bootstrap operation with ~$1.3M EBITDA; internal tool investment initially
-- **Timeline**: M&A process creates urgency for demonstrable progress
-- **Resources**: 8-person dev team focused on core product; limited capacity for new tool
-- **Documentation Gap**: Field mappings exist in code but no consolidated external dictionary
 
-### 10.2 Technical Risks
+| Constraint | Impact | Mitigation |
+|------------|--------|------------|
+| **Timeline** | 1-3 months to show value | Prioritize MVP; iterative delivery |
+| **No Existing Research** | Starting from scratch | Leverage AI for research acceleration |
+| **Dev Team Focused on Core Product** | Limited internal capacity | Contractor/AI-assisted development |
+| **Documentation Gap** | No consolidated field mappings | External DOE research; don't rely on internal docs |
+
+### 10.2 Primary Concerns (from Stakeholder)
+
+1. **Technical Feasibility**: Can we build this in 1-3 months?
+2. **Data Quality/Availability**: Will state DOE data be consistent and accessible?
+
+### 10.3 Technical Risks
+
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
 | State DOE data inconsistency | High | Medium | AI-powered normalization; human review |
 | Requirements change frequently | High | Medium | Version tracking; update monitoring |
 | Competitive data hard to source | Medium | Medium | Multiple data sources; confidence scoring |
-| AI hallucination on requirements | Medium | High | RAG grounding; citation requirements |
+| AI hallucination on requirements | Medium | High | RAG grounding; citation requirements; validation |
 
-### 10.3 Business Risks
+### 10.4 Business Risks
+
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Tool not ready before M&A close | Medium | High | Prioritize MVP for top 5-10 states |
-| Rankings don't match reality | Medium | High | Validate against LA experience |
-| Over-engineering vs. actual need | Medium | Medium | Start simple; iterate based on use |
+| Tool not ready before M&A milestone | Medium | High | Aggressive MVP scope; phased delivery |
+| Rankings don't match reality | Medium | High | Validate against LA/NJ experience |
+| Over-engineering vs. actual need | Medium | Medium | Start simple; iterate based on feedback |
 
 ## 11. Timeline & Milestones
 
-*To be defined in Interview Part 4*
+### 11.1 Target Timeline: 1-3 Months
 
-## 12. Open Questions
+**Phase 1: Foundation (Weeks 1-4)**
+- [ ] Set up infrastructure and development environment
+- [ ] Build data collection pipeline for state DOE sources
+- [ ] Create initial database schema
+- [ ] Develop shallow analysis for all 50 states
+- [ ] Build basic ranking algorithm
 
-### Captured During Discovery
+**Phase 2: Core Features (Weeks 5-8)**
+- [ ] Refine ranking with development effort estimation
+- [ ] Deep analysis for top 10 states
+- [ ] Build executive dashboard
+- [ ] Implement gap analysis module
+- [ ] Validate rankings against NJ/LA experience
 
-**Part 1 - Business Context** ✅
-- [x] Company profile and current state
-- [x] Pain points and challenges
-- [x] User roles and use cases
-- [x] Urgency drivers
-- [x] Commercial intent
+**Phase 3: AI Assistant (Weeks 9-12)**
+- [ ] Build knowledge base for top 3 states
+- [ ] Implement RAG architecture
+- [ ] Deploy AI chatbot with Claude
+- [ ] Add report generation (PDF/PowerPoint)
+- [ ] User testing with dev team
 
-**Part 2 - Current Capabilities** ✅
-- [x] NJ state reporting (NJSLEDS transition, 104 districts, 20+ years)
-- [x] LA state reporting (EdLink, 9 parishes, 6x ARPU, 2.5-3yr timeline)
-- [x] Tech stack (Oracle, Sencha ExtJS, self-hosted, no AI/ML)
-- [x] Development team (8 engineers, 10+ year tenure)
-- [x] Product portfolio (Hub & Spoke model, state compliance requirements)
+### 11.2 MVP Definition
 
-**Part 3 - Remaining Topics** (Next)
-- [ ] State ranking criteria weights and preferences
-- [ ] UI/UX requirements and workflows
-- [ ] Data sources and research approach
-- [ ] AI/ML implementation preferences
-- [ ] Competitive intelligence requirements
-- [ ] Timeline and budget constraints
-- [ ] MVP vs. full product scope
+**Minimum Viable Product includes**:
+1. ✅ State rankings for all 50 states (shallow analysis)
+2. ✅ Gap analysis for top 3 states
+3. ✅ Full knowledge base for top 3 states
+4. ✅ AI chatbot for top 3 states (dev team use)
+5. ✅ Executive dashboard
+6. ✅ PDF/PowerPoint export
+
+**Deferred to Post-MVP**:
+- Competitive intelligence depth (beyond basic)
+- Automated requirement change monitoring
+- CRM integration
+- Roadmap generator automation
+
+## 12. Discovery Summary
+
+### 12.1 Interview Completion Status
+
+| Topic | Status | Key Findings |
+|-------|--------|--------------|
+| **Business Context** | ✅ Complete | 25-year company, M&A active, 1-3 month timeline |
+| **Current Capabilities** | ✅ Complete | NJ/LA expertise, 2.5-3yr expansion timeline, 6x ARPU in LA |
+| **Tech Stack** | ✅ Complete | Oracle/ExtJS (legacy), tool will be independent |
+| **Ranking Criteria** | ✅ Complete | Development effort is PRIMARY factor |
+| **UI/UX** | ✅ Complete | Dashboard + Chatbot + Reports combo |
+| **AI/ML** | ✅ Complete | Claude, high trust, deep expert on chosen states |
+| **Competitive Intel** | ✅ Complete | National + regional, all data types |
+| **Timeline/Budget** | ✅ Complete | 1-3 months, no budget constraints |
+| **Concerns** | ✅ Complete | Technical feasibility, data quality |
+
+### 12.2 Critical Success Factors
+
+1. **Development Effort Estimation**: Must accurately predict work required for new states
+2. **Validation Against Experience**: Rankings must align with known NJ/LA reality
+3. **AI Chatbot Depth**: Must be true expert on chosen states, not shallow generalist
+4. **1-3 Month Delivery**: Must show value before M&A milestones
+5. **Data Quality**: Must handle inconsistent state DOE documentation
+
+### 12.3 Open Items for Development Planning
+
+1. Confirm specific data thresholds for ranking validation
+2. Identify initial data sources for each state DOE
+3. Define exact competitive intelligence sources
+4. Establish knowledge base content prioritization for top 3 states
+5. Determine hosting environment (AWS vs Azure vs GCP)
 
 ---
 
@@ -390,6 +565,7 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 | **EBITDA** | ~$1.3M |
 | **Sales Staff** | 4 |
 | **Development Team** | 8 engineers (10+ year avg tenure) |
+| **Knowledge Management** | 9 staff |
 
 ### Geographic Footprint
 
@@ -406,6 +582,7 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 - **Competitive Loss Rate**: < $12K annual revenue to national competitors
 
 ### Louisiana Expansion Timeline (Benchmark)
+
 | Phase | Duration |
 |-------|----------|
 | Market Research & Decision | ~6 months |
@@ -415,6 +592,7 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 | **Total** | **~2.5-3 years** |
 
 ### ARPU Drivers (LA vs NJ)
+
 | Factor | Contribution |
 |--------|--------------|
 | District Size (4-5x more students) | ~60% |
@@ -436,4 +614,22 @@ Enable OnCourse to make data-driven state expansion decisions by providing compr
 
 ---
 
-*This document will be updated iteratively during the discovery process.*
+## Appendix C: Product Portfolio
+
+| Product | Revenue | % of Total | State Compliance Required |
+|---------|---------|------------|---------------------------|
+| SIS | $2.12M | 26.5% | Critical |
+| Lesson Planner (Legacy) | $1.19M | 15% | None |
+| Evaluate | $1.04M | 13% | Significant |
+| Assessment | $915K | 11% | Moderate |
+| Classroom (LMS) | $567K | 7% | None |
+| Analytics | $315K | 4% | None |
+| Data Manager | $303K | 4% | None |
+| Curriculum Builder (Legacy) | $220K | 3% | None |
+| MTSS | $101K | 1% | Moderate |
+
+---
+
+*Document Version: 1.0 - Discovery Complete*
+*Last Updated: 2026-01-29*
+*Next Step: Development planning and sprint definition*
