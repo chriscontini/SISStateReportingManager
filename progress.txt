@@ -66,4 +66,14 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-004, S1-016 - Database connection and config
 - **Notes**: Created config.py with Pydantic Settings, database.py with async SQLAlchemy engine. Added .env.example. Config includes simple password auth for internal tool.
 
+### Iteration 5
+- **Date**: 2026-01-29
+- **Story Completed**: S1-006, S1-007, S1-008, S1-017 - API layer (schemas, CRUD, routers)
+- **Notes**: Created comprehensive schemas.py with Pydantic models for all API responses. Built crud.py with async CRUD operations for states, ranking factors, scores, and NCES data. Created routers/states.py and routers/rankings.py with full REST endpoints. Rankings endpoint calculates weighted scores across factors.
+
+### Iteration 6
+- **Date**: 2026-01-29
+- **Story Completed**: S1-009, S1-010 - Seed data for all 50 states with DOE URLs
+- **Notes**: Created seed_data.py with complete STATES_DATA list for all 50 US states including Department of Education website URLs. Added DEFAULT_RANKING_FACTORS with 9 factors from PRD (Development Effort weight=3.0, District Structure=2.5, etc.). Async seed functions handle idempotent seeding.
+
 ---

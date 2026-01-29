@@ -116,7 +116,7 @@
       "title": "Create seed data for all 50 states",
       "description": "Create src/backend/seed_data.py with list of all 50 US states (name, abbreviation) and a function to seed the database",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/seed_data.py exists",
         "All 50 states defined",
@@ -129,7 +129,7 @@
       "title": "Add DOE URLs to seed data",
       "description": "Update seed_data.py to include Department of Education website URLs for all 50 states",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Each state has doe_website field populated",
         "URLs are valid DOE websites"
