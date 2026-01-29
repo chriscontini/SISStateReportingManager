@@ -198,3 +198,115 @@ async def _calculate_state_rank(
             higher_count += 1
 
     return higher_count + 1
+
+
+@router.get("/{state_id}/analysis", response_model=schemas.StateAnalysisResponse)
+async def get_state_analysis(
+    state_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Get Tier 2/3 deep analysis for a state.
+
+    Returns detailed analysis including:
+    - Reporting system details
+    - Competitive intelligence
+    - Certification requirements
+    - Implementation recommendations
+    """
+    # Verify state exists
+    state = await crud.get_state(db, state_id)
+    if state is None:
+        raise HTTPException(status_code=404, detail="State not found")
+
+    # Get analysis
+    result = await db.execute(
+        select(models.StateAnalysis).where(models.StateAnalysis.state_id == state_id)
+    )
+    analysis = result.scalar_one_or_none()
+
+    if analysis is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No analysis available for {state.name}. Run Tier 2 analysis first."
+        )
+
+    return schemas.StateAnalysisResponse.model_validate(analysis)
+
+
+@router.get("/compare", response_model=schemas.StateComparisonResponse)
+async def compare_states(
+    ids: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Compare multiple states side-by-side.
+
+    Args:
+        ids: Comma-separated state IDs (e.g., "1,2,3")
+
+    Returns comparison data for all requested states.
+    """
+    try:
+        state_ids = [int(id.strip()) for id in ids.split(",")]
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid state IDs format")
+
+    if len(state_ids) < 2:
+        raise HTTPException(status_code=400, detail="At least 2 states required for comparison")
+
+    if len(state_ids) > 5:
+        raise HTTPException(status_code=400, detail="Maximum 5 states can be compared")
+
+    comparisons = []
+
+    for state_id in state_ids:
+        state = await crud.get_state(db, state_id)
+        if state is None:
+            raise HTTPException(status_code=404, detail=f"State with ID {state_id} not found")
+
+        # Get NCES data
+        nces_result = await db.execute(
+            select(models.NCESData).where(models.NCESData.state_id == state_id)
+        )
+        nces_data = nces_result.scalar_one_or_none()
+
+        # Get scores
+        scores_result = await db.execute(
+            select(models.StateScore, models.RankingFactor)
+            .join(models.RankingFactor)
+            .where(models.StateScore.state_id == state_id)
+        )
+        score_rows = scores_result.all()
+
+        scores_with_factors = []
+        total_score = 0.0
+
+        for score, factor in score_rows:
+            weighted = score.score * factor.weight
+            total_score += weighted
+            scores_with_factors.append(schemas.ScoreWithFactor(
+                factor_name=factor.name,
+                factor_weight=factor.weight,
+                score=score.score,
+                weighted_score=weighted,
+                notes=score.notes,
+            ))
+
+        # Check for analysis
+        analysis_result = await db.execute(
+            select(models.StateAnalysis).where(models.StateAnalysis.state_id == state_id)
+        )
+        has_analysis = analysis_result.scalar_one_or_none() is not None
+
+        comparisons.append(schemas.StateComparison(
+            id=state.id,
+            name=state.name,
+            abbreviation=state.abbreviation,
+            total_score=total_score,
+            nces_data=schemas.NCESDataResponse.model_validate(nces_data) if nces_data else None,
+            scores=scores_with_factors,
+            has_analysis=has_analysis,
+        ))
+
+    return schemas.StateComparisonResponse(states=comparisons)

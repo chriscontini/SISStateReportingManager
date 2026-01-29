@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 2,
+  "current_sprint": 3,
   "stories": [
     {
       "id": "S2-001",
@@ -280,6 +280,286 @@
         "Documents all 9 factors",
         "Explains weight system",
         "Includes LA success story"
+      ]
+    },
+    {
+      "id": "S3-001",
+      "sprint": 3,
+      "title": "Create dashboard page layout",
+      "description": "Create /dashboard page with grid layout for widgets. Include header with navigation and main content area.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "/dashboard page exists",
+        "Grid layout for widgets",
+        "Navigation header",
+        "Responsive design"
+      ]
+    },
+    {
+      "id": "S3-002",
+      "sprint": 3,
+      "title": "Create executive summary widget",
+      "description": "Add executive summary widget to dashboard showing key metrics: total states analyzed, top 3 recommendations, and analysis status.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "Executive summary component",
+        "Shows total states analyzed",
+        "Shows top 3 state recommendations",
+        "Shows analysis completion status"
+      ]
+    },
+    {
+      "id": "S3-003",
+      "sprint": 3,
+      "title": "Create top states widget",
+      "description": "Add widget showing top 10 ranked states with scores. Link each state to detail page.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "Top states widget component",
+        "Shows top 10 states",
+        "Displays total score",
+        "Links to state detail page"
+      ]
+    },
+    {
+      "id": "S3-004",
+      "sprint": 3,
+      "title": "Create tier classification model",
+      "description": "Add tier field to StateScore model. Tier 1: scores > 70, Tier 2: 50-70, Tier 3: < 50. Create migration.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "tier field added to model",
+        "Tier calculation logic",
+        "Alembic migration created",
+        "Tiers assigned on score save"
+      ]
+    },
+    {
+      "id": "S3-005",
+      "sprint": 3,
+      "title": "Add tier indicators to UI",
+      "description": "Add color-coded tier badges to rankings table and state detail pages. Tier 1: green, Tier 2: yellow, Tier 3: red.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "Tier badge component",
+        "Color coding: green/yellow/red",
+        "Displayed on rankings table",
+        "Displayed on state detail page"
+      ]
+    },
+    {
+      "id": "S3-006",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis model",
+      "description": "Create StateAnalysis model for deep Tier 2/3 analysis. Include fields for detailed requirements, competitive intel, and AI insights.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateAnalysis model created",
+        "Fields for deep analysis data",
+        "Foreign key to State",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S3-007",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis service",
+      "description": "Create analysis_service.py with methods to perform deep analysis using Claude. Analyze reporting requirements, competitive landscape, certification process.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "analysis_service.py created",
+        "analyze_state_deep() method",
+        "Uses Claude for analysis",
+        "Saves to StateAnalysis model"
+      ]
+    },
+    {
+      "id": "S3-008",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Pennsylvania",
+      "description": "Run deep analysis for PA. Research PIMS reporting system, certification requirements, major competitors. Store results.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA analysis completed",
+        "PIMS system documented",
+        "Competitors identified",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-009",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Texas",
+      "description": "Run deep analysis for TX. Research PEIMS/TSDS reporting, TEA requirements, major competitors. Store results.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "TX analysis completed",
+        "PEIMS/TSDS documented",
+        "TEA requirements noted",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-010",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Maryland",
+      "description": "Run deep analysis for MD. Research county-based system (24 LEAs), MSDE requirements, competitors. Store results.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD analysis completed",
+        "County model documented",
+        "MSDE requirements noted",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-011",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis API endpoint",
+      "description": "Add GET /api/states/{id}/analysis endpoint returning deep analysis data for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/analysis exists",
+        "Returns StateAnalysis data",
+        "404 if no analysis exists",
+        "Includes all analysis fields"
+      ]
+    },
+    {
+      "id": "S3-012",
+      "sprint": 3,
+      "title": "Add analysis section to state detail page",
+      "description": "Update /states/[id] page to show Tier 2 analysis data if available. Display competitive intel, requirements, and AI insights.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "Analysis section on detail page",
+        "Shows competitive intel",
+        "Shows detailed requirements",
+        "Shows AI insights"
+      ]
+    },
+    {
+      "id": "S3-013",
+      "sprint": 3,
+      "title": "Create state comparison API endpoint",
+      "description": "Add GET /api/states/compare?ids=1,2 endpoint returning side-by-side data for 2+ states.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/compare exists",
+        "Accepts multiple state IDs",
+        "Returns parallel data structure",
+        "Includes scores and NCES data"
+      ]
+    },
+    {
+      "id": "S3-014",
+      "sprint": 3,
+      "title": "Create state comparison page",
+      "description": "Create /compare page with side-by-side state comparison. Allow selecting 2-3 states to compare scores and data.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/compare page exists",
+        "State selection dropdowns",
+        "Side-by-side data display",
+        "Score comparison table"
+      ]
+    },
+    {
+      "id": "S3-015",
+      "sprint": 3,
+      "title": "Add radar chart component",
+      "description": "Create radar chart component using Recharts to visualize state scores across all 9 factors.",
+      "priority": 15,
+      "passes": false,
+      "acceptance_criteria": [
+        "RadarChart component created",
+        "Uses Recharts library",
+        "Shows all 9 factors",
+        "Supports multiple states overlay"
+      ]
+    },
+    {
+      "id": "S3-016",
+      "sprint": 3,
+      "title": "Add bar chart for rankings",
+      "description": "Create bar chart showing top 10 state scores on dashboard. Horizontal bars with state names and scores.",
+      "priority": 16,
+      "passes": false,
+      "acceptance_criteria": [
+        "BarChart component created",
+        "Shows top 10 states",
+        "Horizontal layout",
+        "Color-coded by tier"
+      ]
+    },
+    {
+      "id": "S3-017",
+      "sprint": 3,
+      "title": "Add charts to state detail page",
+      "description": "Add radar chart to state detail page showing score breakdown. Add comparison to NJ/LA baselines.",
+      "priority": 17,
+      "passes": false,
+      "acceptance_criteria": [
+        "Radar chart on detail page",
+        "Shows state vs NJ baseline",
+        "Shows state vs LA baseline",
+        "Responsive sizing"
+      ]
+    },
+    {
+      "id": "S3-018",
+      "sprint": 3,
+      "title": "Implement simple password authentication",
+      "description": "Add /api/auth/login endpoint with simple password check from config. Return session token. Add middleware for protected routes.",
+      "priority": 18,
+      "passes": false,
+      "acceptance_criteria": [
+        "POST /api/auth/login endpoint",
+        "Password from environment variable",
+        "Returns JWT or session token",
+        "Auth middleware created"
+      ]
+    },
+    {
+      "id": "S3-019",
+      "sprint": 3,
+      "title": "Create login page",
+      "description": "Create /login page with password input. Redirect to dashboard on success. Store token in localStorage.",
+      "priority": 19,
+      "passes": false,
+      "acceptance_criteria": [
+        "/login page exists",
+        "Password input field",
+        "Calls /api/auth/login",
+        "Redirects to dashboard on success"
+      ]
+    },
+    {
+      "id": "S3-020",
+      "sprint": 3,
+      "title": "Protect pages with auth check",
+      "description": "Add auth check to all pages except login. Redirect to login if not authenticated. Show loading state during check.",
+      "priority": 20,
+      "passes": false,
+      "acceptance_criteria": [
+        "Auth wrapper component",
+        "Checks token validity",
+        "Redirects unauthenticated users",
+        "Loading state during check"
       ]
     }
   ]

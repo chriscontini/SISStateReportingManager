@@ -50,6 +50,9 @@ class State(Base):
     scores: Mapped[list["StateScore"]] = relationship(
         back_populates="state", cascade="all, delete-orphan"
     )
+    analysis: Mapped[Optional["StateAnalysis"]] = relationship(
+        back_populates="state", cascade="all, delete-orphan", uselist=False
+    )
 
     def __repr__(self) -> str:
         return f"<State(id={self.id}, name='{self.name}', abbreviation='{self.abbreviation}')>"
@@ -133,6 +136,10 @@ class StateScore(Base):
     raw_value: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
+    # Tier classification (1, 2, or 3) based on total weighted score
+    # Tier 1: > 70 (top candidates), Tier 2: 50-70 (potential), Tier 3: < 50 (low priority)
+    tier: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
     # Timestamps
     calculated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
@@ -179,3 +186,57 @@ class NCESData(Base):
 
     def __repr__(self) -> str:
         return f"<NCESData(state_id={self.state_id}, districts={self.total_districts})>"
+
+
+class StateAnalysis(Base):
+    """
+    Deep state analysis model for Tier 2/3 analysis.
+
+    Stores detailed AI-generated analysis including competitive intel,
+    requirements deep-dive, and implementation insights.
+    """
+    __tablename__ = "state_analyses"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state_id: Mapped[int] = mapped_column(ForeignKey("states.id"), nullable=False, unique=True)
+
+    # Analysis tier (2 or 3)
+    analysis_tier: Mapped[int] = mapped_column(Integer, default=2, nullable=False)
+
+    # Reporting system details
+    reporting_system_details: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    submission_requirements: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    data_elements_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Competitive intelligence
+    major_competitors: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    competitor_market_share: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    competitive_advantages: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Certification and compliance
+    certification_process: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    compliance_requirements: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    estimated_certification_time: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+
+    # Implementation insights
+    key_challenges: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    recommended_approach: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    estimated_development_months: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # AI analysis metadata
+    ai_model_used: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    analysis_confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped["State"] = relationship(back_populates="analysis")
+
+    def __repr__(self) -> str:
+        return f"<StateAnalysis(state_id={self.state_id}, tier={self.analysis_tier})>"

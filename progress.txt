@@ -169,6 +169,17 @@ All 20 stories completed:
 - S2-019: NJ/LA ranking validation tests
 - S2-020: Ranking methodology documentation
 
-Ready for Sprint 3: Research Automation & Data Collection
+Ready for Sprint 3: Dashboard & Deep Analysis
+
+---
+
+## Sprint 3 Goals
+
+- Build executive dashboard with widgets
+- Implement tier classification (Tier 1/2/3)
+- Perform Tier 2 deep analysis for PA, TX, MD
+- Create state comparison view
+- Add data visualization (charts)
+- Implement simple password authentication
 
 ---

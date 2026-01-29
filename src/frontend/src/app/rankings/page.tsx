@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import TierBadge from "@/components/TierBadge";
 
 interface RankingFactor {
   id: number;
@@ -334,6 +335,9 @@ export default function RankingsPage() {
               <SortHeader field="total_score">
                 <span className="text-right w-full">Total Score</span>
               </SortHeader>
+              <th className="px-6 py-3 text-center text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                Tier
+              </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Actions
               </th>
@@ -358,6 +362,13 @@ export default function RankingsPage() {
                     <span className="font-medium text-green-600 dark:text-green-400">
                       {state.total_score.toFixed(2)}
                     </span>
+                  ) : (
+                    <span className="text-zinc-400 dark:text-zinc-500">-</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
+                  {state.total_score > 0 ? (
+                    <TierBadge score={state.total_score} size="sm" />
                   ) : (
                     <span className="text-zinc-400 dark:text-zinc-500">-</span>
                   )}

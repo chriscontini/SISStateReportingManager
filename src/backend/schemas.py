@@ -208,3 +208,60 @@ class StateDetailResponse(BaseModel):
 
     # Requirements (if any)
     requirements: list[StateRequirementResponse] = []
+
+
+# ============ State Analysis Schemas ============
+
+class StateAnalysisResponse(BaseModel):
+    """Schema for Tier 2/3 deep state analysis."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    state_id: int
+    analysis_tier: int
+
+    # Reporting system details
+    reporting_system_details: Optional[str] = None
+    submission_requirements: Optional[str] = None
+    data_elements_summary: Optional[str] = None
+
+    # Competitive intelligence
+    major_competitors: Optional[str] = None
+    competitor_market_share: Optional[str] = None
+    competitive_advantages: Optional[str] = None
+
+    # Certification and compliance
+    certification_process: Optional[str] = None
+    compliance_requirements: Optional[str] = None
+    estimated_certification_time: Optional[str] = None
+
+    # Implementation insights
+    key_challenges: Optional[str] = None
+    recommended_approach: Optional[str] = None
+    estimated_development_months: Optional[int] = None
+
+    # AI analysis metadata
+    ai_model_used: Optional[str] = None
+    analysis_confidence: Optional[float] = None
+
+    # Timestamps
+    created_at: datetime
+    updated_at: datetime
+
+
+# ============ State Comparison Schemas ============
+
+class StateComparison(BaseModel):
+    """Single state data for comparison."""
+    id: int
+    name: str
+    abbreviation: str
+    total_score: float
+    nces_data: Optional[NCESDataResponse] = None
+    scores: list[ScoreWithFactor] = []
+    has_analysis: bool = False
+
+
+class StateComparisonResponse(BaseModel):
+    """Response for state comparison endpoint."""
+    states: list[StateComparison]

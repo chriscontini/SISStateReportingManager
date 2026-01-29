@@ -41,6 +41,12 @@ export default function RootLayout({
               </div>
               <div className="flex items-center space-x-4">
                 <Link
+                  href="/dashboard"
+                  className="px-3 py-2 rounded-md text-sm font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800"
+                >
+                  Dashboard
+                </Link>
+                <Link
                   href="/states"
                   className="px-3 py-2 rounded-md text-sm font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800"
                 >
@@ -51,6 +57,12 @@ export default function RootLayout({
                   className="px-3 py-2 rounded-md text-sm font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800"
                 >
                   Rankings
+                </Link>
+                <Link
+                  href="/compare"
+                  className="px-3 py-2 rounded-md text-sm font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800"
+                >
+                  Compare
                 </Link>
               </div>
             </div>
