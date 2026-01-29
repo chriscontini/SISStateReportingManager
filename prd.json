@@ -9,7 +9,7 @@
       "title": "Create NCES data seed file",
       "description": "Create src/backend/nces_data.py with real NCES data for all 50 states: total_districts, total_schools, total_students. Data year 2023.",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "NCES_DATA list with all 50 states",
         "Each state has district, school, student counts",
