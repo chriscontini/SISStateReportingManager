@@ -155,7 +155,7 @@
       "title": "Add Alembic for database migrations",
       "description": "Set up Alembic in src/backend for database migrations. Create initial migration for State and StateRequirement tables.",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "alembic.ini exists",
         "migrations folder created",

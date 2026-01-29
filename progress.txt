@@ -81,4 +81,9 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-011 - Create Docker Compose for local development
 - **Notes**: Created docker-compose.yml with pgvector/pgvector:pg16 image (PostgreSQL 16 with pgvector). Added Redis service for future caching. Created scripts/init-db.sql to enable vector and uuid-ossp extensions on startup. Health checks configured for both services.
 
+### Iteration 8
+- **Date**: 2026-01-29
+- **Story Completed**: S1-012 - Add Alembic for database migrations
+- **Notes**: Set up Alembic with async SQLAlchemy support. Created alembic.ini, migrations/env.py with async engine configuration, and script.py.mako template. Created initial migration for all 5 tables: states, state_requirements, ranking_factors, state_scores, nces_data. All indexes and constraints included.
+
 ---
