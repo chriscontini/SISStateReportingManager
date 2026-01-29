@@ -9,7 +9,7 @@
       "title": "Create backend project structure",
       "description": "Initialize Python project with FastAPI. Create src/backend directory with main.py, requirements.txt, and basic FastAPI app that returns health check at /health",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/main.py exists with FastAPI app",
         "src/backend/requirements.txt includes fastapi and uvicorn",
