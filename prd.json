@@ -49,7 +49,7 @@
       "title": "Create database connection module",
       "description": "Create src/backend/database.py with PostgreSQL connection using SQLAlchemy async. Support DATABASE_URL environment variable.",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/database.py exists",
         "Async SQLAlchemy engine configured",
@@ -208,7 +208,7 @@
       "title": "Create config module",
       "description": "Create src/backend/config.py using Pydantic Settings for environment variables: DATABASE_URL, CLAUDE_API_KEY, DEBUG, etc.",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/config.py exists",
         "Settings class with all env vars",

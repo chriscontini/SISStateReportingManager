@@ -61,4 +61,9 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-003, S1-005, S1-013, S1-014, S1-015 - All database models
 - **Notes**: Created comprehensive models.py with all interdependent models: State, StateRequirement, RankingFactor, StateScore, NCESData. Used SQLAlchemy 2.0 declarative style with Mapped type hints. All relationships and foreign keys defined.
 
+### Iteration 4
+- **Date**: 2026-01-29
+- **Story Completed**: S1-004, S1-016 - Database connection and config
+- **Notes**: Created config.py with Pydantic Settings, database.py with async SQLAlchemy engine. Added .env.example. Config includes simple password auth for internal tool.
+
 ---
