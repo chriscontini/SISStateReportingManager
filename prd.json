@@ -36,7 +36,7 @@
       "title": "Create scoring service base",
       "description": "Create src/backend/services/scoring_service.py with ScoringService class. Include methods to calculate and store scores for each factor.",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/services/scoring_service.py exists",
         "ScoringService class created",
@@ -50,7 +50,7 @@
       "title": "Implement district structure scoring",
       "description": "Add district_structure_score() to scoring service. Score based on county-based (like LA=64 parishes) vs fragmented districts (like NJ=600+). County-based scores higher.",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "district_structure_score() method implemented",
         "LA scores high (parish model)",
@@ -64,7 +64,7 @@
       "title": "Implement average district size scoring",
       "description": "Add avg_district_size_score() to scoring service. Calculate avg_district_size from NCES data, score higher for larger districts (higher ARPU potential).",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "avg_district_size_score() method implemented",
         "Calculates from NCES total_students/total_districts",
@@ -78,7 +78,7 @@
       "title": "Implement market opportunity scoring",
       "description": "Add market_opportunity_score() to scoring service. Score based on total students and total districts from NCES data.",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "market_opportunity_score() method implemented",
         "Uses NCES student/district counts",
@@ -92,7 +92,7 @@
       "title": "Add NJ and LA baseline capabilities",
       "description": "Create src/backend/baselines.py with NJ_CAPABILITIES and LA_CAPABILITIES dictionaries describing current supported features, data elements, submission formats.",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/baselines.py exists",
         "NJ_CAPABILITIES dictionary",
@@ -106,7 +106,7 @@
       "title": "Implement technical fit scoring with AI",
       "description": "Add technical_fit_score() to scoring service. Use Claude to analyze how closely a state's requirements match NJ/LA capabilities. Cache results.",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "technical_fit_score() method implemented",
         "Uses Claude API for analysis",
@@ -120,7 +120,7 @@
       "title": "Implement development effort scoring with AI",
       "description": "Add development_effort_score() to scoring service. Use Claude to estimate effort based on DOE website complexity and existing capabilities. This is the PRIMARY factor.",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "development_effort_score() method implemented",
         "Uses Claude API for analysis",
@@ -134,7 +134,7 @@
       "title": "Implement certification complexity scoring",
       "description": "Add certification_complexity_score() to scoring service. Score based on whether state requires formal vendor certification vs open market.",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "certification_complexity_score() method implemented",
         "Open market scores higher",
@@ -148,7 +148,7 @@
       "title": "Implement competitive landscape scoring",
       "description": "Add competitive_landscape_score() to scoring service. Score based on density of national/regional SIS competitors in state. Less competition = higher score.",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "competitive_landscape_score() method implemented",
         "Fewer competitors = higher score",
@@ -162,7 +162,7 @@
       "title": "Implement geographic proximity scoring",
       "description": "Add geographic_proximity_score() to scoring service. Score based on distance from NJ (current HQ). Closer states score slightly higher for support ease.",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "geographic_proximity_score() method implemented",
         "Closer to NJ = higher score",
