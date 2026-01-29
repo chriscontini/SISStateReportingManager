@@ -36,7 +36,19 @@ This document outlines the sprint-by-sprint development plan for SISStateReporti
 | **Styling** | Tailwind CSS | Rapid UI development |
 | **Charts** | Recharts or Chart.js | Data visualization |
 | **PDF Export** | React-PDF or Puppeteer | Report generation |
-| **Hosting** | TBD (AWS/Vercel) | Cloud-native |
+| **Frontend Hosting** | Netlify | Confirmed - excellent Next.js support |
+| **Backend Hosting** | Railway or Render | Python/FastAPI + PostgreSQL |
+| **Authentication** | Simple password | Internal tool; basic auth sufficient |
+
+## Preliminary Target States (for early knowledge base work)
+
+| Priority | State | Rationale |
+|----------|-------|-----------|
+| **#1** | Pennsylvania (PA) | Stakeholder identified |
+| **#2** | Texas (TX) | Stakeholder identified |
+| **#3** | TBD | To be determined by ranking algorithm |
+
+*Note: Final top 3 will be confirmed by ranking algorithm in Sprint 2, but PA and TX will receive early research attention.*
 
 ---
 
@@ -349,11 +361,13 @@ This document outlines the sprint-by-sprint development plan for SISStateReporti
 
 | Service | Estimated Cost |
 |---------|---------------|
-| Cloud Hosting (AWS/Vercel) | $100-300 |
-| PostgreSQL (managed) | $50-100 |
+| Netlify (Frontend) | $0-19 (free tier likely sufficient) |
+| Railway/Render (Backend + DB) | $20-50 |
 | Claude API | $200-500 |
 | Domain/SSL | $20 |
-| **Total** | **$370-920/month** |
+| **Total** | **$240-590/month** |
+
+*Note: Costs are conservative estimates. Free tiers may cover initial usage.*
 
 ---
 
@@ -381,11 +395,20 @@ This document outlines the sprint-by-sprint development plan for SISStateReporti
 
 ## Open Questions for Sprint Planning
 
-1. **Hosting Decision**: AWS vs Vercel vs other?
-2. **Authentication**: Simple password vs OAuth vs SSO?
-3. **Top 3 States**: Should we pre-identify likely candidates for parallel knowledge base work?
-4. **Dev Team Access**: When should dev team start testing chatbot?
-5. **Report Templates**: What specific data should appear in investor presentations?
+1. ~~**Hosting Decision**: AWS vs Vercel vs other?~~ **RESOLVED**: Netlify (frontend) + Railway/Render (backend)
+2. ~~**Authentication**: Simple password vs OAuth vs SSO?~~ **RESOLVED**: Simple password
+3. ~~**Top 3 States**: Should we pre-identify likely candidates for parallel knowledge base work?~~ **RESOLVED**: PA, TX, + 1 TBD
+4. **Dev Team Access**: When should dev team start testing chatbot? *(Sprint 6, Week 11)*
+5. ~~**Report Templates**: What specific data should appear in investor presentations?~~ **RESOLVED**: Expansion state recommendations
+
+### Report Template Requirements
+- **Primary Content**: Expansion state recommendations
+- **Key Data Points**:
+  - Ranked list of recommended states
+  - Development effort estimates
+  - Gap analysis summary
+  - Competitive landscape overview
+  - Projected timeline and investment
 
 ---
 
