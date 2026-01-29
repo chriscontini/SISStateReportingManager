@@ -22,6 +22,49 @@ This document outlines the sprint-by-sprint development plan for SISStateReporti
 
 **Timeline**: 12 weeks / 6 two-week sprints
 
+**Development Method**: Ralph autonomous AI agent loops
+
+---
+
+## Ralph Workflow
+
+Each sprint is executed using [Ralph](https://github.com/snarktank/ralph) - an autonomous AI agent loop.
+
+### How Ralph Works
+
+1. **Iteration Start**: Fresh AI instance spawns with clean context
+2. **Story Selection**: Picks highest-priority incomplete story from `prd.json`
+3. **Implementation**: Implements the single story
+4. **Quality Checks**: Runs type-checking and tests
+5. **Commit**: If checks pass, commits changes
+6. **Update**: Marks story complete in `prd.json`, appends learnings to `progress.txt`
+7. **Repeat**: Loop continues until all stories pass
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `prd.json` | Task tracking - stories with `passes: true/false` |
+| `progress.txt` | Learnings persisted across iterations |
+| `CLAUDE.md` | Context for AI agents |
+
+### Story Granularity
+
+Stories must be small enough to complete in one context window:
+- Add a database model
+- Create an API endpoint
+- Build a UI component
+- Write a utility function
+
+**Not**: "Build the entire dashboard" (too large)
+
+### Sprint Transition
+
+At end of each sprint:
+1. Archive completed `prd.json` to `sprints/sprint-N-prd.json`
+2. Create new `prd.json` for next sprint
+3. Update `progress.txt` with sprint summary
+
 ---
 
 ## Technology Stack (Confirmed)

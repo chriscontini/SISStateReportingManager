@@ -1,0 +1,274 @@
+{
+  "project": "SISStateReportingManager",
+  "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
+  "current_sprint": 1,
+  "stories": [
+    {
+      "id": "S1-001",
+      "sprint": 1,
+      "title": "Create backend project structure",
+      "description": "Initialize Python project with FastAPI. Create src/backend directory with main.py, requirements.txt, and basic FastAPI app that returns health check at /health",
+      "priority": 1,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/main.py exists with FastAPI app",
+        "src/backend/requirements.txt includes fastapi and uvicorn",
+        "GET /health returns {\"status\": \"ok\"}"
+      ]
+    },
+    {
+      "id": "S1-002",
+      "sprint": 1,
+      "title": "Create frontend project structure",
+      "description": "Initialize Next.js project with TypeScript and Tailwind CSS in src/frontend directory",
+      "priority": 2,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/frontend is a valid Next.js project",
+        "TypeScript configured",
+        "Tailwind CSS configured",
+        "npm run dev works"
+      ]
+    },
+    {
+      "id": "S1-003",
+      "sprint": 1,
+      "title": "Create database models file",
+      "description": "Create src/backend/models.py with SQLAlchemy models for State table (id, name, abbreviation, doe_website, created_at, updated_at)",
+      "priority": 3,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/models.py exists",
+        "State model with required fields",
+        "SQLAlchemy Base configured"
+      ]
+    },
+    {
+      "id": "S1-004",
+      "sprint": 1,
+      "title": "Create database connection module",
+      "description": "Create src/backend/database.py with PostgreSQL connection using SQLAlchemy async. Support DATABASE_URL environment variable.",
+      "priority": 4,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/database.py exists",
+        "Async SQLAlchemy engine configured",
+        "get_db dependency function created"
+      ]
+    },
+    {
+      "id": "S1-005",
+      "sprint": 1,
+      "title": "Add StateRequirement model",
+      "description": "Add StateRequirement model to models.py with fields: id, state_id (FK), requirement_name, description, data_type, submission_format, created_at",
+      "priority": 5,
+      "passes": false,
+      "acceptance_criteria": [
+        "StateRequirement model exists",
+        "Foreign key to State table",
+        "Relationship defined on State model"
+      ]
+    },
+    {
+      "id": "S1-006",
+      "sprint": 1,
+      "title": "Create states API router",
+      "description": "Create src/backend/routers/states.py with GET /api/states (list all) and GET /api/states/{id} (get one) endpoints",
+      "priority": 6,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/routers/states.py exists",
+        "GET /api/states returns list of states",
+        "GET /api/states/{id} returns single state",
+        "Router included in main.py"
+      ]
+    },
+    {
+      "id": "S1-007",
+      "sprint": 1,
+      "title": "Create Pydantic schemas",
+      "description": "Create src/backend/schemas.py with Pydantic models for StateBase, StateCreate, StateResponse, StateRequirementBase, StateRequirementResponse",
+      "priority": 7,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/schemas.py exists",
+        "State schemas defined",
+        "StateRequirement schemas defined",
+        "Proper Config for ORM mode"
+      ]
+    },
+    {
+      "id": "S1-008",
+      "sprint": 1,
+      "title": "Add CRUD operations for states",
+      "description": "Create src/backend/crud.py with async functions: get_states(), get_state(id), create_state(), update_state(), delete_state()",
+      "priority": 8,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/crud.py exists",
+        "All CRUD functions implemented",
+        "Functions are async"
+      ]
+    },
+    {
+      "id": "S1-009",
+      "sprint": 1,
+      "title": "Create seed data for all 50 states",
+      "description": "Create src/backend/seed_data.py with list of all 50 US states (name, abbreviation) and a function to seed the database",
+      "priority": 9,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/seed_data.py exists",
+        "All 50 states defined",
+        "seed_states() function works"
+      ]
+    },
+    {
+      "id": "S1-010",
+      "sprint": 1,
+      "title": "Add DOE URLs to seed data",
+      "description": "Update seed_data.py to include Department of Education website URLs for all 50 states",
+      "priority": 10,
+      "passes": false,
+      "acceptance_criteria": [
+        "Each state has doe_website field populated",
+        "URLs are valid DOE websites"
+      ]
+    },
+    {
+      "id": "S1-011",
+      "sprint": 1,
+      "title": "Create Docker Compose for local development",
+      "description": "Create docker-compose.yml with PostgreSQL service (with pgvector extension) for local development",
+      "priority": 11,
+      "passes": false,
+      "acceptance_criteria": [
+        "docker-compose.yml exists",
+        "PostgreSQL service defined",
+        "pgvector extension enabled",
+        "docker-compose up works"
+      ]
+    },
+    {
+      "id": "S1-012",
+      "sprint": 1,
+      "title": "Add Alembic for database migrations",
+      "description": "Set up Alembic in src/backend for database migrations. Create initial migration for State and StateRequirement tables.",
+      "priority": 12,
+      "passes": false,
+      "acceptance_criteria": [
+        "alembic.ini exists",
+        "migrations folder created",
+        "Initial migration created",
+        "alembic upgrade head works"
+      ]
+    },
+    {
+      "id": "S1-013",
+      "sprint": 1,
+      "title": "Create RankingFactor model",
+      "description": "Add RankingFactor model to models.py with fields: id, name, weight, description, data_source. This stores configurable ranking criteria.",
+      "priority": 13,
+      "passes": false,
+      "acceptance_criteria": [
+        "RankingFactor model exists",
+        "Fields match schema",
+        "Migration created"
+      ]
+    },
+    {
+      "id": "S1-014",
+      "sprint": 1,
+      "title": "Create StateScore model",
+      "description": "Add StateScore model to models.py with fields: id, state_id (FK), factor_id (FK), score, calculated_at. Stores ranking scores per state per factor.",
+      "priority": 14,
+      "passes": false,
+      "acceptance_criteria": [
+        "StateScore model exists",
+        "Foreign keys to State and RankingFactor",
+        "Migration created"
+      ]
+    },
+    {
+      "id": "S1-015",
+      "sprint": 1,
+      "title": "Create NCES data model",
+      "description": "Add NCESData model with fields: id, state_id (FK), total_districts, total_schools, total_students, avg_district_size, data_year",
+      "priority": 15,
+      "passes": false,
+      "acceptance_criteria": [
+        "NCESData model exists",
+        "Foreign key to State",
+        "Migration created"
+      ]
+    },
+    {
+      "id": "S1-016",
+      "sprint": 1,
+      "title": "Create config module",
+      "description": "Create src/backend/config.py using Pydantic Settings for environment variables: DATABASE_URL, CLAUDE_API_KEY, DEBUG, etc.",
+      "priority": 16,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/config.py exists",
+        "Settings class with all env vars",
+        ".env.example file created"
+      ]
+    },
+    {
+      "id": "S1-017",
+      "sprint": 1,
+      "title": "Add ranking API endpoints",
+      "description": "Create src/backend/routers/rankings.py with GET /api/rankings (ranked list of states) and GET /api/rankings/factors (list ranking factors)",
+      "priority": 17,
+      "passes": false,
+      "acceptance_criteria": [
+        "src/backend/routers/rankings.py exists",
+        "GET /api/rankings returns ranked states",
+        "GET /api/rankings/factors returns factors",
+        "Router included in main.py"
+      ]
+    },
+    {
+      "id": "S1-018",
+      "sprint": 1,
+      "title": "Create frontend homepage",
+      "description": "Create basic homepage in src/frontend that displays app title and links to /rankings and /states pages",
+      "priority": 18,
+      "passes": false,
+      "acceptance_criteria": [
+        "Homepage renders",
+        "Navigation to /rankings",
+        "Navigation to /states",
+        "Tailwind styling applied"
+      ]
+    },
+    {
+      "id": "S1-019",
+      "sprint": 1,
+      "title": "Create states list page",
+      "description": "Create /states page in frontend that fetches and displays all 50 states from the API in a table",
+      "priority": 19,
+      "passes": false,
+      "acceptance_criteria": [
+        "/states page exists",
+        "Fetches from /api/states",
+        "Displays states in table",
+        "Shows name, abbreviation, DOE link"
+      ]
+    },
+    {
+      "id": "S1-020",
+      "sprint": 1,
+      "title": "Create rankings page skeleton",
+      "description": "Create /rankings page in frontend with placeholder for state rankings table. Will be populated in Sprint 2.",
+      "priority": 20,
+      "passes": false,
+      "acceptance_criteria": [
+        "/rankings page exists",
+        "Shows placeholder message",
+        "Basic table structure ready"
+      ]
+    }
+  ]
+}
