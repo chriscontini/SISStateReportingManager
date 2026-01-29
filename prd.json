@@ -204,7 +204,7 @@
       "title": "Create ranking weights configuration UI",
       "description": "Add ranking factor weights configuration section to /rankings page. Allow adjusting weights with sliders or inputs.",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Weights configuration UI on /rankings",
         "Slider or number inputs for each factor",
@@ -232,7 +232,7 @@
       "title": "Create state detail page",
       "description": "Create /states/[id] page in frontend showing full state details, scores breakdown, and NCES data.",
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "/states/[id] page exists",
         "Shows state name and DOE link",
@@ -246,7 +246,7 @@
       "title": "Add sorting and filtering to rankings",
       "description": "Update /rankings page with sorting by any column and filtering by minimum score threshold.",
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Click column header to sort",
         "Filter by minimum total score",
@@ -260,7 +260,7 @@
       "title": "Validate NJ and LA rankings",
       "description": "Write validation test ensuring NJ and LA appear in appropriate positions (LA should rank favorably due to parish model). Add test file.",
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "tests/test_rankings.py exists",
         "Test validates LA ranks favorably",
@@ -274,7 +274,7 @@
       "title": "Create ranking methodology documentation",
       "description": "Create /rankings/methodology page explaining all ranking factors, weights, and data sources. Include LA benchmark story.",
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "/rankings/methodology page exists",
         "Documents all 9 factors",

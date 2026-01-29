@@ -138,4 +138,37 @@ Ready for Sprint 2: AI Research Integration
 - **Story Completed**: S2-013, S2-014 - API endpoints for calculation and weight updates
 - **Notes**: Added POST /api/rankings/calculate with use_ai parameter. Added PATCH /api/rankings/factors/{id} for weight updates. Both endpoints integrated with scoring service.
 
+### Iteration 14
+- **Date**: 2026-01-29
+- **Story Completed**: S2-015, S2-016, S2-017, S2-018 - Frontend enhancements
+- **Notes**: Created state detail page at /states/[id] with NCES data and score breakdown. Updated rankings page with weight configuration UI (number inputs), sorting by any column, and filtering by search/min score. Added GET /api/states/{id}/detail endpoint returning full state data with scores, NCES data, and requirements.
+
+### Iteration 15
+- **Date**: 2026-01-29
+- **Story Completed**: S2-019 - Validate NJ and LA rankings
+- **Notes**: Created tests/test_rankings.py with comprehensive validation tests. Tests verify LA ranks favorably due to parish model, NJ serves as baseline, and scoring logic is correct. Documents LA expansion success (6x ARPU).
+
+### Iteration 16
+- **Date**: 2026-01-29
+- **Story Completed**: S2-020 - Ranking methodology documentation
+- **Notes**: Created /rankings/methodology page documenting all 9 ranking factors with weights, scoring methodology, and data sources. Includes LA success story as validation of the ranking model.
+
+---
+
+## Sprint 2 Complete!
+
+All 20 stories completed:
+- S2-001: NCES data seed file for all 50 states
+- S2-002: Claude API service with rate limiting and caching
+- S2-003 to S2-012: Scoring service with all 9 ranking factors
+- S2-013, S2-014: Score calculation and weight update endpoints
+- S2-015: Ranking weights configuration UI
+- S2-016: State detail API endpoint
+- S2-017: State detail page
+- S2-018: Sorting and filtering for rankings
+- S2-019: NJ/LA ranking validation tests
+- S2-020: Ranking methodology documentation
+
+Ready for Sprint 3: Research Automation & Data Collection
+
 ---

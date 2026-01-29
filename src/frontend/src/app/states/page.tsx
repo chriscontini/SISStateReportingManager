@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface State {
   id: number;
@@ -80,6 +81,9 @@ export default function StatesPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 DOE Website
               </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
@@ -89,7 +93,12 @@ export default function StatesPage() {
                 className="hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-zinc-900 dark:text-white">
-                  {state.name}
+                  <Link
+                    href={`/states/${state.id}`}
+                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    {state.name}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
                   {state.abbreviation}
@@ -109,6 +118,14 @@ export default function StatesPage() {
                       Not available
                     </span>
                   )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                  <Link
+                    href={`/states/${state.id}`}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    View Details
+                  </Link>
                 </td>
               </tr>
             ))}
