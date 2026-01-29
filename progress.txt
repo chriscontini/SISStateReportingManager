@@ -86,4 +86,21 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-012 - Add Alembic for database migrations
 - **Notes**: Set up Alembic with async SQLAlchemy support. Created alembic.ini, migrations/env.py with async engine configuration, and script.py.mako template. Created initial migration for all 5 tables: states, state_requirements, ranking_factors, state_scores, nces_data. All indexes and constraints included.
 
+### Iteration 9
+- **Date**: 2026-01-29
+- **Story Completed**: S1-018, S1-019, S1-020 - Frontend pages (homepage, states, rankings)
+- **Notes**: Updated layout.tsx with navigation and proper metadata. Created homepage with links to states and rankings. Built /states page with table fetching from API. Created /rankings page skeleton with ranking factors display and table structure ready for Sprint 2 scoring.
+
+---
+
+## Sprint 1 Complete!
+
+All 20 stories completed:
+- S1-001 to S1-008: Backend foundation (FastAPI, models, database, CRUD, routers)
+- S1-009 to S1-012: Infrastructure (seed data, Docker, Alembic)
+- S1-013 to S1-017: Additional models and ranking API
+- S1-018 to S1-020: Frontend pages
+
+Ready for Sprint 2: AI Research Integration
+
 ---

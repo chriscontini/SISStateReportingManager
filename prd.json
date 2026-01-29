@@ -235,7 +235,7 @@
       "title": "Create frontend homepage",
       "description": "Create basic homepage in src/frontend that displays app title and links to /rankings and /states pages",
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Homepage renders",
         "Navigation to /rankings",
@@ -249,7 +249,7 @@
       "title": "Create states list page",
       "description": "Create /states page in frontend that fetches and displays all 50 states from the API in a table",
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "/states page exists",
         "Fetches from /api/states",
@@ -263,7 +263,7 @@
       "title": "Create rankings page skeleton",
       "description": "Create /rankings page in frontend with placeholder for state rankings table. Will be populated in Sprint 2.",
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "/rankings page exists",
         "Shows placeholder message",
