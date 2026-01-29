@@ -22,7 +22,7 @@
       "title": "Create Claude API service",
       "description": "Create src/backend/services/claude_service.py with async Claude API client for AI-powered analysis. Include rate limiting and error handling.",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/services/claude_service.py exists",
         "ClaudeService class with async methods",
