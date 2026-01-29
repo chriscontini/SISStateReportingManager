@@ -56,4 +56,9 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-002 - Create frontend project structure
 - **Notes**: Used create-next-app with TypeScript, Tailwind CSS, ESLint, App Router, and src directory. Next.js 16.1.6, React 19.2.3.
 
+### Iteration 3
+- **Date**: 2026-01-29
+- **Story Completed**: S1-003, S1-005, S1-013, S1-014, S1-015 - All database models
+- **Notes**: Created comprehensive models.py with all interdependent models: State, StateRequirement, RankingFactor, StateScore, NCESData. Used SQLAlchemy 2.0 declarative style with Mapped type hints. All relationships and foreign keys defined.
+
 ---

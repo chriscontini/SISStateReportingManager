@@ -36,7 +36,7 @@
       "title": "Create database models file",
       "description": "Create src/backend/models.py with SQLAlchemy models for State table (id, name, abbreviation, doe_website, created_at, updated_at)",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/models.py exists",
         "State model with required fields",
@@ -62,7 +62,7 @@
       "title": "Add StateRequirement model",
       "description": "Add StateRequirement model to models.py with fields: id, state_id (FK), requirement_name, description, data_type, submission_format, created_at",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "StateRequirement model exists",
         "Foreign key to State table",
@@ -169,7 +169,7 @@
       "title": "Create RankingFactor model",
       "description": "Add RankingFactor model to models.py with fields: id, name, weight, description, data_source. This stores configurable ranking criteria.",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "RankingFactor model exists",
         "Fields match schema",
@@ -182,7 +182,7 @@
       "title": "Create StateScore model",
       "description": "Add StateScore model to models.py with fields: id, state_id (FK), factor_id (FK), score, calculated_at. Stores ranking scores per state per factor.",
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "StateScore model exists",
         "Foreign keys to State and RankingFactor",
@@ -195,7 +195,7 @@
       "title": "Create NCES data model",
       "description": "Add NCESData model with fields: id, state_id (FK), total_districts, total_schools, total_students, avg_district_size, data_year",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "NCESData model exists",
         "Foreign key to State",
