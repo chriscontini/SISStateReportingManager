@@ -7,7 +7,7 @@ This file tracks learnings and insights across Ralph iterations.
 - **Purpose**: AI-powered state expansion planning tool for OnCourse Systems for Education
 - **Goal**: Help identify best states for SIS market expansion based on development effort
 - **Timeline**: 12 weeks (6 sprints)
-- **Current Sprint**: 1 (Foundation)
+- **Current Sprint**: 2 (Ranking Algorithm & AI Analysis)
 
 ## Key Reference Files
 
@@ -102,5 +102,18 @@ All 20 stories completed:
 - S1-018 to S1-020: Frontend pages
 
 Ready for Sprint 2: AI Research Integration
+
+---
+
+## Sprint 2 Goals
+
+- Seed NCES data for all 50 states (districts, schools, students)
+- Create Claude API service for AI-powered analysis
+- Implement scoring service with all 9 ranking factors
+- Add NJ/LA baseline capabilities for comparison
+- Build score calculation and weight configuration
+- Create state detail pages with score breakdowns
+- Validate rankings against NJ/LA benchmarks
+- Document ranking methodology
 
 ---

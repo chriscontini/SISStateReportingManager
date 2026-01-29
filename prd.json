@@ -1,273 +1,285 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 1,
+  "current_sprint": 2,
   "stories": [
     {
-      "id": "S1-001",
-      "sprint": 1,
-      "title": "Create backend project structure",
-      "description": "Initialize Python project with FastAPI. Create src/backend directory with main.py, requirements.txt, and basic FastAPI app that returns health check at /health",
+      "id": "S2-001",
+      "sprint": 2,
+      "title": "Create NCES data seed file",
+      "description": "Create src/backend/nces_data.py with real NCES data for all 50 states: total_districts, total_schools, total_students. Data year 2023.",
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/main.py exists with FastAPI app",
-        "src/backend/requirements.txt includes fastapi and uvicorn",
-        "GET /health returns {\"status\": \"ok\"}"
+        "NCES_DATA list with all 50 states",
+        "Each state has district, school, student counts",
+        "seed_nces_data() async function created"
       ]
     },
     {
-      "id": "S1-002",
-      "sprint": 1,
-      "title": "Create frontend project structure",
-      "description": "Initialize Next.js project with TypeScript and Tailwind CSS in src/frontend directory",
+      "id": "S2-002",
+      "sprint": 2,
+      "title": "Create Claude API service",
+      "description": "Create src/backend/services/claude_service.py with async Claude API client for AI-powered analysis. Include rate limiting and error handling.",
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/frontend is a valid Next.js project",
-        "TypeScript configured",
-        "Tailwind CSS configured",
-        "npm run dev works"
+        "src/backend/services/claude_service.py exists",
+        "ClaudeService class with async methods",
+        "analyze_state_complexity() method",
+        "Rate limiting implemented"
       ]
     },
     {
-      "id": "S1-003",
-      "sprint": 1,
-      "title": "Create database models file",
-      "description": "Create src/backend/models.py with SQLAlchemy models for State table (id, name, abbreviation, doe_website, created_at, updated_at)",
+      "id": "S2-003",
+      "sprint": 2,
+      "title": "Create scoring service base",
+      "description": "Create src/backend/services/scoring_service.py with ScoringService class. Include methods to calculate and store scores for each factor.",
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/models.py exists",
-        "State model with required fields",
-        "SQLAlchemy Base configured"
+        "src/backend/services/scoring_service.py exists",
+        "ScoringService class created",
+        "calculate_all_scores() method",
+        "save_score() helper method"
       ]
     },
     {
-      "id": "S1-004",
-      "sprint": 1,
-      "title": "Create database connection module",
-      "description": "Create src/backend/database.py with PostgreSQL connection using SQLAlchemy async. Support DATABASE_URL environment variable.",
+      "id": "S2-004",
+      "sprint": 2,
+      "title": "Implement district structure scoring",
+      "description": "Add district_structure_score() to scoring service. Score based on county-based (like LA=64 parishes) vs fragmented districts (like NJ=600+). County-based scores higher.",
       "priority": 4,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/database.py exists",
-        "Async SQLAlchemy engine configured",
-        "get_db dependency function created"
+        "district_structure_score() method implemented",
+        "LA scores high (parish model)",
+        "NJ scores low (fragmented)",
+        "Scores 0-10 scale"
       ]
     },
     {
-      "id": "S1-005",
-      "sprint": 1,
-      "title": "Add StateRequirement model",
-      "description": "Add StateRequirement model to models.py with fields: id, state_id (FK), requirement_name, description, data_type, submission_format, created_at",
+      "id": "S2-005",
+      "sprint": 2,
+      "title": "Implement average district size scoring",
+      "description": "Add avg_district_size_score() to scoring service. Calculate avg_district_size from NCES data, score higher for larger districts (higher ARPU potential).",
       "priority": 5,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "StateRequirement model exists",
-        "Foreign key to State table",
-        "Relationship defined on State model"
+        "avg_district_size_score() method implemented",
+        "Calculates from NCES total_students/total_districts",
+        "Larger districts score higher",
+        "Scores 0-10 scale"
       ]
     },
     {
-      "id": "S1-006",
-      "sprint": 1,
-      "title": "Create states API router",
-      "description": "Create src/backend/routers/states.py with GET /api/states (list all) and GET /api/states/{id} (get one) endpoints",
+      "id": "S2-006",
+      "sprint": 2,
+      "title": "Implement market opportunity scoring",
+      "description": "Add market_opportunity_score() to scoring service. Score based on total students and total districts from NCES data.",
       "priority": 6,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/routers/states.py exists",
-        "GET /api/states returns list of states",
-        "GET /api/states/{id} returns single state",
-        "Router included in main.py"
+        "market_opportunity_score() method implemented",
+        "Uses NCES student/district counts",
+        "Larger markets score higher",
+        "Scores 0-10 scale"
       ]
     },
     {
-      "id": "S1-007",
-      "sprint": 1,
-      "title": "Create Pydantic schemas",
-      "description": "Create src/backend/schemas.py with Pydantic models for StateBase, StateCreate, StateResponse, StateRequirementBase, StateRequirementResponse",
+      "id": "S2-007",
+      "sprint": 2,
+      "title": "Add NJ and LA baseline capabilities",
+      "description": "Create src/backend/baselines.py with NJ_CAPABILITIES and LA_CAPABILITIES dictionaries describing current supported features, data elements, submission formats.",
       "priority": 7,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/schemas.py exists",
-        "State schemas defined",
-        "StateRequirement schemas defined",
-        "Proper Config for ORM mode"
+        "src/backend/baselines.py exists",
+        "NJ_CAPABILITIES dictionary",
+        "LA_CAPABILITIES dictionary",
+        "Key features documented"
       ]
     },
     {
-      "id": "S1-008",
-      "sprint": 1,
-      "title": "Add CRUD operations for states",
-      "description": "Create src/backend/crud.py with async functions: get_states(), get_state(id), create_state(), update_state(), delete_state()",
+      "id": "S2-008",
+      "sprint": 2,
+      "title": "Implement technical fit scoring with AI",
+      "description": "Add technical_fit_score() to scoring service. Use Claude to analyze how closely a state's requirements match NJ/LA capabilities. Cache results.",
       "priority": 8,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/crud.py exists",
-        "All CRUD functions implemented",
-        "Functions are async"
+        "technical_fit_score() method implemented",
+        "Uses Claude API for analysis",
+        "Compares against NJ/LA baselines",
+        "Results cached in database"
       ]
     },
     {
-      "id": "S1-009",
-      "sprint": 1,
-      "title": "Create seed data for all 50 states",
-      "description": "Create src/backend/seed_data.py with list of all 50 US states (name, abbreviation) and a function to seed the database",
+      "id": "S2-009",
+      "sprint": 2,
+      "title": "Implement development effort scoring with AI",
+      "description": "Add development_effort_score() to scoring service. Use Claude to estimate effort based on DOE website complexity and existing capabilities. This is the PRIMARY factor.",
       "priority": 9,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/seed_data.py exists",
-        "All 50 states defined",
-        "seed_states() function works"
+        "development_effort_score() method implemented",
+        "Uses Claude API for analysis",
+        "Lower effort = higher score",
+        "PRIMARY ranking factor (weight 3.0)"
       ]
     },
     {
-      "id": "S1-010",
-      "sprint": 1,
-      "title": "Add DOE URLs to seed data",
-      "description": "Update seed_data.py to include Department of Education website URLs for all 50 states",
+      "id": "S2-010",
+      "sprint": 2,
+      "title": "Implement certification complexity scoring",
+      "description": "Add certification_complexity_score() to scoring service. Score based on whether state requires formal vendor certification vs open market.",
       "priority": 10,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "Each state has doe_website field populated",
-        "URLs are valid DOE websites"
+        "certification_complexity_score() method implemented",
+        "Open market scores higher",
+        "Formal certification scores lower",
+        "Scores 0-10 scale"
       ]
     },
     {
-      "id": "S1-011",
-      "sprint": 1,
-      "title": "Create Docker Compose for local development",
-      "description": "Create docker-compose.yml with PostgreSQL service (with pgvector extension) for local development",
+      "id": "S2-011",
+      "sprint": 2,
+      "title": "Implement competitive landscape scoring",
+      "description": "Add competitive_landscape_score() to scoring service. Score based on density of national/regional SIS competitors in state. Less competition = higher score.",
       "priority": 11,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "docker-compose.yml exists",
-        "PostgreSQL service defined",
-        "pgvector extension enabled",
-        "docker-compose up works"
+        "competitive_landscape_score() method implemented",
+        "Fewer competitors = higher score",
+        "Considers PowerSchool, Infinite Campus, Tyler",
+        "Scores 0-10 scale"
       ]
     },
     {
-      "id": "S1-012",
-      "sprint": 1,
-      "title": "Add Alembic for database migrations",
-      "description": "Set up Alembic in src/backend for database migrations. Create initial migration for State and StateRequirement tables.",
+      "id": "S2-012",
+      "sprint": 2,
+      "title": "Implement geographic proximity scoring",
+      "description": "Add geographic_proximity_score() to scoring service. Score based on distance from NJ (current HQ). Closer states score slightly higher for support ease.",
       "priority": 12,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "alembic.ini exists",
-        "migrations folder created",
-        "Initial migration created",
-        "alembic upgrade head works"
+        "geographic_proximity_score() method implemented",
+        "Closer to NJ = higher score",
+        "PA, MD, NY score high",
+        "West coast scores lower"
       ]
     },
     {
-      "id": "S1-013",
-      "sprint": 1,
-      "title": "Create RankingFactor model",
-      "description": "Add RankingFactor model to models.py with fields: id, name, weight, description, data_source. This stores configurable ranking criteria.",
+      "id": "S2-013",
+      "sprint": 2,
+      "title": "Create score calculation endpoint",
+      "description": "Add POST /api/rankings/calculate endpoint to trigger score calculation for all states. Returns job status.",
       "priority": 13,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "RankingFactor model exists",
-        "Fields match schema",
-        "Migration created"
+        "POST /api/rankings/calculate endpoint exists",
+        "Triggers scoring service",
+        "Returns calculation status",
+        "Stores scores in database"
       ]
     },
     {
-      "id": "S1-014",
-      "sprint": 1,
-      "title": "Create StateScore model",
-      "description": "Add StateScore model to models.py with fields: id, state_id (FK), factor_id (FK), score, calculated_at. Stores ranking scores per state per factor.",
+      "id": "S2-014",
+      "sprint": 2,
+      "title": "Add ranking factor weight update endpoint",
+      "description": "Add PATCH /api/rankings/factors/{id} endpoint to update factor weights. Allows configuring ranking importance.",
       "priority": 14,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "StateScore model exists",
-        "Foreign keys to State and RankingFactor",
-        "Migration created"
+        "PATCH /api/rankings/factors/{id} endpoint exists",
+        "Updates factor weight",
+        "Validates weight is positive",
+        "Returns updated factor"
       ]
     },
     {
-      "id": "S1-015",
-      "sprint": 1,
-      "title": "Create NCES data model",
-      "description": "Add NCESData model with fields: id, state_id (FK), total_districts, total_schools, total_students, avg_district_size, data_year",
+      "id": "S2-015",
+      "sprint": 2,
+      "title": "Create ranking weights configuration UI",
+      "description": "Add ranking factor weights configuration section to /rankings page. Allow adjusting weights with sliders or inputs.",
       "priority": 15,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "NCESData model exists",
-        "Foreign key to State",
-        "Migration created"
+        "Weights configuration UI on /rankings",
+        "Slider or number inputs for each factor",
+        "Save button calls PATCH endpoint",
+        "Updates trigger recalculation"
       ]
     },
     {
-      "id": "S1-016",
-      "sprint": 1,
-      "title": "Create config module",
-      "description": "Create src/backend/config.py using Pydantic Settings for environment variables: DATABASE_URL, CLAUDE_API_KEY, DEBUG, etc.",
+      "id": "S2-016",
+      "sprint": 2,
+      "title": "Add state detail API endpoint",
+      "description": "Add GET /api/states/{id}/detail endpoint returning full state data including NCES data, all scores, and requirements.",
       "priority": 16,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/config.py exists",
-        "Settings class with all env vars",
-        ".env.example file created"
+        "GET /api/states/{id}/detail endpoint exists",
+        "Returns state with NCES data",
+        "Includes all factor scores",
+        "Includes requirements if any"
       ]
     },
     {
-      "id": "S1-017",
-      "sprint": 1,
-      "title": "Add ranking API endpoints",
-      "description": "Create src/backend/routers/rankings.py with GET /api/rankings (ranked list of states) and GET /api/rankings/factors (list ranking factors)",
+      "id": "S2-017",
+      "sprint": 2,
+      "title": "Create state detail page",
+      "description": "Create /states/[id] page in frontend showing full state details, scores breakdown, and NCES data.",
       "priority": 17,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "src/backend/routers/rankings.py exists",
-        "GET /api/rankings returns ranked states",
-        "GET /api/rankings/factors returns factors",
-        "Router included in main.py"
+        "/states/[id] page exists",
+        "Shows state name and DOE link",
+        "Displays NCES data",
+        "Shows score breakdown by factor"
       ]
     },
     {
-      "id": "S1-018",
-      "sprint": 1,
-      "title": "Create frontend homepage",
-      "description": "Create basic homepage in src/frontend that displays app title and links to /rankings and /states pages",
+      "id": "S2-018",
+      "sprint": 2,
+      "title": "Add sorting and filtering to rankings",
+      "description": "Update /rankings page with sorting by any column and filtering by minimum score threshold.",
       "priority": 18,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "Homepage renders",
-        "Navigation to /rankings",
-        "Navigation to /states",
-        "Tailwind styling applied"
+        "Click column header to sort",
+        "Filter by minimum total score",
+        "Sort ascending/descending toggle",
+        "Maintains state on page refresh"
       ]
     },
     {
-      "id": "S1-019",
-      "sprint": 1,
-      "title": "Create states list page",
-      "description": "Create /states page in frontend that fetches and displays all 50 states from the API in a table",
+      "id": "S2-019",
+      "sprint": 2,
+      "title": "Validate NJ and LA rankings",
+      "description": "Write validation test ensuring NJ and LA appear in appropriate positions (LA should rank favorably due to parish model). Add test file.",
       "priority": 19,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "/states page exists",
-        "Fetches from /api/states",
-        "Displays states in table",
-        "Shows name, abbreviation, DOE link"
+        "tests/test_rankings.py exists",
+        "Test validates LA ranks favorably",
+        "Test validates NJ baseline",
+        "Documents expected behavior"
       ]
     },
     {
-      "id": "S1-020",
-      "sprint": 1,
-      "title": "Create rankings page skeleton",
-      "description": "Create /rankings page in frontend with placeholder for state rankings table. Will be populated in Sprint 2.",
+      "id": "S2-020",
+      "sprint": 2,
+      "title": "Create ranking methodology documentation",
+      "description": "Create /rankings/methodology page explaining all ranking factors, weights, and data sources. Include LA benchmark story.",
       "priority": 20,
-      "passes": true,
+      "passes": false,
       "acceptance_criteria": [
-        "/rankings page exists",
-        "Shows placeholder message",
-        "Basic table structure ready"
+        "/rankings/methodology page exists",
+        "Documents all 9 factors",
+        "Explains weight system",
+        "Includes LA success story"
       ]
     }
   ]
