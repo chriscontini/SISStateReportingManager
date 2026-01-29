@@ -4,14 +4,35 @@ Rankings API router.
 Endpoints for state rankings and ranking factors.
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+from pydantic import BaseModel
 
 from .. import crud, schemas, models
 from ..database import get_db
+from ..services import scoring_service
+from ..baselines import NJ_CAPABILITIES, LA_CAPABILITIES
 
 router = APIRouter(prefix="/api/rankings", tags=["rankings"])
+
+
+class CalculateRequest(BaseModel):
+    """Request body for score calculation."""
+    use_ai: bool = False  # AI scoring is slower but more accurate
+
+
+class CalculateResponse(BaseModel):
+    """Response from score calculation."""
+    status: str
+    message: str
+    states_calculated: int = 0
+    errors: list[dict] = []
+
+
+class FactorWeightUpdate(BaseModel):
+    """Request body for updating factor weight."""
+    weight: float
 
 
 @router.get("", response_model=schemas.RankingsResponse)
@@ -105,3 +126,80 @@ async def get_ranking_factor(
     if factor is None:
         raise HTTPException(status_code=404, detail="Ranking factor not found")
     return schemas.RankingFactorResponse.model_validate(factor)
+
+
+@router.patch("/factors/{factor_id}", response_model=schemas.RankingFactorResponse)
+async def update_ranking_factor_weight(
+    factor_id: int,
+    update: FactorWeightUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Update a ranking factor's weight.
+
+    Weight must be a positive number. Common weights:
+    - 3.0: Primary factor (Development Effort)
+    - 2.5: High importance (District Structure, Avg District Size)
+    - 2.0: Medium-high (Technical Fit)
+    - 1.5: Medium (Certification, Competition, Market)
+    - 1.0: Lower (Regulatory)
+    - 0.5: Minor (Geographic Proximity)
+    """
+    if update.weight <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Weight must be a positive number"
+        )
+
+    factor = await crud.get_ranking_factor(db, factor_id)
+    if factor is None:
+        raise HTTPException(status_code=404, detail="Ranking factor not found")
+
+    # Update the weight
+    factor.weight = update.weight
+    await db.commit()
+    await db.refresh(factor)
+
+    return schemas.RankingFactorResponse.model_validate(factor)
+
+
+@router.post("/calculate", response_model=CalculateResponse)
+async def calculate_scores(
+    request: CalculateRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Calculate scores for all states.
+
+    This endpoint triggers the scoring service to calculate scores
+    for all ranking factors across all states.
+
+    Args:
+        use_ai: If True, uses AI-powered scoring for Development Effort,
+               Technical Fit, and Competitive Landscape. This is slower
+               but more accurate. Default False uses heuristic fallbacks.
+
+    Note: AI scoring requires CLAUDE_API_KEY to be configured and
+          may take several minutes for all 50 states.
+    """
+    try:
+        result = await scoring_service.calculate_all_scores(
+            db=db,
+            nj_capabilities=NJ_CAPABILITIES,
+            la_capabilities=LA_CAPABILITIES,
+            use_ai=request.use_ai,
+        )
+
+        return CalculateResponse(
+            status="completed",
+            message=f"Calculated scores for {result['states_calculated']} states",
+            states_calculated=result["states_calculated"],
+            errors=result.get("errors", []),
+        )
+
+    except Exception as e:
+        return CalculateResponse(
+            status="error",
+            message=f"Score calculation failed: {str(e)}",
+            errors=[{"error": str(e)}],
+        )

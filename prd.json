@@ -176,7 +176,7 @@
       "title": "Create score calculation endpoint",
       "description": "Add POST /api/rankings/calculate endpoint to trigger score calculation for all states. Returns job status.",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "POST /api/rankings/calculate endpoint exists",
         "Triggers scoring service",
@@ -190,7 +190,7 @@
       "title": "Add ranking factor weight update endpoint",
       "description": "Add PATCH /api/rankings/factors/{id} endpoint to update factor weights. Allows configuring ranking importance.",
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "PATCH /api/rankings/factors/{id} endpoint exists",
         "Updates factor weight",
