@@ -141,7 +141,7 @@
       "title": "Create Docker Compose for local development",
       "description": "Create docker-compose.yml with PostgreSQL service (with pgvector extension) for local development",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "docker-compose.yml exists",
         "PostgreSQL service defined",

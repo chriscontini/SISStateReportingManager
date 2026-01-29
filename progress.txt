@@ -76,4 +76,9 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-009, S1-010 - Seed data for all 50 states with DOE URLs
 - **Notes**: Created seed_data.py with complete STATES_DATA list for all 50 US states including Department of Education website URLs. Added DEFAULT_RANKING_FACTORS with 9 factors from PRD (Development Effort weight=3.0, District Structure=2.5, etc.). Async seed functions handle idempotent seeding.
 
+### Iteration 7
+- **Date**: 2026-01-29
+- **Story Completed**: S1-011 - Create Docker Compose for local development
+- **Notes**: Created docker-compose.yml with pgvector/pgvector:pg16 image (PostgreSQL 16 with pgvector). Added Redis service for future caching. Created scripts/init-db.sql to enable vector and uuid-ossp extensions on startup. Health checks configured for both services.
+
 ---
