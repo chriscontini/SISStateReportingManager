@@ -46,9 +46,11 @@ This document outlines the sprint-by-sprint development plan for SISStateReporti
 |----------|-------|-----------|
 | **#1** | Pennsylvania (PA) | Stakeholder identified |
 | **#2** | Texas (TX) | Stakeholder identified |
-| **#3** | TBD | To be determined by ranking algorithm |
+| **#3** | Maryland (MD) | County-based (24 districts), large avg size, LA-like profile |
 
-*Note: Final top 3 will be confirmed by ranking algorithm in Sprint 2, but PA and TX will receive early research attention.*
+*Note: Final top 3 will be confirmed by ranking algorithm in Sprint 2, but PA, TX, and MD will receive early research attention.*
+
+**Excluded**: Georgia (statewide PowerSchool contract)
 
 ---
 
