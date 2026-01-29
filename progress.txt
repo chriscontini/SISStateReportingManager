@@ -51,4 +51,9 @@ This file tracks learnings and insights across Ralph iterations.
 - **Story Completed**: S1-001 - Create backend project structure
 - **Notes**: Created src/backend with FastAPI app. Included CORS middleware for frontend. Added comprehensive requirements.txt with all planned dependencies (SQLAlchemy, Alembic, anthropic, etc.)
 
+### Iteration 2
+- **Date**: 2026-01-29
+- **Story Completed**: S1-002 - Create frontend project structure
+- **Notes**: Used create-next-app with TypeScript, Tailwind CSS, ESLint, App Router, and src directory. Next.js 16.1.6, React 19.2.3.
+
 ---

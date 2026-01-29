@@ -22,7 +22,7 @@
       "title": "Create frontend project structure",
       "description": "Initialize Next.js project with TypeScript and Tailwind CSS in src/frontend directory",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/frontend is a valid Next.js project",
         "TypeScript configured",
