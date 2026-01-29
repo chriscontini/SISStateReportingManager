@@ -117,3 +117,25 @@ Ready for Sprint 2: AI Research Integration
 - Document ranking methodology
 
 ---
+
+### Iteration 10
+- **Date**: 2026-01-29
+- **Story Completed**: S2-001 - Create NCES data seed file
+- **Notes**: Created nces_data.py with 2022-2023 NCES CCD data for all 50 states. Includes total_districts, total_schools, total_students. Documents county-based vs fragmented district models.
+
+### Iteration 11
+- **Date**: 2026-01-29
+- **Story Completed**: S2-002 - Create Claude API service
+- **Notes**: Created services/claude_service.py with async Anthropic client. Rate limiting (10/min), 24hr caching. Methods: analyze_state_complexity(), estimate_development_effort(), evaluate_technical_fit(), analyze_competitive_landscape().
+
+### Iteration 12
+- **Date**: 2026-01-29
+- **Story Completed**: S2-003 to S2-012 - Scoring service with all factors
+- **Notes**: Created scoring_service.py with all 9 ranking methods. Created baselines.py with NJ_CAPABILITIES and LA_CAPABILITIES including LA expansion success metrics (6x ARPU). Non-AI methods use NCES data and heuristics; AI methods use Claude for deeper analysis.
+
+### Iteration 13
+- **Date**: 2026-01-29
+- **Story Completed**: S2-013, S2-014 - API endpoints for calculation and weight updates
+- **Notes**: Added POST /api/rankings/calculate with use_ai parameter. Added PATCH /api/rankings/factors/{id} for weight updates. Both endpoints integrated with scoring service.
+
+---
