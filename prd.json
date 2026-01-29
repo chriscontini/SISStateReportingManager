@@ -75,7 +75,7 @@
       "title": "Create states API router",
       "description": "Create src/backend/routers/states.py with GET /api/states (list all) and GET /api/states/{id} (get one) endpoints",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/routers/states.py exists",
         "GET /api/states returns list of states",
@@ -89,7 +89,7 @@
       "title": "Create Pydantic schemas",
       "description": "Create src/backend/schemas.py with Pydantic models for StateBase, StateCreate, StateResponse, StateRequirementBase, StateRequirementResponse",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/schemas.py exists",
         "State schemas defined",
@@ -103,7 +103,7 @@
       "title": "Add CRUD operations for states",
       "description": "Create src/backend/crud.py with async functions: get_states(), get_state(id), create_state(), update_state(), delete_state()",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/crud.py exists",
         "All CRUD functions implemented",
@@ -221,7 +221,7 @@
       "title": "Add ranking API endpoints",
       "description": "Create src/backend/routers/rankings.py with GET /api/rankings (ranked list of states) and GET /api/rankings/factors (list ranking factors)",
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "src/backend/routers/rankings.py exists",
         "GET /api/rankings returns ranked states",
