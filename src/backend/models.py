@@ -529,3 +529,102 @@ class KnowledgeArticle(Base):
 
     def __repr__(self) -> str:
         return f"<KnowledgeArticle(title={self.title[:30]})>"
+
+
+class ChatSession(Base):
+    """Chat session for AI assistant conversations."""
+
+    __tablename__ = "chat_sessions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Session metadata
+    title: Mapped[str] = mapped_column(String(200), default="New Chat")
+
+    # Context filters for scoping knowledge retrieval
+    state_filter: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    context: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Status
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    messages: Mapped[list["ChatMessage"]] = relationship(
+        back_populates="session", cascade="all, delete-orphan", order_by="ChatMessage.created_at"
+    )
+
+    def __repr__(self) -> str:
+        return f"<ChatSession(id={self.id}, title='{self.title[:30]}')>"
+
+
+class ChatMessage(Base):
+    """Individual message in a chat session."""
+
+    __tablename__ = "chat_messages"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("chat_sessions.id"), nullable=False)
+
+    # Message content
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    # Role: user, assistant, system
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Citations/sources used (JSON array of article IDs)
+    citations: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Metadata
+    tokens_used: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    model_used: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    session: Mapped["ChatSession"] = relationship(back_populates="messages")
+
+    def __repr__(self) -> str:
+        return f"<ChatMessage(session_id={self.session_id}, role='{self.role}')>"
+
+
+class KnowledgeEmbedding(Base):
+    """Vector embeddings for knowledge articles for semantic search."""
+
+    __tablename__ = "knowledge_embeddings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    article_id: Mapped[int] = mapped_column(
+        ForeignKey("knowledge_articles.id"), nullable=False, unique=True
+    )
+
+    # Embedding vector (stored as JSON array since pgvector may not be available)
+    # In production with pgvector, this would be: Vector(1536) for OpenAI embeddings
+    embedding: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Embedding metadata
+    embedding_model: Mapped[str] = mapped_column(String(100), default="claude-3-haiku")
+    embedding_dim: Mapped[int] = mapped_column(Integer, default=1024)
+
+    # Content that was embedded (for cache invalidation)
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<KnowledgeEmbedding(article_id={self.article_id})>"

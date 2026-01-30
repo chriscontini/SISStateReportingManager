@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 6,
+  "current_sprint": 7,
   "stories": [
     {
       "id": "S2-001",
@@ -1398,6 +1398,286 @@
         "No console errors",
         "Forms validate properly",
         "Navigation works correctly"
+      ]
+    },
+    {
+      "id": "S7-001",
+      "sprint": 7,
+      "title": "Create ChatSession model",
+      "description": "Create ChatSession model to store conversation sessions with title, created_at, and user context.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "ChatSession model in models.py",
+        "Fields: id, title, context, created_at",
+        "Alembic migration created",
+        "Session can store state filter context"
+      ]
+    },
+    {
+      "id": "S7-002",
+      "sprint": 7,
+      "title": "Create ChatMessage model",
+      "description": "Create ChatMessage model to store individual messages in a chat session with role and content.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "ChatMessage model in models.py",
+        "Fields: id, session_id, role, content, created_at",
+        "Foreign key to ChatSession",
+        "Alembic migration created"
+      ]
+    },
+    {
+      "id": "S7-003",
+      "sprint": 7,
+      "title": "Create KnowledgeEmbedding model",
+      "description": "Create KnowledgeEmbedding model with pgvector for semantic search on knowledge articles.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "KnowledgeEmbedding model created",
+        "Vector field using pgvector",
+        "Foreign key to KnowledgeArticle",
+        "Index on vector field"
+      ]
+    },
+    {
+      "id": "S7-004",
+      "sprint": 7,
+      "title": "Create embedding service",
+      "description": "Create embedding_service.py to generate embeddings using Claude or voyage-embed for knowledge articles.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "embedding_service.py created",
+        "generate_embedding() method",
+        "Batch embedding support",
+        "Caching for repeated queries"
+      ]
+    },
+    {
+      "id": "S7-005",
+      "sprint": 7,
+      "title": "Create chat service",
+      "description": "Create chat_service.py with methods for RAG-based chat using knowledge base and Claude.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "chat_service.py created",
+        "send_message() method",
+        "retrieve_context() for RAG",
+        "format_response() with citations"
+      ]
+    },
+    {
+      "id": "S7-006",
+      "sprint": 7,
+      "title": "Implement semantic search",
+      "description": "Add semantic search to knowledge service using vector similarity for finding relevant articles.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "semantic_search() method added",
+        "Uses cosine similarity",
+        "Returns top-k results with scores",
+        "Filters by state if provided"
+      ]
+    },
+    {
+      "id": "S7-007",
+      "sprint": 7,
+      "title": "Create chat API endpoints",
+      "description": "Add /api/chat endpoints for creating sessions, sending messages, and retrieving history.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/chat/sessions",
+        "POST /api/chat/sessions/{id}/messages",
+        "GET /api/chat/sessions/{id}",
+        "GET /api/chat/sessions"
+      ]
+    },
+    {
+      "id": "S7-008",
+      "sprint": 7,
+      "title": "Add streaming response support",
+      "description": "Implement streaming responses for chat API using Server-Sent Events for real-time output.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "SSE endpoint for streaming",
+        "Tokens streamed as generated",
+        "Client can cancel stream",
+        "Final message saved to DB"
+      ]
+    },
+    {
+      "id": "S7-009",
+      "sprint": 7,
+      "title": "Generate embeddings for existing articles",
+      "description": "Create script to generate embeddings for all existing knowledge articles in the database.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "embed_articles.py script",
+        "Processes all articles",
+        "Progress logging",
+        "Idempotent execution"
+      ]
+    },
+    {
+      "id": "S7-010",
+      "sprint": 7,
+      "title": "Create chat page layout",
+      "description": "Create /chat page with chat interface layout including message list and input area.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "/chat page exists",
+        "Message list component",
+        "Input textarea with send button",
+        "Responsive layout"
+      ]
+    },
+    {
+      "id": "S7-011",
+      "sprint": 7,
+      "title": "Implement chat message components",
+      "description": "Create ChatMessage components for user and assistant messages with proper styling.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "UserMessage component",
+        "AssistantMessage component",
+        "Markdown rendering for responses",
+        "Copy button for messages"
+      ]
+    },
+    {
+      "id": "S7-012",
+      "sprint": 7,
+      "title": "Add citation display",
+      "description": "Display source citations in assistant messages linking to knowledge articles.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "Citation component",
+        "Links to knowledge articles",
+        "Shows article title and state",
+        "Collapsible citation list"
+      ]
+    },
+    {
+      "id": "S7-013",
+      "sprint": 7,
+      "title": "Implement streaming UI",
+      "description": "Add streaming message display that shows tokens as they arrive from the API.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "useChat hook for streaming",
+        "Typing indicator during stream",
+        "Smooth token rendering",
+        "Handle stream errors"
+      ]
+    },
+    {
+      "id": "S7-014",
+      "sprint": 7,
+      "title": "Add chat session sidebar",
+      "description": "Add sidebar showing chat history with session list and new chat button.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "Session list sidebar",
+        "New chat button",
+        "Session titles",
+        "Delete session option"
+      ]
+    },
+    {
+      "id": "S7-015",
+      "sprint": 7,
+      "title": "Add state context filter",
+      "description": "Add state filter dropdown to scope chat context to specific states.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "State filter dropdown",
+        "Filters knowledge retrieval",
+        "Shows current filter in UI",
+        "Persists in session"
+      ]
+    },
+    {
+      "id": "S7-016",
+      "sprint": 7,
+      "title": "Create suggested prompts",
+      "description": "Add suggested prompt chips for common questions about state requirements.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Suggested prompts component",
+        "State-specific suggestions",
+        "Click to fill input",
+        "Hide after first message"
+      ]
+    },
+    {
+      "id": "S7-017",
+      "sprint": 7,
+      "title": "Add chat to navigation",
+      "description": "Add Chat/Assistant link to main navigation bar.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat in nav menu",
+        "Active state highlighting",
+        "Keyboard shortcut Alt+A",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S7-018",
+      "sprint": 7,
+      "title": "Create chat widget for state detail",
+      "description": "Add mini chat widget on state detail page pre-filtered to that state.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat widget component",
+        "Auto-filtered to state",
+        "Expand to full chat",
+        "Quick question input"
+      ]
+    },
+    {
+      "id": "S7-019",
+      "sprint": 7,
+      "title": "Add chat tests",
+      "description": "Create unit and integration tests for chat service and API endpoints.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat service unit tests",
+        "Chat API integration tests",
+        "RAG retrieval tests",
+        "Streaming tests"
+      ]
+    },
+    {
+      "id": "S7-020",
+      "sprint": 7,
+      "title": "Update PRD current_sprint",
+      "description": "Update prd.json current_sprint to 7 and verify all Sprint 7 stories pass.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "current_sprint set to 7",
+        "All S7 stories pass",
+        "Tests run successfully",
+        "Documentation updated"
       ]
     }
   ]

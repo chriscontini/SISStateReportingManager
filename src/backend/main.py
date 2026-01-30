@@ -15,8 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import settings
 from .database import init_db, close_db, get_db
-from .routers import states_router, rankings_router, auth_router, gap_analysis_router, roadmaps_router, knowledge_router
-from .models import State, StateScore, StateAnalysis, GapAnalysis, Roadmap, KnowledgeArticle
+from .routers import states_router, rankings_router, auth_router, gap_analysis_router, roadmaps_router, knowledge_router, chat_router
+from .models import State, StateScore, StateAnalysis, GapAnalysis, Roadmap, KnowledgeArticle, ChatSession
 from .middleware import setup_error_handlers, RequestLoggingMiddleware
 
 # Track application start time
@@ -62,6 +62,7 @@ app.include_router(auth_router)
 app.include_router(gap_analysis_router)
 app.include_router(roadmaps_router)
 app.include_router(knowledge_router)
+app.include_router(chat_router)
 
 
 @app.get("/health")
@@ -111,6 +112,7 @@ async def admin_stats(db: AsyncSession = Depends(get_db)):
         ("gap_analyses", GapAnalysis),
         ("roadmaps", Roadmap),
         ("knowledge_articles", KnowledgeArticle),
+        ("chat_sessions", ChatSession),
     ]
 
     for name, model in models:
@@ -148,5 +150,6 @@ async def root():
             "gap_analysis": "/api/gap-analysis",
             "roadmaps": "/api/roadmaps",
             "knowledge": "/api/knowledge",
+            "chat": "/api/chat",
         },
     }

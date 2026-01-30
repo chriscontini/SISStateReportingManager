@@ -27,6 +27,7 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
     { key: 'g', description: 'Go to Gap Analysis', action: () => router.push('/gap-analysis'), modifiers: ['alt'] },
     { key: 'm', description: 'Go to Roadmap', action: () => router.push('/roadmap'), modifiers: ['alt'] },
     { key: 'k', description: 'Go to Knowledge Base', action: () => router.push('/knowledge'), modifiers: ['alt'] },
+    { key: 'a', description: 'Go to AI Chat', action: () => router.push('/chat'), modifiers: ['alt'] },
     { key: '?', description: 'Show keyboard shortcuts', action: () => setShowHelp(true), modifiers: ['shift'] },
   ];
 
