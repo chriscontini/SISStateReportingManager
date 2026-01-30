@@ -16,7 +16,7 @@ Enable regional SIS vendors to strategically grow their state footprint by:
 
 ### Current Status
 
-**Sprint 6 Complete** - 100 stories implemented across 6 sprints.
+**Sprint 7 Complete** - 120 stories implemented across 7 sprints.
 
 The application is fully functional with:
 - State rankings with 9 weighted scoring factors
@@ -24,8 +24,9 @@ The application is fully functional with:
 - Gap analysis comparing against NJ/LA baselines
 - Implementation roadmaps with Gantt visualization
 - Knowledge base with search
+- **AI Chatbot with RAG-based responses** (NEW)
 - Docker deployment ready
-- 41 passing tests
+- 83 passing unit tests
 
 ## Core Application Modules
 
@@ -171,6 +172,7 @@ SISStateReportingManager/
 │   │   │   ├── gap_analysis.py  # Gap analysis endpoints
 │   │   │   ├── roadmaps.py      # Roadmap endpoints
 │   │   │   ├── knowledge.py     # Knowledge base endpoints
+│   │   │   ├── chat.py          # Chat API endpoints
 │   │   │   └── auth.py          # Authentication endpoints
 │   │   ├── services/            # Business logic
 │   │   │   ├── scoring_service.py    # 9-factor scoring
@@ -178,7 +180,9 @@ SISStateReportingManager/
 │   │   │   ├── gap_service.py        # Gap detection
 │   │   │   ├── roadmap_service.py    # Roadmap generation
 │   │   │   ├── knowledge_service.py  # Knowledge management
-│   │   │   └── analysis_service.py   # Deep state analysis
+│   │   │   ├── analysis_service.py   # Deep state analysis
+│   │   │   ├── embedding_service.py  # Vector embeddings
+│   │   │   └── chat_service.py       # RAG-based chat
 │   │   ├── models.py            # SQLAlchemy models
 │   │   ├── baselines.py         # NJ/LA capability baselines
 │   │   ├── nces_data.py         # NCES district/school data
@@ -197,6 +201,7 @@ SISStateReportingManager/
 │           │   ├── gap-analysis/# Gap analysis views
 │           │   ├── roadmap/     # Gantt chart roadmaps
 │           │   ├── knowledge/   # Knowledge base search
+│           │   ├── chat/        # AI chatbot interface
 │           │   └── login/       # Authentication
 │           └── components/      # Reusable components
 │               ├── charts/      # Recharts visualizations
@@ -410,6 +415,26 @@ KnowledgeArticle
 ├── title, content, category
 ├── source_url, tags[]
 └── created_at, updated_at
+
+ChatSession
+├── id, title
+├── state_filter (optional)
+├── context, is_active
+├── created_at, updated_at
+└── messages[] (relationship)
+
+ChatMessage
+├── id, session_id (FK)
+├── role (user/assistant/system)
+├── content, citations (JSON)
+├── tokens_used, model_used
+└── created_at
+
+KnowledgeEmbedding
+├── id, article_id (FK)
+├── embedding (JSON vector)
+├── embedding_model, embedding_dim
+└── content_hash
 ```
 
 ### Scoring Factors (9 total)
@@ -460,6 +485,14 @@ GET  /api/knowledge/articles       # List articles (filter by state)
 GET  /api/knowledge/articles/{id}  # Get article detail
 GET  /api/knowledge/search         # Search articles (?q=query)
 POST /api/knowledge/articles       # Create new article
+
+# Chat (AI Assistant)
+POST /api/chat/sessions            # Create new chat session
+GET  /api/chat/sessions            # List all sessions
+GET  /api/chat/sessions/{id}       # Get session with messages
+DELETE /api/chat/sessions/{id}     # Delete session
+POST /api/chat/sessions/{id}/messages        # Send message (returns response)
+POST /api/chat/sessions/{id}/messages/stream # Stream response (SSE)
 
 # System
 GET  /health                       # Health check with DB status
