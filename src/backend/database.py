@@ -56,3 +56,19 @@ async def init_db() -> None:
 async def close_db() -> None:
     """Close database connections."""
     await engine.dispose()
+
+
+def get_engine():
+    """Get the async engine for direct use in scripts."""
+    return engine
+
+
+def get_session_maker(eng=None):
+    """Get a session maker for the given engine."""
+    if eng is None:
+        eng = engine
+    return async_sessionmaker(
+        eng,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
