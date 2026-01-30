@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 7,
+  "current_sprint": 8,
   "stories": [
     {
       "id": "S2-001",
@@ -1678,6 +1678,286 @@
         "All S7 stories pass",
         "Tests run successfully",
         "Documentation updated"
+      ]
+    },
+    {
+      "id": "S8-001",
+      "sprint": 8,
+      "title": "Create Competitor model",
+      "description": "Create Competitor model to store SIS vendor information with name, type (national/regional), headquarters, and website.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitor model in models.py",
+        "Fields: id, name, type, headquarters, website, description",
+        "Type enum: national, regional, local",
+        "created_at, updated_at timestamps"
+      ]
+    },
+    {
+      "id": "S8-002",
+      "sprint": 8,
+      "title": "Create StateCompetitor model",
+      "description": "Create StateCompetitor junction model linking competitors to states with market share and presence data.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateCompetitor model in models.py",
+        "Fields: state_id, competitor_id, market_share, district_count",
+        "presence_level enum: dominant, strong, moderate, minimal",
+        "estimated_revenue, notes fields"
+      ]
+    },
+    {
+      "id": "S8-003",
+      "sprint": 8,
+      "title": "Create CompetitorStrength model",
+      "description": "Create model to track competitor strengths and weaknesses per category.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "CompetitorStrength model in models.py",
+        "Fields: competitor_id, category, rating, description",
+        "Categories: pricing, support, features, integration, reputation",
+        "Rating 1-5 scale"
+      ]
+    },
+    {
+      "id": "S8-004",
+      "sprint": 8,
+      "title": "Create competitor seed data",
+      "description": "Create seed file with major national and regional SIS competitors with known market presence.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitor_data.py with COMPETITORS list",
+        "Include PowerSchool, Infinite Campus, Tyler SIS, Skyward",
+        "Include regional players by state",
+        "seed_competitors() async function"
+      ]
+    },
+    {
+      "id": "S8-005",
+      "sprint": 8,
+      "title": "Create competitive intelligence service",
+      "description": "Create competitive_service.py with methods for analyzing competitive landscape per state.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitive_service.py created",
+        "get_state_competitors() method",
+        "analyze_competitive_landscape() method",
+        "calculate_market_opportunity() method"
+      ]
+    },
+    {
+      "id": "S8-006",
+      "sprint": 8,
+      "title": "Implement competitor comparison",
+      "description": "Add methods to compare our capabilities against specific competitors.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "compare_with_competitor() method",
+        "Returns strength/weakness analysis",
+        "Identifies differentiation opportunities",
+        "Suggests competitive positioning"
+      ]
+    },
+    {
+      "id": "S8-007",
+      "sprint": 8,
+      "title": "Add AI competitive analysis",
+      "description": "Use Claude API to generate detailed competitive intelligence reports for states.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "generate_competitive_report() method",
+        "Uses Claude for market analysis",
+        "Includes entry strategy recommendations",
+        "Identifies partnership opportunities"
+      ]
+    },
+    {
+      "id": "S8-008",
+      "sprint": 8,
+      "title": "Calculate competitive score factor",
+      "description": "Integrate competitive landscape into state scoring with competitive_density factor.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitive_landscape_score() in scoring_service",
+        "Fewer/weaker competitors = higher score",
+        "Considers market concentration",
+        "Updates existing rankings"
+      ]
+    },
+    {
+      "id": "S8-009",
+      "sprint": 8,
+      "title": "Create competitors API router",
+      "description": "Create /api/competitors endpoints for CRUD operations on competitor data.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/competitors - list all",
+        "GET /api/competitors/{id} - get detail",
+        "GET /api/competitors/{id}/states - states present in",
+        "POST /api/competitors - create (admin)"
+      ]
+    },
+    {
+      "id": "S8-010",
+      "sprint": 8,
+      "title": "Add state competitor endpoints",
+      "description": "Add endpoints to get competitive data for specific states.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/competitors",
+        "Returns competitors with market share",
+        "Includes presence level",
+        "Sorted by market share descending"
+      ]
+    },
+    {
+      "id": "S8-011",
+      "sprint": 8,
+      "title": "Add competitive analysis endpoint",
+      "description": "Add endpoint to generate AI-powered competitive analysis for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/states/{id}/competitive-analysis",
+        "Triggers AI analysis",
+        "Returns detailed report",
+        "Caches results in StateAnalysis"
+      ]
+    },
+    {
+      "id": "S8-012",
+      "sprint": 8,
+      "title": "Add market comparison endpoint",
+      "description": "Add endpoint to compare competitive landscape across multiple states.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/competitors/compare?states=1,2,3",
+        "Shows competitor overlap",
+        "Highlights market gaps",
+        "Returns opportunity matrix"
+      ]
+    },
+    {
+      "id": "S8-013",
+      "sprint": 8,
+      "title": "Create competitors list page",
+      "description": "Create /competitors page showing all known SIS competitors.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "/competitors page exists",
+        "Filterable by type (national/regional)",
+        "Shows state count per competitor",
+        "Links to competitor detail"
+      ]
+    },
+    {
+      "id": "S8-014",
+      "sprint": 8,
+      "title": "Create competitor detail page",
+      "description": "Create competitor detail page showing presence map and strengths.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/competitors/[id] page",
+        "Shows competitor info",
+        "State presence list",
+        "Strength/weakness radar chart"
+      ]
+    },
+    {
+      "id": "S8-015",
+      "sprint": 8,
+      "title": "Add competitive landscape to state detail",
+      "description": "Add competitive intelligence section to state detail page.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitors section on state detail",
+        "Market share pie chart",
+        "Competitor cards with key info",
+        "Generate analysis button"
+      ]
+    },
+    {
+      "id": "S8-016",
+      "sprint": 8,
+      "title": "Create market opportunity visualization",
+      "description": "Add visualization showing market opportunity based on competitive density.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Opportunity score visualization",
+        "Competitor density heat map",
+        "Market gap indicators",
+        "Integrates with rankings page"
+      ]
+    },
+    {
+      "id": "S8-017",
+      "sprint": 8,
+      "title": "Add competitors to navigation",
+      "description": "Add Competitors link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitors in nav menu",
+        "Keyboard shortcut Alt+I",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S8-018",
+      "sprint": 8,
+      "title": "Add competitive intelligence tests",
+      "description": "Create unit and integration tests for competitive intelligence features.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitor service unit tests",
+        "Competitor API integration tests",
+        "Market share calculation tests",
+        "Score factor tests"
+      ]
+    },
+    {
+      "id": "S8-019",
+      "sprint": 8,
+      "title": "Seed competitor data for all states",
+      "description": "Add competitor presence data for all 50 states based on known market data.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "STATE_COMPETITORS mapping",
+        "At least 3 competitors per state",
+        "Market share estimates",
+        "Source attribution where available"
+      ]
+    },
+    {
+      "id": "S8-020",
+      "sprint": 8,
+      "title": "Update PRD and documentation",
+      "description": "Update prd.json and CLAUDE.md to reflect Sprint 8 completion.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "All S8 stories pass",
+        "CLAUDE.md updated",
+        "API docs updated",
+        "Tests passing"
       ]
     }
   ]

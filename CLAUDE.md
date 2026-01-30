@@ -16,7 +16,7 @@ Enable regional SIS vendors to strategically grow their state footprint by:
 
 ### Current Status
 
-**Sprint 7 Complete** - 120 stories implemented across 7 sprints.
+**Sprint 8 Complete** - 140 stories implemented across 8 sprints.
 
 The application is fully functional with:
 - State rankings with 9 weighted scoring factors
@@ -24,9 +24,10 @@ The application is fully functional with:
 - Gap analysis comparing against NJ/LA baselines
 - Implementation roadmaps with Gantt visualization
 - Knowledge base with search
-- **AI Chatbot with RAG-based responses** (NEW)
+- AI Chatbot with RAG-based responses
+- **Competitive Intelligence Module** (NEW)
 - Docker deployment ready
-- 83 passing unit tests
+- 98 passing unit tests
 
 ## Core Application Modules
 
@@ -173,19 +174,22 @@ SISStateReportingManager/
 │   │   │   ├── roadmaps.py      # Roadmap endpoints
 │   │   │   ├── knowledge.py     # Knowledge base endpoints
 │   │   │   ├── chat.py          # Chat API endpoints
+│   │   │   ├── competitors.py   # Competitor API endpoints
 │   │   │   └── auth.py          # Authentication endpoints
 │   │   ├── services/            # Business logic
-│   │   │   ├── scoring_service.py    # 9-factor scoring
-│   │   │   ├── claude_service.py     # Claude API integration
-│   │   │   ├── gap_service.py        # Gap detection
-│   │   │   ├── roadmap_service.py    # Roadmap generation
-│   │   │   ├── knowledge_service.py  # Knowledge management
-│   │   │   ├── analysis_service.py   # Deep state analysis
-│   │   │   ├── embedding_service.py  # Vector embeddings
-│   │   │   └── chat_service.py       # RAG-based chat
+│   │   │   ├── scoring_service.py      # 9-factor scoring
+│   │   │   ├── claude_service.py       # Claude API integration
+│   │   │   ├── gap_service.py          # Gap detection
+│   │   │   ├── roadmap_service.py      # Roadmap generation
+│   │   │   ├── knowledge_service.py    # Knowledge management
+│   │   │   ├── analysis_service.py     # Deep state analysis
+│   │   │   ├── embedding_service.py    # Vector embeddings
+│   │   │   ├── chat_service.py         # RAG-based chat
+│   │   │   └── competitive_service.py  # Competitive intelligence
 │   │   ├── models.py            # SQLAlchemy models
 │   │   ├── baselines.py         # NJ/LA capability baselines
 │   │   ├── nces_data.py         # NCES district/school data
+│   │   ├── competitor_data.py   # Competitor seed data
 │   │   ├── config.py            # Settings from env
 │   │   ├── database.py          # Async DB connection
 │   │   ├── middleware.py        # Error handling, logging
@@ -202,6 +206,7 @@ SISStateReportingManager/
 │           │   ├── roadmap/     # Gantt chart roadmaps
 │           │   ├── knowledge/   # Knowledge base search
 │           │   ├── chat/        # AI chatbot interface
+│           │   ├── competitors/ # Competitive intelligence
 │           │   └── login/       # Authentication
 │           └── components/      # Reusable components
 │               ├── charts/      # Recharts visualizations
@@ -435,6 +440,27 @@ KnowledgeEmbedding
 ├── embedding (JSON vector)
 ├── embedding_model, embedding_dim
 └── content_hash
+
+Competitor
+├── id, name, description
+├── competitor_type (national/regional/local)
+├── headquarters, website, founded_year
+├── total_states, total_districts, total_students
+├── primary_product, has_state_reporting, has_lms, has_assessment
+└── state_presence[] (relationship)
+
+StateCompetitor
+├── id, state_id (FK), competitor_id (FK)
+├── presence_level (dominant/strong/moderate/minimal)
+├── market_share_percent, district_count
+├── estimated_annual_revenue, is_certified
+└── data_confidence
+
+CompetitorStrength
+├── id, competitor_id (FK)
+├── category (pricing/support/features/etc.)
+├── rating (1-5), description
+└── is_strength (boolean)
 ```
 
 ### Scoring Factors (9 total)
@@ -493,6 +519,15 @@ GET  /api/chat/sessions/{id}       # Get session with messages
 DELETE /api/chat/sessions/{id}     # Delete session
 POST /api/chat/sessions/{id}/messages        # Send message (returns response)
 POST /api/chat/sessions/{id}/messages/stream # Stream response (SSE)
+
+# Competitors (Competitive Intelligence)
+GET  /api/competitors              # List all competitors
+GET  /api/competitors/summary      # Competitive landscape summary
+GET  /api/competitors/compare      # Compare competitors (?ids=1,2,3)
+GET  /api/competitors/{id}         # Get competitor detail with state presence
+GET  /api/competitors/state/{state_id}           # Get competitors in state
+GET  /api/competitors/state/{state_id}/analysis  # Deep competitive analysis
+GET  /api/competitors/state/{state_id}/opportunity  # Market opportunity score
 
 # System
 GET  /health                       # Health check with DB status

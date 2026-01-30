@@ -628,3 +628,133 @@ class KnowledgeEmbedding(Base):
 
     def __repr__(self) -> str:
         return f"<KnowledgeEmbedding(article_id={self.article_id})>"
+
+
+class Competitor(Base):
+    """SIS vendor competitor model."""
+
+    __tablename__ = "competitors"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Basic information
+    name: Mapped[str] = mapped_column(String(200), nullable=False, unique=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Classification
+    competitor_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    # Types: national, regional, local
+
+    # Company info
+    headquarters: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    website: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    founded_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    employee_count: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+
+    # Market presence
+    total_states: Mapped[int] = mapped_column(Integer, default=0)
+    total_districts: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    total_students: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Product info
+    primary_product: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    has_state_reporting: Mapped[bool] = mapped_column(Boolean, default=True)
+    has_lms: Mapped[bool] = mapped_column(Boolean, default=False)
+    has_assessment: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state_presence: Mapped[list["StateCompetitor"]] = relationship(
+        back_populates="competitor", cascade="all, delete-orphan"
+    )
+    strengths: Mapped[list["CompetitorStrength"]] = relationship(
+        back_populates="competitor", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Competitor(name='{self.name}', type='{self.competitor_type}')>"
+
+
+class StateCompetitor(Base):
+    """Junction table linking competitors to states with market data."""
+
+    __tablename__ = "state_competitors"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state_id: Mapped[int] = mapped_column(ForeignKey("states.id"), nullable=False)
+    competitor_id: Mapped[int] = mapped_column(ForeignKey("competitors.id"), nullable=False)
+
+    # Market presence
+    presence_level: Mapped[str] = mapped_column(String(50), default="moderate")
+    # Levels: dominant (>40%), strong (20-40%), moderate (5-20%), minimal (<5%)
+
+    # Market share data
+    market_share_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    district_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    student_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Revenue estimates
+    estimated_annual_revenue: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Additional info
+    years_in_state: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    is_certified: Mapped[bool] = mapped_column(Boolean, default=True)
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Data quality
+    data_source: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    data_confidence: Mapped[str] = mapped_column(String(20), default="estimated")
+    # Confidence: verified, estimated, speculative
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped["State"] = relationship()
+    competitor: Mapped["Competitor"] = relationship(back_populates="state_presence")
+
+    def __repr__(self) -> str:
+        return f"<StateCompetitor(state_id={self.state_id}, competitor_id={self.competitor_id})>"
+
+
+class CompetitorStrength(Base):
+    """Competitor strengths and weaknesses by category."""
+
+    __tablename__ = "competitor_strengths"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    competitor_id: Mapped[int] = mapped_column(ForeignKey("competitors.id"), nullable=False)
+
+    # Category and rating
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    # Categories: pricing, support, features, integration, reputation,
+    # state_reporting, ease_of_use, implementation, training
+    rating: Mapped[int] = mapped_column(Integer, nullable=False)
+    # Rating: 1-5 (1=weak, 5=strong)
+
+    # Details
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    is_strength: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    competitor: Mapped["Competitor"] = relationship(back_populates="strengths")
+
+    def __repr__(self) -> str:
+        return f"<CompetitorStrength(competitor_id={self.competitor_id}, category='{self.category}')>"

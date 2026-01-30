@@ -160,6 +160,16 @@ export default function AppShell({ children }: AppShellProps) {
                 >
                   Chat
                 </Link>
+                <Link
+                  href="/competitors"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    pathname.startsWith('/competitors')
+                      ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white'
+                      : 'text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800'
+                  }`}
+                >
+                  Competitors
+                </Link>
                 <button
                   onClick={toggleDarkMode}
                   className="p-2 rounded-md text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800"
