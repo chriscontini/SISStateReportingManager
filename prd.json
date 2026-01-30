@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 3,
+  "current_sprint": 4,
   "stories": [
     {
       "id": "S2-001",
@@ -560,6 +560,286 @@
         "Checks token validity",
         "Redirects unauthenticated users",
         "Loading state during check"
+      ]
+    },
+    {
+      "id": "S4-001",
+      "sprint": 4,
+      "title": "Create Gap model for requirements gaps",
+      "description": "Create Gap model to track missing requirements between target state and NJ/LA baselines. Include fields for gap type, severity, effort estimate.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Gap model created in models.py",
+        "Fields: state_id, baseline_state, gap_type, description, severity, effort_hours",
+        "Alembic migration created",
+        "Foreign key to State"
+      ]
+    },
+    {
+      "id": "S4-002",
+      "sprint": 4,
+      "title": "Create GapAnalysis model for analysis results",
+      "description": "Create GapAnalysis model to store full gap analysis results for a state. Includes summary, total effort, timeline projection.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "GapAnalysis model created",
+        "Fields: state_id, baseline_used, total_gaps, critical_gaps, total_effort_hours, projected_months",
+        "Relationship to Gap model",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S4-003",
+      "sprint": 4,
+      "title": "Expand NJ baseline with detailed capabilities",
+      "description": "Expand baselines.py NJ_CAPABILITIES with detailed feature list including data elements, submission formats, integrations, and workflows.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "NJ_CAPABILITIES expanded with 50+ features",
+        "Categories: enrollment, attendance, grades, special_ed, assessments",
+        "Each feature has name, description, complexity",
+        "Documents NJ SMART integration"
+      ]
+    },
+    {
+      "id": "S4-004",
+      "sprint": 4,
+      "title": "Expand LA baseline with detailed capabilities",
+      "description": "Expand baselines.py LA_CAPABILITIES with detailed feature list. Document parish model specifics and what made LA expansion successful.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "LA_CAPABILITIES expanded with 50+ features",
+        "Documents parish-specific features",
+        "Includes SIS data submission details",
+        "Notes on 6x ARPU success factors"
+      ]
+    },
+    {
+      "id": "S4-005",
+      "sprint": 4,
+      "title": "Create gap detection service",
+      "description": "Create gap_service.py with methods to compare target state requirements against NJ/LA baselines and identify gaps.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "gap_service.py created",
+        "compare_to_baseline() method",
+        "identify_gaps() method",
+        "calculate_gap_severity() method"
+      ]
+    },
+    {
+      "id": "S4-006",
+      "sprint": 4,
+      "title": "Implement gap effort estimation",
+      "description": "Add effort estimation logic to gap service. Estimate hours based on gap type and complexity using LA benchmark data.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "estimate_gap_effort() method",
+        "Uses complexity multipliers",
+        "References LA timeline (30 months)",
+        "Returns effort in hours and FTE-months"
+      ]
+    },
+    {
+      "id": "S4-007",
+      "sprint": 4,
+      "title": "Create gap analysis API endpoints",
+      "description": "Add /api/gap-analysis endpoints for running analysis, retrieving results, and listing gaps for a state.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/gap-analysis/{state_id}/analyze",
+        "GET /api/gap-analysis/{state_id}",
+        "GET /api/gap-analysis/{state_id}/gaps",
+        "Returns structured gap data"
+      ]
+    },
+    {
+      "id": "S4-008",
+      "sprint": 4,
+      "title": "Run gap analysis for Pennsylvania",
+      "description": "Execute gap analysis for PA comparing against NJ baseline. Identify PIMS-specific gaps and estimate effort.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA gap analysis completed",
+        "PIMS gaps identified",
+        "Effort estimates calculated",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-009",
+      "sprint": 4,
+      "title": "Run gap analysis for Texas",
+      "description": "Execute gap analysis for TX comparing against NJ/LA baselines. Identify PEIMS-specific gaps and estimate effort.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "TX gap analysis completed",
+        "PEIMS/TSDS gaps identified",
+        "Effort estimates calculated",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-010",
+      "sprint": 4,
+      "title": "Run gap analysis for Maryland",
+      "description": "Execute gap analysis for MD comparing against LA baseline (county model). Identify MSDE gaps and estimate effort.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD gap analysis completed",
+        "Uses LA as primary baseline",
+        "County model gaps identified",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-011",
+      "sprint": 4,
+      "title": "Create gap analysis page",
+      "description": "Create /gap-analysis page showing gap analysis results for top states with summary cards and gap list.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "/gap-analysis page exists",
+        "Shows top 3 states summary",
+        "Displays gap counts by severity",
+        "Links to detailed gap view"
+      ]
+    },
+    {
+      "id": "S4-012",
+      "sprint": 4,
+      "title": "Create state gap detail page",
+      "description": "Create /gap-analysis/[id] page showing detailed gaps for a state with filtering and sorting.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "/gap-analysis/[id] page exists",
+        "Lists all gaps with details",
+        "Filter by severity/category",
+        "Sort by effort/priority"
+      ]
+    },
+    {
+      "id": "S4-013",
+      "sprint": 4,
+      "title": "Add gap visualization chart",
+      "description": "Add chart component showing gap distribution by category and severity using Recharts.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "GapChart component created",
+        "Pie/donut chart by category",
+        "Bar chart by severity",
+        "Interactive tooltips"
+      ]
+    },
+    {
+      "id": "S4-014",
+      "sprint": 4,
+      "title": "Implement effort estimation display",
+      "description": "Add effort estimation section to gap analysis page showing total hours, FTE-months, and timeline projection.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "Effort summary component",
+        "Shows total hours",
+        "Converts to FTE-months",
+        "Compares to LA benchmark"
+      ]
+    },
+    {
+      "id": "S4-015",
+      "sprint": 4,
+      "title": "Create timeline projection view",
+      "description": "Add timeline visualization showing projected implementation phases and milestones for each state.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Timeline component created",
+        "Shows phases: Research, Dev, Testing, Cert",
+        "Milestone markers",
+        "Total duration estimate"
+      ]
+    },
+    {
+      "id": "S4-016",
+      "sprint": 4,
+      "title": "Add gap comparison view",
+      "description": "Create view to compare gaps across multiple states side-by-side showing relative effort and complexity.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Multi-state gap comparison",
+        "Side-by-side effort display",
+        "Highlights easiest state",
+        "Recommendation summary"
+      ]
+    },
+    {
+      "id": "S4-017",
+      "sprint": 4,
+      "title": "Create executive summary report",
+      "description": "Create printable executive summary component with top 3 recommendations, key metrics, and action items.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Executive summary component",
+        "Top 3 state recommendations",
+        "Key decision metrics",
+        "Print-friendly styling"
+      ]
+    },
+    {
+      "id": "S4-018",
+      "sprint": 4,
+      "title": "Add gap analysis to navigation",
+      "description": "Add Gap Analysis link to main navigation and dashboard quick actions.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Gap Analysis in nav menu",
+        "Link on dashboard",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S4-019",
+      "sprint": 4,
+      "title": "Create validation checklist",
+      "description": "Create validation checklist component for stakeholder review of rankings and gap analysis results.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Validation checklist component",
+        "Ranking methodology check",
+        "Gap analysis check",
+        "Effort estimates check"
+      ]
+    },
+    {
+      "id": "S4-020",
+      "sprint": 4,
+      "title": "Add export functionality for reports",
+      "description": "Add ability to export gap analysis and rankings data as CSV for stakeholder review.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "Export to CSV button",
+        "Rankings export",
+        "Gap analysis export",
+        "Includes all key metrics"
       ]
     }
   ]

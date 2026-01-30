@@ -53,6 +53,9 @@ class State(Base):
     analysis: Mapped[Optional["StateAnalysis"]] = relationship(
         back_populates="state", cascade="all, delete-orphan", uselist=False
     )
+    gap_analysis: Mapped[Optional["GapAnalysis"]] = relationship(
+        back_populates="state", cascade="all, delete-orphan", uselist=False
+    )
 
     def __repr__(self) -> str:
         return f"<State(id={self.id}, name='{self.name}', abbreviation='{self.abbreviation}')>"
@@ -240,3 +243,111 @@ class StateAnalysis(Base):
 
     def __repr__(self) -> str:
         return f"<StateAnalysis(state_id={self.state_id}, tier={self.analysis_tier})>"
+
+
+class GapAnalysis(Base):
+    """
+    Gap analysis results for a state.
+
+    Stores the overall gap analysis comparing a target state
+    to NJ/LA baselines with effort estimates and projections.
+    """
+    __tablename__ = "gap_analyses"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state_id: Mapped[int] = mapped_column(ForeignKey("states.id"), nullable=False, unique=True)
+
+    # Analysis configuration
+    baseline_state: Mapped[str] = mapped_column(String(2), nullable=False)  # NJ or LA
+    analysis_status: Mapped[str] = mapped_column(String(50), default="pending")
+
+    # Gap counts
+    total_gaps: Mapped[int] = mapped_column(Integer, default=0)
+    critical_gaps: Mapped[int] = mapped_column(Integer, default=0)
+    major_gaps: Mapped[int] = mapped_column(Integer, default=0)
+    minor_gaps: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Effort estimates
+    total_effort_hours: Mapped[int] = mapped_column(Integer, default=0)
+    development_hours: Mapped[int] = mapped_column(Integer, default=0)
+    testing_hours: Mapped[int] = mapped_column(Integer, default=0)
+    certification_hours: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Timeline projections
+    projected_months: Mapped[int] = mapped_column(Integer, default=0)
+    projected_start_date: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    projected_end_date: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+
+    # Summary
+    executive_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    recommendation: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    risk_assessment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped["State"] = relationship(back_populates="gap_analysis")
+    gaps: Mapped[list["Gap"]] = relationship(
+        back_populates="gap_analysis", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<GapAnalysis(state_id={self.state_id}, gaps={self.total_gaps})>"
+
+
+class Gap(Base):
+    """
+    Individual gap between target state and baseline.
+
+    Represents a specific requirement or capability that needs
+    to be implemented for the target state.
+    """
+    __tablename__ = "gaps"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    gap_analysis_id: Mapped[int] = mapped_column(
+        ForeignKey("gap_analyses.id"), nullable=False
+    )
+
+    # Gap identification
+    gap_code: Mapped[str] = mapped_column(String(50), nullable=False)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Classification
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    # Categories: enrollment, attendance, grades, special_ed, assessments,
+    # staff, finance, reporting, integration, certification
+    severity: Mapped[str] = mapped_column(String(20), nullable=False)
+    # Severity: critical, major, minor
+
+    # Effort estimation
+    effort_hours: Mapped[int] = mapped_column(Integer, default=0)
+    complexity: Mapped[str] = mapped_column(String(20), default="medium")
+    # Complexity: low, medium, high, very_high
+
+    # Implementation details
+    baseline_feature: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    required_changes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    dependencies: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Status tracking
+    status: Mapped[str] = mapped_column(String(50), default="identified")
+    # Status: identified, in_progress, completed, deferred
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    gap_analysis: Mapped["GapAnalysis"] = relationship(back_populates="gaps")
+
+    def __repr__(self) -> str:
+        return f"<Gap(code={self.gap_code}, severity={self.severity})>"

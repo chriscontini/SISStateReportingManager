@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .database import init_db, close_db
-from .routers import states_router, rankings_router, auth_router
+from .routers import states_router, rankings_router, auth_router, gap_analysis_router
 
 
 @asynccontextmanager
@@ -44,6 +44,7 @@ app.add_middleware(
 app.include_router(states_router)
 app.include_router(rankings_router)
 app.include_router(auth_router)
+app.include_router(gap_analysis_router)
 
 
 @app.get("/health")
@@ -63,5 +64,6 @@ async def root():
             "states": "/api/states",
             "rankings": "/api/rankings",
             "auth": "/api/auth",
+            "gap_analysis": "/api/gap-analysis",
         },
     }

@@ -71,6 +71,16 @@ export default function AppShell({ children }: AppShellProps) {
                 >
                   Compare
                 </Link>
+                <Link
+                  href="/gap-analysis"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    pathname.startsWith('/gap-analysis')
+                      ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white'
+                      : 'text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800'
+                  }`}
+                >
+                  Gap Analysis
+                </Link>
                 <button
                   onClick={logout}
                   className="px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
