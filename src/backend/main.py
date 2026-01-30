@@ -17,7 +17,7 @@ from .config import settings
 from .database import init_db, close_db, get_db
 from .routers import states_router, rankings_router, auth_router, gap_analysis_router, roadmaps_router, knowledge_router
 from .models import State, StateScore, StateAnalysis, GapAnalysis, Roadmap, KnowledgeArticle
-from .middleware import setup_error_handlers
+from .middleware import setup_error_handlers, RequestLoggingMiddleware
 
 # Track application start time
 APP_START_TIME = datetime.utcnow()
@@ -42,6 +42,9 @@ app = FastAPI(
 
 # Setup error handlers
 setup_error_handlers(app)
+
+# Request logging middleware
+app.add_middleware(RequestLoggingMiddleware)
 
 # CORS middleware for frontend communication
 app.add_middleware(
