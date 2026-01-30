@@ -31,8 +31,37 @@ interface DashboardStats {
   avgScore: number;
 }
 
+interface Roadmap {
+  id: number;
+  state_id: number;
+  name: string;
+  total_months: number;
+  total_effort_hours: number;
+  peak_fte: number;
+  status: string;
+  start_date: string;
+  end_date: string;
+  state?: State;
+}
+
+interface Phase {
+  id: number;
+  name: string;
+  status: string;
+  start_month: number;
+  end_month: number;
+}
+
+interface Milestone {
+  id: number;
+  name: string;
+  target_month: number;
+  status: string;
+}
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +77,17 @@ export default function DashboardPage() {
         const statesRes = await fetch(`${API_URL}/api/states`);
         if (!statesRes.ok) throw new Error('Failed to fetch states');
         const statesData = await statesRes.json();
+
+        // Fetch roadmaps
+        try {
+          const roadmapsRes = await fetch(`${API_URL}/api/roadmaps/`);
+          if (roadmapsRes.ok) {
+            const roadmapsData = await roadmapsRes.json();
+            setRoadmaps(roadmapsData);
+          }
+        } catch (e) {
+          console.log('No roadmaps available yet');
+        }
 
         // Calculate stats
         const rankings = rankingsData.rankings || [];
@@ -318,6 +358,105 @@ export default function DashboardPage() {
                   : `${(stats?.totalStates || 50) - (stats?.statesAnalyzed || 0)} states remaining to be analyzed.`
               }
             </p>
+          </div>
+        </div>
+
+        {/* Implementation Roadmaps Widget */}
+        <div className="mt-8 bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Implementation Roadmaps
+              </h2>
+              <p className="text-sm text-gray-500">
+                Active expansion plans for target states
+              </p>
+            </div>
+            <Link
+              href="/roadmap"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              View All &rarr;
+            </Link>
+          </div>
+          <div className="p-6">
+            {roadmaps.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {roadmaps.map((roadmap) => {
+                  const startDate = new Date(roadmap.start_date);
+                  const endDate = new Date(roadmap.end_date);
+                  const now = new Date();
+                  const totalDuration = endDate.getTime() - startDate.getTime();
+                  const elapsed = Math.max(0, now.getTime() - startDate.getTime());
+                  const progressPercent = Math.min(100, Math.round((elapsed / totalDuration) * 100));
+
+                  return (
+                    <Link
+                      key={roadmap.id}
+                      href={`/roadmap?state=${roadmap.state_id}`}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {roadmap.state?.abbreviation || roadmap.name}
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            {roadmap.total_months} months
+                          </p>
+                        </div>
+                        <span className={`px-2 py-1 text-xs font-medium rounded ${
+                          roadmap.status === 'active'
+                            ? 'bg-green-100 text-green-800'
+                            : roadmap.status === 'completed'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {roadmap.status}
+                        </span>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="mb-2">
+                        <div className="flex justify-between text-xs text-gray-500 mb-1">
+                          <span>Progress</span>
+                          <span>{progressPercent}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-blue-600 h-2 rounded-full"
+                            style={{ width: `${progressPercent}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Key Metrics */}
+                      <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+                        <div className="bg-gray-50 rounded p-2">
+                          <div className="text-gray-500">Effort</div>
+                          <div className="font-medium text-gray-900">
+                            {roadmap.total_effort_hours.toLocaleString()}h
+                          </div>
+                        </div>
+                        <div className="bg-gray-50 rounded p-2">
+                          <div className="text-gray-500">Peak FTE</div>
+                          <div className="font-medium text-gray-900">
+                            {roadmap.peak_fte}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>No roadmaps generated yet.</p>
+                <Link href="/roadmap" className="text-blue-600 hover:underline mt-2 inline-block">
+                  Generate a roadmap for a target state
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </main>

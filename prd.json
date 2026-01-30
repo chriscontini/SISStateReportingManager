@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 4,
+  "current_sprint": 5,
   "stories": [
     {
       "id": "S2-001",
@@ -840,6 +840,284 @@
         "Rankings export",
         "Gap analysis export",
         "Includes all key metrics"
+      ]
+    },
+    {
+      "id": "S5-001",
+      "sprint": 5,
+      "title": "Create Roadmap model",
+      "description": "Create Roadmap model to store implementation roadmaps for target states. Include phases, milestones, and dependencies.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap model in models.py",
+        "RoadmapPhase model for phases",
+        "RoadmapMilestone model",
+        "Alembic migration created"
+      ]
+    },
+    {
+      "id": "S5-002",
+      "sprint": 5,
+      "title": "Create roadmap service",
+      "description": "Create roadmap_service.py with methods to generate implementation roadmaps based on gap analysis results.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "roadmap_service.py created",
+        "generate_roadmap() method",
+        "calculate_phase_durations() method",
+        "Uses LA benchmark for estimates"
+      ]
+    },
+    {
+      "id": "S5-003",
+      "sprint": 5,
+      "title": "Define roadmap phases",
+      "description": "Define standard implementation phases: Discovery, Development, Testing, Certification, Pilot, Rollout.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "ROADMAP_PHASES constant defined",
+        "Each phase has duration formula",
+        "Dependencies between phases",
+        "Phase descriptions"
+      ]
+    },
+    {
+      "id": "S5-004",
+      "sprint": 5,
+      "title": "Create roadmap API endpoints",
+      "description": "Add /api/roadmaps endpoints for generating, retrieving, and updating roadmaps.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/roadmaps/{state_id}/generate",
+        "GET /api/roadmaps/{state_id}",
+        "PATCH /api/roadmaps/{id}/phases",
+        "Returns structured roadmap data"
+      ]
+    },
+    {
+      "id": "S5-005",
+      "sprint": 5,
+      "title": "Generate roadmap for Maryland",
+      "description": "Generate implementation roadmap for MD using LA baseline. MD recommended as first expansion target.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD roadmap generated",
+        "Phases calculated from gap analysis",
+        "Timeline starts from today",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S5-006",
+      "sprint": 5,
+      "title": "Generate roadmap for Pennsylvania",
+      "description": "Generate implementation roadmap for PA with PIMS-specific phases and milestones.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA roadmap generated",
+        "PIMS certification milestone",
+        "Keystone assessment integration phase",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S5-007",
+      "sprint": 5,
+      "title": "Create roadmap page",
+      "description": "Create /roadmap page showing generated roadmaps with Gantt-style visualization.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "/roadmap page exists",
+        "State selector dropdown",
+        "Gantt chart visualization",
+        "Phase details on click"
+      ]
+    },
+    {
+      "id": "S5-008",
+      "sprint": 5,
+      "title": "Create Gantt chart component",
+      "description": "Create GanttChart component using Recharts to visualize roadmap phases and milestones.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "GanttChart component created",
+        "Horizontal timeline view",
+        "Phase bars with colors",
+        "Milestone markers"
+      ]
+    },
+    {
+      "id": "S5-009",
+      "sprint": 5,
+      "title": "Add roadmap export",
+      "description": "Add ability to export roadmap as CSV and printable PDF-style view.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "Export to CSV button",
+        "Print-friendly layout",
+        "Includes all phases and dates",
+        "Includes resource estimates"
+      ]
+    },
+    {
+      "id": "S5-010",
+      "sprint": 5,
+      "title": "Create KnowledgeArticle model",
+      "description": "Create KnowledgeArticle model for storing state-specific documentation and insights.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "KnowledgeArticle model created",
+        "Fields: title, content, state_id, category, source_url",
+        "Tags support",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S5-011",
+      "sprint": 5,
+      "title": "Create knowledge base service",
+      "description": "Create knowledge_service.py with methods to manage knowledge articles and search.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "knowledge_service.py created",
+        "create_article() method",
+        "search_articles() method",
+        "get_articles_by_state() method"
+      ]
+    },
+    {
+      "id": "S5-012",
+      "sprint": 5,
+      "title": "Create knowledge base API endpoints",
+      "description": "Add /api/knowledge endpoints for CRUD operations on knowledge articles.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/knowledge/articles",
+        "GET /api/knowledge/articles",
+        "GET /api/knowledge/articles/{id}",
+        "GET /api/knowledge/search?q="
+      ]
+    },
+    {
+      "id": "S5-013",
+      "sprint": 5,
+      "title": "Seed knowledge articles for target states",
+      "description": "Create seed data with key documentation for PA, TX, MD reporting requirements.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA PIMS articles created",
+        "TX PEIMS articles created",
+        "MD MSDE articles created",
+        "Minimum 5 articles per state"
+      ]
+    },
+    {
+      "id": "S5-014",
+      "sprint": 5,
+      "title": "Create knowledge base page",
+      "description": "Create /knowledge page with article listing, search, and filtering by state.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/knowledge page exists",
+        "Search bar",
+        "Filter by state",
+        "Article cards with preview"
+      ]
+    },
+    {
+      "id": "S5-015",
+      "sprint": 5,
+      "title": "Create knowledge article detail page",
+      "description": "Create /knowledge/[id] page showing full article content with related articles.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "/knowledge/[id] page exists",
+        "Full article content",
+        "Related articles sidebar",
+        "Source link"
+      ]
+    },
+    {
+      "id": "S5-016",
+      "sprint": 5,
+      "title": "Add roadmap to navigation",
+      "description": "Add Roadmap link to main navigation alongside Gap Analysis.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap in nav menu",
+        "Active state highlighting",
+        "Between Gap Analysis and Logout"
+      ]
+    },
+    {
+      "id": "S5-017",
+      "sprint": 5,
+      "title": "Add knowledge to navigation",
+      "description": "Add Knowledge Base link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Knowledge in nav menu",
+        "Active state highlighting",
+        "Accessible from all pages"
+      ]
+    },
+    {
+      "id": "S5-018",
+      "sprint": 5,
+      "title": "Create dashboard roadmap widget",
+      "description": "Add widget to dashboard showing active roadmaps with progress indicators.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap widget on dashboard",
+        "Shows active state roadmaps",
+        "Progress percentage",
+        "Next milestone date"
+      ]
+    },
+    {
+      "id": "S5-019",
+      "sprint": 5,
+      "title": "Create resource allocation view",
+      "description": "Add resource allocation section to roadmap showing FTE requirements by phase.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Resource section on roadmap page",
+        "FTE by phase chart",
+        "Total team size estimate",
+        "Skill requirements list"
+      ]
+    },
+    {
+      "id": "S5-020",
+      "sprint": 5,
+      "title": "Create roadmap comparison view",
+      "description": "Add ability to compare roadmaps for multiple states side-by-side.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "Compare button on roadmap page",
+        "Multi-state selection",
+        "Timeline overlay",
+        "Resource comparison"
       ]
     }
   ]

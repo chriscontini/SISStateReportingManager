@@ -56,6 +56,12 @@ class State(Base):
     gap_analysis: Mapped[Optional["GapAnalysis"]] = relationship(
         back_populates="state", cascade="all, delete-orphan", uselist=False
     )
+    roadmap: Mapped[Optional["Roadmap"]] = relationship(
+        back_populates="state", cascade="all, delete-orphan", uselist=False
+    )
+    knowledge_articles: Mapped[list["KnowledgeArticle"]] = relationship(
+        back_populates="state", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<State(id={self.id}, name='{self.name}', abbreviation='{self.abbreviation}')>"
@@ -351,3 +357,175 @@ class Gap(Base):
 
     def __repr__(self) -> str:
         return f"<Gap(code={self.gap_code}, severity={self.severity})>"
+
+
+class Roadmap(Base):
+    """Implementation roadmap for a state expansion."""
+
+    __tablename__ = "roadmaps"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state_id: Mapped[int] = mapped_column(ForeignKey("states.id"), nullable=False, unique=True)
+
+    # Roadmap metadata
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), default="draft")
+    # Status: draft, active, completed, on_hold
+
+    # Timeline
+    start_date: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    end_date: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    total_months: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Resource estimates
+    total_effort_hours: Mapped[int] = mapped_column(Integer, default=0)
+    peak_fte: Mapped[int] = mapped_column(Integer, default=0)
+    total_budget_estimate: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Source references
+    gap_analysis_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("gap_analyses.id"), nullable=True
+    )
+    baseline_state: Mapped[str] = mapped_column(String(2), default="NJ")
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped["State"] = relationship(back_populates="roadmap")
+    phases: Mapped[list["RoadmapPhase"]] = relationship(
+        back_populates="roadmap", cascade="all, delete-orphan"
+    )
+    milestones: Mapped[list["RoadmapMilestone"]] = relationship(
+        back_populates="roadmap", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Roadmap(state_id={self.state_id}, months={self.total_months})>"
+
+
+class RoadmapPhase(Base):
+    """A phase within an implementation roadmap."""
+
+    __tablename__ = "roadmap_phases"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    roadmap_id: Mapped[int] = mapped_column(ForeignKey("roadmaps.id"), nullable=False)
+
+    # Phase identification
+    phase_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Timeline
+    start_month: Mapped[int] = mapped_column(Integer, default=0)
+    duration_months: Mapped[int] = mapped_column(Integer, default=1)
+    end_month: Mapped[int] = mapped_column(Integer, default=1)
+
+    # Resources
+    effort_hours: Mapped[int] = mapped_column(Integer, default=0)
+    fte_required: Mapped[float] = mapped_column(Float, default=1.0)
+
+    # Status
+    status: Mapped[str] = mapped_column(String(50), default="pending")
+    # Status: pending, in_progress, completed
+    progress_percent: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Dependencies (comma-separated phase numbers)
+    dependencies: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+
+    # Deliverables
+    deliverables: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Relationships
+    roadmap: Mapped["Roadmap"] = relationship(back_populates="phases")
+
+    def __repr__(self) -> str:
+        return f"<RoadmapPhase(name={self.name}, months={self.duration_months})>"
+
+
+class RoadmapMilestone(Base):
+    """A milestone within an implementation roadmap."""
+
+    __tablename__ = "roadmap_milestones"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    roadmap_id: Mapped[int] = mapped_column(ForeignKey("roadmaps.id"), nullable=False)
+
+    # Milestone details
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    milestone_type: Mapped[str] = mapped_column(String(50), default="checkpoint")
+    # Types: checkpoint, deliverable, decision, external
+
+    # Timeline
+    target_month: Mapped[int] = mapped_column(Integer, nullable=False)
+    target_date: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+
+    # Status
+    status: Mapped[str] = mapped_column(String(50), default="pending")
+    # Status: pending, completed, missed, deferred
+    completed_date: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+
+    # Associated phase
+    phase_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("roadmap_phases.id"), nullable=True
+    )
+
+    # Relationships
+    roadmap: Mapped["Roadmap"] = relationship(back_populates="milestones")
+
+    def __repr__(self) -> str:
+        return f"<RoadmapMilestone(name={self.name}, month={self.target_month})>"
+
+
+class KnowledgeArticle(Base):
+    """Knowledge base article for state-specific documentation."""
+
+    __tablename__ = "knowledge_articles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Article content
+    title: Mapped[str] = mapped_column(String(300), nullable=False)
+    summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Categorization
+    state_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("states.id"), nullable=True
+    )
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    # Categories: reporting_requirements, certification, integration, best_practices, etc.
+    tags: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    # Comma-separated tags
+
+    # Source attribution
+    source_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    source_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    source_date: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+
+    # Metadata
+    author: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=True)
+    view_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped[Optional["State"]] = relationship(back_populates="knowledge_articles")
+
+    def __repr__(self) -> str:
+        return f"<KnowledgeArticle(title={self.title[:30]})>"

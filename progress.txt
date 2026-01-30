@@ -293,3 +293,60 @@ All 20 stories completed:
 Ready for Sprint 5: Roadmap Generation & Knowledge Base
 
 ---
+
+## Sprint 5 Goals
+
+- Create Roadmap and RoadmapPhase models
+- Build roadmap generation service using gap analysis data
+- Define standard phases: Discovery, Development, Testing, Certification, Pilot, Rollout
+- Generate roadmaps for MD (recommended) and PA
+- Create Gantt chart visualization for roadmaps
+- Create KnowledgeArticle model for state documentation
+- Build knowledge base service with search
+- Seed knowledge articles for PA, TX, MD
+- Create knowledge base pages with search and filtering
+- Add roadmap and knowledge to navigation
+- Create dashboard widgets for roadmaps
+
+---
+
+### Iteration 28
+- **Date**: 2026-01-30
+- **Story Completed**: S5-001 to S5-006 - Roadmap models, service, API, seed data
+- **Notes**: Created Roadmap, RoadmapPhase, RoadmapMilestone, KnowledgeArticle models. Created roadmap_service.py with 6 phases (Discovery, Development-Core, Development-Integration, Testing, Certification, Pilot). Created roadmaps.py router with generate, get, list, compare endpoints. Created seed_roadmaps.py for MD and PA. LA benchmark: 30 months, 15,000 hours, 5 FTE.
+
+### Iteration 29
+- **Date**: 2026-01-30
+- **Story Completed**: S5-007 to S5-009 - Roadmap UI and export
+- **Notes**: Created GanttChart.tsx component with phase bars and milestone markers. Created /roadmap page with state selector, Gantt visualization, phase details, milestones list, and CSV export.
+
+### Iteration 30
+- **Date**: 2026-01-30
+- **Story Completed**: S5-010 to S5-015 - Knowledge base models, service, API, pages
+- **Notes**: KnowledgeArticle model already created with roadmap migration. Created knowledge_service.py with CRUD, search, related articles, stats. Created knowledge.py router with articles CRUD, search, categories. Created seed_knowledge.py with 5 articles each for PA (PIMS), TX (PEIMS/TSDS), MD (MSDE). Created /knowledge page with search, state/category filtering. Created /knowledge/[id] with markdown rendering and related articles sidebar.
+
+### Iteration 31
+- **Date**: 2026-01-30
+- **Story Completed**: S5-016 to S5-020 - Navigation, dashboard widget, resources, comparison
+- **Notes**: Added Roadmap and Knowledge links to AppShell navigation. Added roadmap widget to dashboard showing active roadmaps with progress indicators. Created ResourceAllocation.tsx with FTE charts, skill requirements, LA benchmark comparison. Created RoadmapComparison.tsx for multi-state comparison with timeline, effort, and phase charts. Added tabs to roadmap page for Timeline, Resources, and Compare views.
+
+---
+
+## Sprint 5 Complete!
+
+All 20 stories completed:
+- S5-001 to S5-004: Roadmap models, service, phases definition, API endpoints
+- S5-005, S5-006: Roadmap generation for MD and PA
+- S5-007 to S5-009: Roadmap page, Gantt chart, CSV export
+- S5-010: KnowledgeArticle model (in roadmap migration)
+- S5-011, S5-012: Knowledge service and API endpoints
+- S5-013: Seed knowledge articles for PA, TX, MD (5 each)
+- S5-014, S5-015: Knowledge list and detail pages
+- S5-016, S5-017: Roadmap and Knowledge in navigation
+- S5-018: Dashboard roadmap widget with progress
+- S5-019: Resource allocation view with FTE charts and skill requirements
+- S5-020: Roadmap comparison view with multi-state timeline comparison
+
+Ready for Sprint 6: Polish & Deployment
+
+---
