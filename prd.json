@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 5,
+  "current_sprint": 6,
   "stories": [
     {
       "id": "S2-001",
@@ -1118,6 +1118,286 @@
         "Multi-state selection",
         "Timeline overlay",
         "Resource comparison"
+      ]
+    },
+    {
+      "id": "S6-001",
+      "sprint": 6,
+      "title": "Create unified seeding script",
+      "description": "Create master seed script that runs all seeders in correct order: states, NCES, scores, analysis, gaps, roadmaps, knowledge.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "seed_all.py script created",
+        "Runs seeders in dependency order",
+        "Idempotent (can run multiple times)",
+        "Progress output for each step"
+      ]
+    },
+    {
+      "id": "S6-002",
+      "sprint": 6,
+      "title": "Add Docker configuration",
+      "description": "Create Dockerfile and docker-compose.yml for easy deployment of backend and frontend.",
+      "priority": 2,
+      "passes": false,
+      "acceptance_criteria": [
+        "Dockerfile for backend",
+        "Dockerfile for frontend",
+        "docker-compose.yml with services",
+        "PostgreSQL and Redis containers"
+      ]
+    },
+    {
+      "id": "S6-003",
+      "sprint": 6,
+      "title": "Create environment configuration",
+      "description": "Create .env.example files with documented environment variables for both backend and frontend.",
+      "priority": 3,
+      "passes": false,
+      "acceptance_criteria": [
+        ".env.example for backend",
+        ".env.example for frontend",
+        "All variables documented",
+        "Sensible defaults where possible"
+      ]
+    },
+    {
+      "id": "S6-004",
+      "sprint": 6,
+      "title": "Add API error handling middleware",
+      "description": "Create centralized error handling middleware with consistent error response format.",
+      "priority": 4,
+      "passes": false,
+      "acceptance_criteria": [
+        "Error handler middleware created",
+        "Consistent error response format",
+        "Logging for errors",
+        "Client-friendly error messages"
+      ]
+    },
+    {
+      "id": "S6-005",
+      "sprint": 6,
+      "title": "Add loading skeletons to frontend",
+      "description": "Add skeleton loading states to main pages for better UX during data fetching.",
+      "priority": 5,
+      "passes": false,
+      "acceptance_criteria": [
+        "Skeleton component created",
+        "Dashboard loading skeleton",
+        "Rankings loading skeleton",
+        "Roadmap loading skeleton"
+      ]
+    },
+    {
+      "id": "S6-006",
+      "sprint": 6,
+      "title": "Implement toast notifications",
+      "description": "Add toast notification system for success/error feedback on user actions.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "Toast component created",
+        "Toast context/provider",
+        "Success/error/info variants",
+        "Auto-dismiss with manual close"
+      ]
+    },
+    {
+      "id": "S6-007",
+      "sprint": 6,
+      "title": "Add mobile responsive fixes",
+      "description": "Review and fix mobile responsiveness across all pages, especially tables and charts.",
+      "priority": 7,
+      "passes": false,
+      "acceptance_criteria": [
+        "Rankings table scrollable on mobile",
+        "Charts resize properly",
+        "Navigation mobile menu works",
+        "Forms usable on small screens"
+      ]
+    },
+    {
+      "id": "S6-008",
+      "sprint": 6,
+      "title": "Create API documentation page",
+      "description": "Add /docs page linking to FastAPI auto-docs and explaining key endpoints.",
+      "priority": 8,
+      "passes": false,
+      "acceptance_criteria": [
+        "/api-docs page created",
+        "Links to /docs (Swagger)",
+        "Key endpoints documented",
+        "Authentication explained"
+      ]
+    },
+    {
+      "id": "S6-009",
+      "sprint": 6,
+      "title": "Add data export for all views",
+      "description": "Add CSV export buttons to rankings, gap analysis, and knowledge base pages.",
+      "priority": 9,
+      "passes": false,
+      "acceptance_criteria": [
+        "Rankings CSV export",
+        "Gap analysis CSV export",
+        "Knowledge articles export",
+        "Consistent export format"
+      ]
+    },
+    {
+      "id": "S6-010",
+      "sprint": 6,
+      "title": "Create print-friendly views",
+      "description": "Add print stylesheets for executive summary, gap analysis, and roadmap pages.",
+      "priority": 10,
+      "passes": false,
+      "acceptance_criteria": [
+        "Print CSS for key pages",
+        "Hide navigation on print",
+        "Page breaks at logical points",
+        "Charts render for print"
+      ]
+    },
+    {
+      "id": "S6-011",
+      "sprint": 6,
+      "title": "Add unit tests for services",
+      "description": "Create unit tests for scoring, gap, and roadmap services.",
+      "priority": 11,
+      "passes": false,
+      "acceptance_criteria": [
+        "tests/unit directory created",
+        "Scoring service tests",
+        "Gap service tests",
+        "Roadmap service tests"
+      ]
+    },
+    {
+      "id": "S6-012",
+      "sprint": 6,
+      "title": "Add API integration tests",
+      "description": "Create integration tests for main API endpoints using pytest.",
+      "priority": 12,
+      "passes": false,
+      "acceptance_criteria": [
+        "tests/integration directory",
+        "States API tests",
+        "Rankings API tests",
+        "Auth flow tests"
+      ]
+    },
+    {
+      "id": "S6-013",
+      "sprint": 6,
+      "title": "Create health check endpoint enhancements",
+      "description": "Enhance /health endpoint to check database connectivity and return detailed status.",
+      "priority": 13,
+      "passes": false,
+      "acceptance_criteria": [
+        "Database connectivity check",
+        "Service status details",
+        "Response time metrics",
+        "Version information"
+      ]
+    },
+    {
+      "id": "S6-014",
+      "sprint": 6,
+      "title": "Add request logging middleware",
+      "description": "Add middleware to log all API requests with timing and user info.",
+      "priority": 14,
+      "passes": false,
+      "acceptance_criteria": [
+        "Request logging middleware",
+        "Response time logging",
+        "User identification",
+        "Configurable log level"
+      ]
+    },
+    {
+      "id": "S6-015",
+      "sprint": 6,
+      "title": "Create admin statistics endpoint",
+      "description": "Add /api/admin/stats endpoint returning system statistics for monitoring.",
+      "priority": 15,
+      "passes": false,
+      "acceptance_criteria": [
+        "/api/admin/stats endpoint",
+        "Database record counts",
+        "API usage stats",
+        "Last activity timestamps"
+      ]
+    },
+    {
+      "id": "S6-016",
+      "sprint": 6,
+      "title": "Add dark mode toggle persistence",
+      "description": "Persist dark mode preference in localStorage and apply on page load.",
+      "priority": 16,
+      "passes": false,
+      "acceptance_criteria": [
+        "Dark mode preference saved",
+        "Applied on initial load",
+        "Toggle in navigation",
+        "System preference fallback"
+      ]
+    },
+    {
+      "id": "S6-017",
+      "sprint": 6,
+      "title": "Create onboarding tour",
+      "description": "Add optional guided tour for new users highlighting key features.",
+      "priority": 17,
+      "passes": false,
+      "acceptance_criteria": [
+        "Tour component created",
+        "Highlights key features",
+        "Skip/dismiss option",
+        "Only shows once"
+      ]
+    },
+    {
+      "id": "S6-018",
+      "sprint": 6,
+      "title": "Add keyboard shortcuts",
+      "description": "Implement keyboard shortcuts for common actions (search, navigation).",
+      "priority": 18,
+      "passes": false,
+      "acceptance_criteria": [
+        "Cmd/Ctrl+K for search",
+        "Escape to close modals",
+        "Arrow keys for navigation",
+        "Shortcuts help modal"
+      ]
+    },
+    {
+      "id": "S6-019",
+      "sprint": 6,
+      "title": "Create deployment documentation",
+      "description": "Write deployment guide covering Docker, environment setup, and database migration.",
+      "priority": 19,
+      "passes": false,
+      "acceptance_criteria": [
+        "DEPLOYMENT.md created",
+        "Docker deployment steps",
+        "Environment configuration",
+        "Database setup instructions"
+      ]
+    },
+    {
+      "id": "S6-020",
+      "sprint": 6,
+      "title": "Final QA and bug fixes",
+      "description": "Perform final QA pass and fix any remaining bugs or UI issues.",
+      "priority": 20,
+      "passes": false,
+      "acceptance_criteria": [
+        "All pages tested",
+        "No console errors",
+        "Forms validate properly",
+        "Navigation works correctly"
       ]
     }
   ]
