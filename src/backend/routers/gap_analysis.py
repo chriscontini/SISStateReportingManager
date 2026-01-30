@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..database import get_session
+from ..database import get_db
 from ..services.gap_service import GapService
 from ..models import GapAnalysis, Gap
 
@@ -86,7 +86,7 @@ class GapStatusUpdate(BaseModel):
 async def analyze_state(
     state_id: int,
     request: AnalyzeRequest = None,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Run gap analysis for a state.
@@ -135,7 +135,7 @@ async def analyze_state(
 @router.get("/{state_id}", response_model=GapAnalysisResponse)
 async def get_gap_analysis(
     state_id: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Get existing gap analysis for a state.
@@ -179,7 +179,7 @@ async def get_gaps(
     state_id: int,
     category: Optional[str] = Query(None, description="Filter by category"),
     severity: Optional[str] = Query(None, description="Filter by severity (critical, major, minor)"),
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Get gaps for a state's gap analysis with optional filtering.
@@ -204,7 +204,7 @@ async def get_gaps(
 async def update_gap_status(
     gap_id: int,
     update: GapStatusUpdate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Update the status of a specific gap.
@@ -229,7 +229,7 @@ async def update_gap_status(
 
 @router.get("/", response_model=list[GapAnalysisSummary])
 async def list_gap_analyses(
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     List all gap analyses with summary information.
@@ -264,7 +264,7 @@ async def list_gap_analyses(
 @router.get("/compare", response_model=list[GapAnalysisSummary])
 async def compare_gap_analyses(
     ids: str = Query(..., description="Comma-separated state IDs to compare"),
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Compare gap analyses for multiple states.

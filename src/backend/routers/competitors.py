@@ -9,8 +9,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
-from database import get_db
-from services.competitive_service import (
+from ..database import get_db
+from ..services.competitive_service import (
     get_competitors,
     get_competitor_by_id,
     get_state_competitors,

@@ -10,7 +10,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from models import State, Competitor, StateCompetitor, CompetitorStrength
+from ..models import State, Competitor, StateCompetitor, CompetitorStrength
 
 
 async def get_competitors(db: AsyncSession) -> list[dict]:

@@ -10,7 +10,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from models import State, Product, ProductFeature, StateProductFit
+from ..models import State, Product, ProductFeature, StateProductFit
 
 
 async def get_products(db: AsyncSession) -> list[dict]:

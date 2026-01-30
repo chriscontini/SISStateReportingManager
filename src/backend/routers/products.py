@@ -8,8 +8,8 @@ and cross-sell opportunities.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_db
-from services.product_service import (
+from ..database import get_db
+from ..services.product_service import (
     get_products,
     get_product_by_id,
     get_hub_product,

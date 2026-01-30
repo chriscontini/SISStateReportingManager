@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..database import get_session
+from ..database import get_db
 from ..services.roadmap_service import RoadmapService
 from ..models import Roadmap, RoadmapPhase, RoadmapMilestone
 
@@ -103,7 +103,7 @@ class MilestoneStatusUpdate(BaseModel):
 async def generate_roadmap(
     state_id: int,
     request: GenerateRequest = None,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Generate an implementation roadmap for a state.
@@ -144,7 +144,7 @@ async def generate_roadmap(
 @router.get("/{state_id}", response_model=RoadmapResponse)
 async def get_roadmap(
     state_id: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Get existing roadmap for a state.
@@ -182,7 +182,7 @@ async def get_roadmap(
 @router.get("/{state_id}/phases", response_model=list[PhaseResponse])
 async def get_roadmap_phases(
     state_id: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Get all phases for a state's roadmap.
@@ -200,7 +200,7 @@ async def get_roadmap_phases(
 async def update_phase_status(
     phase_id: int,
     update: PhaseStatusUpdate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Update the status of a roadmap phase.
@@ -231,7 +231,7 @@ async def update_phase_status(
 async def update_milestone_status(
     milestone_id: int,
     update: MilestoneStatusUpdate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Update the status of a milestone.
@@ -256,7 +256,7 @@ async def update_milestone_status(
 
 @router.get("/", response_model=list[RoadmapSummary])
 async def list_roadmaps(
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     List all roadmaps with summary information.
@@ -301,7 +301,7 @@ async def list_roadmaps(
 @router.get("/compare", response_model=list[RoadmapResponse])
 async def compare_roadmaps(
     ids: str = Query(..., description="Comma-separated state IDs to compare"),
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Compare roadmaps for multiple states.
