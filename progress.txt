@@ -369,4 +369,9 @@ Ready for Sprint 6: Polish & Deployment
 - **Stories Completed**: S6-001 to S6-006, S6-019
 - **Notes**: Created seed_all.py unified seeding script with dependency ordering and idempotent checks. Updated docker-compose.yml with backend and frontend services. Created Dockerfiles for both services. Expanded .env.example with comprehensive documentation. Created error handling middleware with custom exceptions (APIError, NotFoundError, ValidationError, etc.) and request logging. Created Skeleton.tsx with multiple pre-built skeleton components (TableSkeleton, DashboardSkeleton, RoadmapSkeleton, etc.). Created Toast.tsx with ToastProvider context and success/error/warning/info variants. Created DEPLOYMENT.md with comprehensive deployment guide.
 
+### Iteration 33
+- **Date**: 2026-01-30
+- **Stories Completed**: S6-011 to S6-013, S6-015
+- **Notes**: Enhanced /health endpoint with database connectivity check, latency measurement, uptime tracking, and version info. Added /api/admin/stats endpoint with record counts for all models. Created tests/unit with test_roadmap_service.py (phase calculations, LA benchmark, milestone tests) and test_gap_service.py (severity levels, effort estimation, baseline comparison). Created tests/integration with test_api.py (health, states, auth, rankings, knowledge, roadmaps endpoints). Added pytest.ini with async support and markers. Setup error handlers in main.py.
+
 ---

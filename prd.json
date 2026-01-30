@@ -1266,7 +1266,7 @@
       "title": "Add unit tests for services",
       "description": "Create unit tests for scoring, gap, and roadmap services.",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "tests/unit directory created",
         "Scoring service tests",
@@ -1280,7 +1280,7 @@
       "title": "Add API integration tests",
       "description": "Create integration tests for main API endpoints using pytest.",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "tests/integration directory",
         "States API tests",
@@ -1294,7 +1294,7 @@
       "title": "Create health check endpoint enhancements",
       "description": "Enhance /health endpoint to check database connectivity and return detailed status.",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Database connectivity check",
         "Service status details",
