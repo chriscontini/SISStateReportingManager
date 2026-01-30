@@ -16,7 +16,16 @@ Enable regional SIS vendors to strategically grow their state footprint by:
 
 ### Current Status
 
-This project is in the **initial development stage**. The repository has been initialized but does not yet contain implementation code.
+**Sprint 6 Complete** - 100 stories implemented across 6 sprints.
+
+The application is fully functional with:
+- State rankings with 9 weighted scoring factors
+- AI-powered analysis using Claude API
+- Gap analysis comparing against NJ/LA baselines
+- Implementation roadmaps with Gantt visualization
+- Knowledge base with search
+- Docker deployment ready
+- 41 passing tests
 
 ## Core Application Modules
 
@@ -154,79 +163,61 @@ This project is in the **initial development stage**. The repository has been in
 
 ```
 SISStateReportingManager/
-├── README.md                    # Project overview
-├── CLAUDE.md                    # This file - AI assistant guidance
-└── .git/                        # Git version control
-```
-
-### Planned Architecture
-
-```
-SISStateReportingManager/
 ├── src/
-│   ├── research/                # State requirements research engine
-│   │   ├── scrapers/            # Web scraping for state docs
-│   │   ├── parsers/             # Document parsing utilities
-│   │   └── aggregators/         # Data consolidation
+│   ├── backend/                 # FastAPI backend
+│   │   ├── routers/             # API endpoint handlers
+│   │   │   ├── states.py        # State CRUD endpoints
+│   │   │   ├── rankings.py      # Ranking endpoints
+│   │   │   ├── gap_analysis.py  # Gap analysis endpoints
+│   │   │   ├── roadmaps.py      # Roadmap endpoints
+│   │   │   ├── knowledge.py     # Knowledge base endpoints
+│   │   │   └── auth.py          # Authentication endpoints
+│   │   ├── services/            # Business logic
+│   │   │   ├── scoring_service.py    # 9-factor scoring
+│   │   │   ├── claude_service.py     # Claude API integration
+│   │   │   ├── gap_service.py        # Gap detection
+│   │   │   ├── roadmap_service.py    # Roadmap generation
+│   │   │   ├── knowledge_service.py  # Knowledge management
+│   │   │   └── analysis_service.py   # Deep state analysis
+│   │   ├── models.py            # SQLAlchemy models
+│   │   ├── baselines.py         # NJ/LA capability baselines
+│   │   ├── nces_data.py         # NCES district/school data
+│   │   ├── config.py            # Settings from env
+│   │   ├── database.py          # Async DB connection
+│   │   ├── middleware.py        # Error handling, logging
+│   │   └── main.py              # FastAPI app entry
 │   │
-│   ├── matching/                # Capability matching system
-│   │   ├── analyzers/           # Feature comparison logic
-│   │   └── mappers/             # Data element mapping
-│   │
-│   ├── ranking/                 # State ranking engine
-│   │   ├── criteria/            # Ranking factor definitions
-│   │   ├── weights/             # Configurable weight system
-│   │   └── calculators/         # Score computation
-│   │
-│   ├── gap-analysis/            # Gap analysis module
-│   │   ├── comparators/         # Requirement comparison
-│   │   └── reporters/           # Gap report generation
-│   │
-│   ├── roadmap/                 # Roadmap generator
-│   │   ├── templates/           # Roadmap templates
-│   │   └── generators/          # Dynamic roadmap creation
-│   │
-│   ├── knowledge-base/          # Knowledge base builder
-│   │   ├── collectors/          # Content aggregation
-│   │   ├── indexers/            # Search indexing
-│   │   └── storage/             # Document storage
-│   │
-│   ├── chatbot/                 # AI development assistant
-│   │   ├── embeddings/          # Vector embeddings
-│   │   ├── retrieval/           # RAG implementation
-│   │   └── agents/              # Conversational agents
-│   │
-│   ├── competitive/             # Competitive intelligence
-│   │   ├── trackers/            # Competitor monitoring
-│   │   └── analyzers/           # Market analysis
-│   │
-│   ├── product-alignment/       # Hub & spoke analyzer
-│   │   └── evaluators/          # Product fit assessment
-│   │
-│   ├── api/                     # REST API endpoints
-│   ├── models/                  # Data models
-│   ├── services/                # Business logic services
-│   ├── utils/                   # Utility functions
-│   └── config/                  # Configuration management
-│
-├── data/
-│   ├── states/                  # State-specific data
-│   ├── requirements/            # Requirements databases
-│   ├── knowledge/               # Knowledge base content
-│   └── vendor/                  # Vendor capability data
+│   └── frontend/                # Next.js 14 frontend
+│       └── src/
+│           ├── app/             # App Router pages
+│           │   ├── dashboard/   # Main dashboard
+│           │   ├── states/      # State list and detail
+│           │   ├── rankings/    # Rankings with weights config
+│           │   ├── compare/     # State comparison
+│           │   ├── gap-analysis/# Gap analysis views
+│           │   ├── roadmap/     # Gantt chart roadmaps
+│           │   ├── knowledge/   # Knowledge base search
+│           │   └── login/       # Authentication
+│           └── components/      # Reusable components
+│               ├── charts/      # Recharts visualizations
+│               ├── AppShell.tsx # Layout with nav
+│               ├── AuthWrapper.tsx
+│               ├── ExportButton.tsx
+│               ├── KeyboardShortcuts.tsx
+│               └── OnboardingTour.tsx
 │
 ├── tests/                       # Test suites
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
+│   ├── unit/                    # Service unit tests
+│   ├── integration/             # API integration tests
+│   └── test_rankings.py         # Ranking validation tests
 │
-├── docs/                        # Documentation
-│   ├── architecture/
-│   ├── api/
-│   └── user-guides/
-│
-├── scripts/                     # Utility scripts
-└── config/                      # Environment configs
+├── docker-compose.yml           # Container orchestration
+├── Dockerfile.backend           # Backend container
+├── Dockerfile.frontend          # Frontend container
+├── .env.example                 # Environment template
+├── DEPLOYMENT.md                # Deployment guide
+├── CLAUDE.md                    # This file
+└── README.md                    # Project overview
 ```
 
 ## Development Guidelines
@@ -363,80 +354,116 @@ LOG_LEVEL=info
 
 **Never commit actual credentials to version control.**
 
-## Key Data Models (Conceptual)
+## Key Data Models (Implemented)
 
-```
+```python
+# src/backend/models.py
+
 State
 ├── id, name, abbreviation
-├── doeWebsite, reportingPortal
-├── certificationRequired (bool)
-└── reportingCalendar
+├── doe_website, reporting_portal
+├── total_districts, total_schools, total_students  # NCES data
+└── certification_required
 
-StateRequirement
-├── stateId, dataElementId
-├── description, format
-├── validationRules
-├── submissionFrequency
-└── effectiveDate, expirationDate
+StateScore
+├── state_id (FK)
+├── factor_name (district_structure, avg_district_size, market_opportunity, etc.)
+├── score (0-10)
+├── weight (configurable)
+├── tier (1/2/3, calculated)
+└── composite_score (weighted sum)
 
-DataElement
-├── id, name, cedsMapping
-├── dataType, constraints
-└── description
-
-VendorCapability
-├── dataElementId
-├── supportedStates[]
-├── implementationDetails
-└── customizationRequired
+StateAnalysis
+├── state_id (FK)
+├── analysis_type (tier2/competitive)
+├── content (JSON - requirements, competitors, insights)
+└── created_at
 
 GapAnalysis
-├── targetStateId
-├── missingElements[]
-├── partialElements[]
-├── estimatedEffort
-└── riskLevel
+├── state_id (FK)
+├── baseline_state (NJ or LA)
+├── total_gaps, critical_gaps
+├── total_effort_hours, projected_months
+└── gaps[] (relationship to Gap model)
 
-Competitor
-├── name, type (national/regional)
-├── statesServed[]
-├── strengths, weaknesses
-└── marketShare (estimated)
+Gap
+├── gap_analysis_id (FK)
+├── category (data_element, workflow, integration, etc.)
+├── description, severity
+└── effort_hours
+
+Roadmap
+├── state_id (FK)
+├── start_date, end_date
+├── total_months, total_hours
+└── phases[] (relationship to RoadmapPhase)
+
+RoadmapPhase
+├── roadmap_id (FK)
+├── phase_number, name (Discovery, Development, Testing, etc.)
+├── start_date, end_date, duration_months
+├── effort_hours, fte_required
+└── milestones[]
+
+KnowledgeArticle
+├── state_id (FK, nullable)
+├── title, content, category
+├── source_url, tags[]
+└── created_at, updated_at
 ```
 
-## API Endpoints (Planned)
+### Scoring Factors (9 total)
+
+| Factor | Weight | Description |
+|--------|--------|-------------|
+| development_effort | 3.0 | PRIMARY - AI-estimated dev effort |
+| technical_fit | 2.0 | Capability match with baselines |
+| district_structure | 1.5 | County-based (LA) vs fragmented (NJ) |
+| avg_district_size | 1.0 | Larger = higher ARPU |
+| market_opportunity | 1.0 | Total students/districts |
+| competitive_landscape | 1.0 | Fewer competitors = better |
+| certification_complexity | 1.0 | Open market preferred |
+| geographic_proximity | 0.5 | Distance from NJ HQ |
+| data_element_overlap | 1.0 | Feature coverage |
+
+## API Endpoints (Implemented)
 
 ```
-# State Research
-GET  /api/states                    # List all states with basic info
-GET  /api/states/:id/requirements   # State-specific requirements
-POST /api/states/:id/refresh        # Trigger research refresh
+# Authentication
+POST /api/auth/login               # Login with password, returns JWT
 
-# Ranking
-GET  /api/ranking                   # Get ranked state list
-POST /api/ranking/configure         # Update ranking weights
-GET  /api/ranking/factors           # Available ranking factors
+# States
+GET  /api/states                   # List all 50 states
+GET  /api/states/{id}              # Get state by ID
+GET  /api/states/{id}/detail       # Full state detail with NCES data
+GET  /api/states/{id}/analysis     # Deep Tier 2 analysis
+GET  /api/states/compare           # Compare multiple states (?ids=1,2,3)
+
+# Rankings
+GET  /api/rankings                 # Get ranked state list with scores
+GET  /api/rankings/factors         # List all ranking factors with weights
+PATCH /api/rankings/factors/{id}   # Update factor weight
+POST /api/rankings/calculate       # Trigger score recalculation
 
 # Gap Analysis
-POST /api/gap-analysis              # Generate gap analysis
-GET  /api/gap-analysis/:stateId     # Get existing analysis
+GET  /api/gap-analysis/{state_id}  # Get gap analysis for state
+GET  /api/gap-analysis/{state_id}/gaps  # List individual gaps
+POST /api/gap-analysis/{state_id}/analyze  # Run new analysis
 
-# Roadmap
-POST /api/roadmap/generate          # Generate implementation roadmap
-GET  /api/roadmap/:stateId          # Get existing roadmap
+# Roadmaps
+GET  /api/roadmaps/{state_id}      # Get roadmap for state
+POST /api/roadmaps/{state_id}/generate  # Generate new roadmap
+PATCH /api/roadmaps/{id}/phases    # Update phase dates
 
 # Knowledge Base
-GET  /api/knowledge/search          # Search knowledge base
-POST /api/knowledge/ingest          # Add new content
-GET  /api/knowledge/sources         # List content sources
+GET  /api/knowledge/articles       # List articles (filter by state)
+GET  /api/knowledge/articles/{id}  # Get article detail
+GET  /api/knowledge/search         # Search articles (?q=query)
+POST /api/knowledge/articles       # Create new article
 
-# Chatbot
-POST /api/chat                      # Send message to AI assistant
-GET  /api/chat/history              # Get conversation history
-
-# Competitive
-GET  /api/competitive/:stateId      # Competitive analysis for state
-GET  /api/competitive/national      # National competitor overview
+# System
+GET  /health                       # Health check with DB status
+GET  /api/admin/stats              # System statistics
 ```
 
 ## Resources
@@ -454,6 +481,37 @@ GET  /api/competitive/national      # National competitor overview
 - [CoSN (Consortium for School Networking)](https://www.cosn.org/)
 - [SETDA (State Educational Technology Directors Association)](https://www.setda.org/)
 
+## The LA Benchmark
+
+Louisiana serves as the success benchmark for state expansion:
+
+- **30 months** development timeline
+- **15,000 hours** total effort (100 productive hours/month × 5 FTE × 30 months)
+- **5 FTE** average team size
+- **6x higher ARPU** than NJ due to parish-based district model
+
+States with similar county-based structures (like MD's 24 LEAs) score higher in `district_structure` factor.
+
+## Key Commands
+
+```bash
+# Run tests
+pytest
+
+# Start with Docker
+docker-compose up -d
+docker-compose exec backend alembic upgrade head
+docker-compose exec backend python -m src.backend.seed_all
+
+# Manual backend start
+cd src/backend
+uvicorn main:app --reload
+
+# Manual frontend start
+cd src/frontend
+npm run dev
+```
+
 ---
 
-*Last updated: 2026-01-29*
+*Last updated: 2026-01-30*
