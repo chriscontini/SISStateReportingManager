@@ -1,7 +1,7 @@
 {
   "project": "SISStateReportingManager",
   "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
-  "current_sprint": 8,
+  "current_sprint": 9,
   "stories": [
     {
       "id": "S2-001",
@@ -1958,6 +1958,285 @@
         "CLAUDE.md updated",
         "API docs updated",
         "Tests passing"
+      ]
+    },
+    {
+      "id": "S9-001",
+      "sprint": 9,
+      "title": "Create Product model",
+      "description": "Create Product model to store company products (Hub SIS and Spoke products) with name, type, description, and features.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Product model in models.py",
+        "Fields: id, name, product_type, description, features",
+        "product_type enum: hub, spoke",
+        "is_core, launch_year fields"
+      ]
+    },
+    {
+      "id": "S9-002",
+      "sprint": 9,
+      "title": "Create ProductFeature model",
+      "description": "Create ProductFeature model to track individual features of each product with category and state applicability.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "ProductFeature model in models.py",
+        "Fields: product_id, name, category, description",
+        "state_specific boolean flag",
+        "complexity rating"
+      ]
+    },
+    {
+      "id": "S9-003",
+      "sprint": 9,
+      "title": "Create StateProductFit model",
+      "description": "Create junction model linking products to states with fit score and gap analysis.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateProductFit model in models.py",
+        "Fields: state_id, product_id, fit_score",
+        "gap_count, enhancement_opportunities",
+        "synergy_score for cross-sell"
+      ]
+    },
+    {
+      "id": "S9-004",
+      "sprint": 9,
+      "title": "Create product seed data",
+      "description": "Create seed file with OnCourse product portfolio: Hub SIS and Spoke products (LMS, Assessment, Finance, HR, etc.).",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_data.py with PRODUCTS list",
+        "Hub: OnCourse SIS with features",
+        "Spokes: LMS, Assessment, Special Ed, Finance, HR, Transportation",
+        "seed_products() async function"
+      ]
+    },
+    {
+      "id": "S9-005",
+      "sprint": 9,
+      "title": "Create product alignment service",
+      "description": "Create product_service.py with methods for analyzing product-state fit and alignment opportunities.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_service.py created",
+        "calculate_product_fit() method",
+        "analyze_hub_spoke_synergy() method",
+        "get_cross_sell_opportunities() method"
+      ]
+    },
+    {
+      "id": "S9-006",
+      "sprint": 9,
+      "title": "Implement state product analysis",
+      "description": "Add methods to analyze which products fit best with specific state requirements.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "analyze_state_product_fit() method",
+        "Returns fit scores per product",
+        "Identifies required customizations",
+        "Estimates integration effort"
+      ]
+    },
+    {
+      "id": "S9-007",
+      "sprint": 9,
+      "title": "Add bundling strategy analysis",
+      "description": "Create methods to analyze optimal product bundling strategies per state.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "get_bundling_recommendations() method",
+        "Analyzes competitor bundles",
+        "Calculates bundle value proposition",
+        "Suggests pricing tiers"
+      ]
+    },
+    {
+      "id": "S9-008",
+      "sprint": 9,
+      "title": "Calculate product alignment score factor",
+      "description": "Integrate product alignment into state scoring with hub_spoke_alignment factor.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_alignment_score() in scoring_service",
+        "Higher score = more product opportunities",
+        "Considers spoke cross-sell potential",
+        "Updates existing rankings"
+      ]
+    },
+    {
+      "id": "S9-009",
+      "sprint": 9,
+      "title": "Create products API router",
+      "description": "Create /api/products endpoints for listing products and features.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/products - list all products",
+        "GET /api/products/{id} - get detail with features",
+        "GET /api/products/{id}/states - states with fit data",
+        "GET /api/products/hub - get hub product"
+      ]
+    },
+    {
+      "id": "S9-010",
+      "sprint": 9,
+      "title": "Add state product endpoints",
+      "description": "Add endpoints to get product fit data for specific states.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/products",
+        "Returns products with fit scores",
+        "Includes customization requirements",
+        "Sorted by fit score descending"
+      ]
+    },
+    {
+      "id": "S9-011",
+      "sprint": 9,
+      "title": "Add alignment analysis endpoint",
+      "description": "Add endpoint to generate comprehensive product alignment analysis for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/product-alignment",
+        "Returns hub fit analysis",
+        "Returns spoke opportunities",
+        "Includes bundling recommendations"
+      ]
+    },
+    {
+      "id": "S9-012",
+      "sprint": 9,
+      "title": "Add cross-sell opportunities endpoint",
+      "description": "Add endpoint to identify cross-sell opportunities based on product portfolio.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/products/cross-sell?state_id=1",
+        "Lists spoke products by opportunity",
+        "Estimates revenue potential",
+        "Prioritizes by ease of sale"
+      ]
+    },
+    {
+      "id": "S9-013",
+      "sprint": 9,
+      "title": "Create products list page",
+      "description": "Create /products page showing company product portfolio with hub and spokes.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "/products page exists",
+        "Hub product highlighted",
+        "Spoke products listed",
+        "Links to product detail"
+      ]
+    },
+    {
+      "id": "S9-014",
+      "sprint": 9,
+      "title": "Create product detail page",
+      "description": "Create product detail page showing features and state fit analysis.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/products/[id] page",
+        "Shows product features",
+        "State fit heatmap",
+        "Top states for this product"
+      ]
+    },
+    {
+      "id": "S9-015",
+      "sprint": 9,
+      "title": "Add product alignment to state detail",
+      "description": "Add product alignment section to state detail page showing fit scores.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Products section on state detail",
+        "Hub fit score display",
+        "Spoke opportunity cards",
+        "Cross-sell recommendations"
+      ]
+    },
+    {
+      "id": "S9-016",
+      "sprint": 9,
+      "title": "Create hub-spoke visualization",
+      "description": "Add visualization showing hub-spoke product relationships and state opportunities.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Hub-spoke diagram component",
+        "Shows product relationships",
+        "State opportunity indicators",
+        "Interactive product selection"
+      ]
+    },
+    {
+      "id": "S9-017",
+      "sprint": 9,
+      "title": "Add products to navigation",
+      "description": "Add Products link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Products in nav menu",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S9-018",
+      "sprint": 9,
+      "title": "Add product alignment tests",
+      "description": "Create unit tests for product alignment features.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Product service unit tests",
+        "Fit score calculation tests",
+        "Cross-sell logic tests",
+        "Bundling recommendation tests"
+      ]
+    },
+    {
+      "id": "S9-019",
+      "sprint": 9,
+      "title": "Seed product data for all states",
+      "description": "Add product fit data for target states based on requirements analysis.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "STATE_PRODUCT_FIT mapping",
+        "Fit scores for top 10 states",
+        "Cross-sell opportunities identified",
+        "Integration estimates"
+      ]
+    },
+    {
+      "id": "S9-020",
+      "sprint": 9,
+      "title": "Final PRD and documentation update",
+      "description": "Update prd.json and CLAUDE.md to reflect Sprint 9 and project completion.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "All S9 stories pass",
+        "CLAUDE.md updated to Sprint 9",
+        "All 9 modules complete",
+        "160 stories total"
       ]
     }
   ]

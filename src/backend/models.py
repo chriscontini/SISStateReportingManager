@@ -758,3 +758,144 @@ class CompetitorStrength(Base):
 
     def __repr__(self) -> str:
         return f"<CompetitorStrength(competitor_id={self.competitor_id}, category='{self.category}')>"
+
+
+class Product(Base):
+    """Company product model (Hub SIS and Spoke products)."""
+
+    __tablename__ = "products"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Basic information
+    name: Mapped[str] = mapped_column(String(200), nullable=False, unique=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Classification
+    product_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    # Types: hub, spoke
+
+    # Product details
+    category: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # Categories: sis, lms, assessment, special_ed, finance, hr, transportation
+    is_core: Mapped[bool] = mapped_column(Boolean, default=False)
+    launch_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Market info
+    total_states: Mapped[int] = mapped_column(Integer, default=0)
+    total_districts: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    # Integration
+    integrates_with_hub: Mapped[bool] = mapped_column(Boolean, default=True)
+    integration_complexity: Mapped[str] = mapped_column(String(20), default="low")
+    # Complexity: low, medium, high
+
+    # Pricing (relative)
+    pricing_tier: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    # Tiers: entry, standard, premium, enterprise
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    features: Mapped[list["ProductFeature"]] = relationship(
+        back_populates="product", cascade="all, delete-orphan"
+    )
+    state_fits: Mapped[list["StateProductFit"]] = relationship(
+        back_populates="product", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Product(name='{self.name}', type='{self.product_type}')>"
+
+
+class ProductFeature(Base):
+    """Individual features of each product."""
+
+    __tablename__ = "product_features"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
+
+    # Feature details
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Classification
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    # Categories: core, reporting, integration, analytics, compliance, automation
+
+    # State applicability
+    is_state_specific: Mapped[bool] = mapped_column(Boolean, default=False)
+    applicable_states: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    # JSON array of state abbreviations if state-specific
+
+    # Complexity and effort
+    complexity: Mapped[str] = mapped_column(String(20), default="medium")
+    # Complexity: low, medium, high
+    customization_effort: Mapped[int] = mapped_column(Integer, default=0)
+    # Hours to customize for new state
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    product: Mapped["Product"] = relationship(back_populates="features")
+
+    def __repr__(self) -> str:
+        return f"<ProductFeature(product_id={self.product_id}, name='{self.name}')>"
+
+
+class StateProductFit(Base):
+    """Junction table linking products to states with fit analysis."""
+
+    __tablename__ = "state_product_fits"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state_id: Mapped[int] = mapped_column(ForeignKey("states.id"), nullable=False)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
+
+    # Fit scoring
+    fit_score: Mapped[float] = mapped_column(Float, default=0.0)
+    # Score: 0-10 scale
+
+    # Gap analysis
+    gap_count: Mapped[int] = mapped_column(Integer, default=0)
+    critical_gaps: Mapped[int] = mapped_column(Integer, default=0)
+    customization_hours: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Opportunity metrics
+    synergy_score: Mapped[float] = mapped_column(Float, default=0.0)
+    # Cross-sell synergy with other products
+    revenue_potential: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    # Estimated annual revenue
+
+    # Status
+    analysis_status: Mapped[str] = mapped_column(String(50), default="pending")
+    # Status: pending, analyzed, verified
+
+    # Notes
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    recommendations: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    state: Mapped["State"] = relationship()
+    product: Mapped["Product"] = relationship(back_populates="state_fits")
+
+    def __repr__(self) -> str:
+        return f"<StateProductFit(state_id={self.state_id}, product_id={self.product_id}, fit={self.fit_score})>"

@@ -8,6 +8,7 @@ from .roadmaps import router as roadmaps_router
 from .knowledge import router as knowledge_router
 from .chat import router as chat_router
 from .competitors import router as competitors_router
+from .products import router as products_router
 
 __all__ = [
     "states_router",
@@ -18,4 +19,5 @@ __all__ = [
     "knowledge_router",
     "chat_router",
     "competitors_router",
+    "products_router",
 ]
