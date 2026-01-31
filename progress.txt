@@ -1,0 +1,377 @@
+# SISStateReportingManager - Progress Log
+
+This file tracks learnings and insights across Ralph iterations.
+
+## Project Context
+
+- **Purpose**: AI-powered state expansion planning tool for OnCourse Systems for Education
+- **Goal**: Help identify best states for SIS market expansion based on development effort
+- **Timeline**: 12 weeks (6 sprints)
+- **Current Sprint**: 2 (Ranking Algorithm & AI Analysis)
+
+## Key Reference Files
+
+- `PRD.md` - Full product requirements document
+- `DEVELOPMENT_PLAN.md` - Sprint breakdown and tasks
+- `CLAUDE.md` - AI assistant guidelines
+- `prd.json` - Ralph task tracking
+
+## Technology Stack
+
+- **Backend**: Python + FastAPI
+- **Frontend**: Next.js + React + Tailwind
+- **Database**: PostgreSQL + pgvector
+- **LLM**: Claude API (Anthropic)
+- **Hosting**: Netlify (frontend) + Railway/Render (backend)
+
+## Preliminary Target States
+
+1. Pennsylvania (PA)
+2. Texas (TX)
+3. Maryland (MD)
+
+## Sprint 1 Goals
+
+- Set up project infrastructure
+- Create database models (State, StateRequirement, RankingFactor, StateScore, NCESData)
+- Seed all 50 states with DOE URLs
+- Create basic API endpoints
+- Set up frontend with Next.js
+
+## Learnings & Patterns
+
+*(Updated after each Ralph iteration)*
+
+---
+
+## Iteration Log
+
+### Iteration 1
+- **Date**: 2026-01-29
+- **Story Completed**: S1-001 - Create backend project structure
+- **Notes**: Created src/backend with FastAPI app. Included CORS middleware for frontend. Added comprehensive requirements.txt with all planned dependencies (SQLAlchemy, Alembic, anthropic, etc.)
+
+### Iteration 2
+- **Date**: 2026-01-29
+- **Story Completed**: S1-002 - Create frontend project structure
+- **Notes**: Used create-next-app with TypeScript, Tailwind CSS, ESLint, App Router, and src directory. Next.js 16.1.6, React 19.2.3.
+
+### Iteration 3
+- **Date**: 2026-01-29
+- **Story Completed**: S1-003, S1-005, S1-013, S1-014, S1-015 - All database models
+- **Notes**: Created comprehensive models.py with all interdependent models: State, StateRequirement, RankingFactor, StateScore, NCESData. Used SQLAlchemy 2.0 declarative style with Mapped type hints. All relationships and foreign keys defined.
+
+### Iteration 4
+- **Date**: 2026-01-29
+- **Story Completed**: S1-004, S1-016 - Database connection and config
+- **Notes**: Created config.py with Pydantic Settings, database.py with async SQLAlchemy engine. Added .env.example. Config includes simple password auth for internal tool.
+
+### Iteration 5
+- **Date**: 2026-01-29
+- **Story Completed**: S1-006, S1-007, S1-008, S1-017 - API layer (schemas, CRUD, routers)
+- **Notes**: Created comprehensive schemas.py with Pydantic models for all API responses. Built crud.py with async CRUD operations for states, ranking factors, scores, and NCES data. Created routers/states.py and routers/rankings.py with full REST endpoints. Rankings endpoint calculates weighted scores across factors.
+
+### Iteration 6
+- **Date**: 2026-01-29
+- **Story Completed**: S1-009, S1-010 - Seed data for all 50 states with DOE URLs
+- **Notes**: Created seed_data.py with complete STATES_DATA list for all 50 US states including Department of Education website URLs. Added DEFAULT_RANKING_FACTORS with 9 factors from PRD (Development Effort weight=3.0, District Structure=2.5, etc.). Async seed functions handle idempotent seeding.
+
+### Iteration 7
+- **Date**: 2026-01-29
+- **Story Completed**: S1-011 - Create Docker Compose for local development
+- **Notes**: Created docker-compose.yml with pgvector/pgvector:pg16 image (PostgreSQL 16 with pgvector). Added Redis service for future caching. Created scripts/init-db.sql to enable vector and uuid-ossp extensions on startup. Health checks configured for both services.
+
+### Iteration 8
+- **Date**: 2026-01-29
+- **Story Completed**: S1-012 - Add Alembic for database migrations
+- **Notes**: Set up Alembic with async SQLAlchemy support. Created alembic.ini, migrations/env.py with async engine configuration, and script.py.mako template. Created initial migration for all 5 tables: states, state_requirements, ranking_factors, state_scores, nces_data. All indexes and constraints included.
+
+### Iteration 9
+- **Date**: 2026-01-29
+- **Story Completed**: S1-018, S1-019, S1-020 - Frontend pages (homepage, states, rankings)
+- **Notes**: Updated layout.tsx with navigation and proper metadata. Created homepage with links to states and rankings. Built /states page with table fetching from API. Created /rankings page skeleton with ranking factors display and table structure ready for Sprint 2 scoring.
+
+---
+
+## Sprint 1 Complete!
+
+All 20 stories completed:
+- S1-001 to S1-008: Backend foundation (FastAPI, models, database, CRUD, routers)
+- S1-009 to S1-012: Infrastructure (seed data, Docker, Alembic)
+- S1-013 to S1-017: Additional models and ranking API
+- S1-018 to S1-020: Frontend pages
+
+Ready for Sprint 2: AI Research Integration
+
+---
+
+## Sprint 2 Goals
+
+- Seed NCES data for all 50 states (districts, schools, students)
+- Create Claude API service for AI-powered analysis
+- Implement scoring service with all 9 ranking factors
+- Add NJ/LA baseline capabilities for comparison
+- Build score calculation and weight configuration
+- Create state detail pages with score breakdowns
+- Validate rankings against NJ/LA benchmarks
+- Document ranking methodology
+
+---
+
+### Iteration 10
+- **Date**: 2026-01-29
+- **Story Completed**: S2-001 - Create NCES data seed file
+- **Notes**: Created nces_data.py with 2022-2023 NCES CCD data for all 50 states. Includes total_districts, total_schools, total_students. Documents county-based vs fragmented district models.
+
+### Iteration 11
+- **Date**: 2026-01-29
+- **Story Completed**: S2-002 - Create Claude API service
+- **Notes**: Created services/claude_service.py with async Anthropic client. Rate limiting (10/min), 24hr caching. Methods: analyze_state_complexity(), estimate_development_effort(), evaluate_technical_fit(), analyze_competitive_landscape().
+
+### Iteration 12
+- **Date**: 2026-01-29
+- **Story Completed**: S2-003 to S2-012 - Scoring service with all factors
+- **Notes**: Created scoring_service.py with all 9 ranking methods. Created baselines.py with NJ_CAPABILITIES and LA_CAPABILITIES including LA expansion success metrics (6x ARPU). Non-AI methods use NCES data and heuristics; AI methods use Claude for deeper analysis.
+
+### Iteration 13
+- **Date**: 2026-01-29
+- **Story Completed**: S2-013, S2-014 - API endpoints for calculation and weight updates
+- **Notes**: Added POST /api/rankings/calculate with use_ai parameter. Added PATCH /api/rankings/factors/{id} for weight updates. Both endpoints integrated with scoring service.
+
+### Iteration 14
+- **Date**: 2026-01-29
+- **Story Completed**: S2-015, S2-016, S2-017, S2-018 - Frontend enhancements
+- **Notes**: Created state detail page at /states/[id] with NCES data and score breakdown. Updated rankings page with weight configuration UI (number inputs), sorting by any column, and filtering by search/min score. Added GET /api/states/{id}/detail endpoint returning full state data with scores, NCES data, and requirements.
+
+### Iteration 15
+- **Date**: 2026-01-29
+- **Story Completed**: S2-019 - Validate NJ and LA rankings
+- **Notes**: Created tests/test_rankings.py with comprehensive validation tests. Tests verify LA ranks favorably due to parish model, NJ serves as baseline, and scoring logic is correct. Documents LA expansion success (6x ARPU).
+
+### Iteration 16
+- **Date**: 2026-01-29
+- **Story Completed**: S2-020 - Ranking methodology documentation
+- **Notes**: Created /rankings/methodology page documenting all 9 ranking factors with weights, scoring methodology, and data sources. Includes LA success story as validation of the ranking model.
+
+---
+
+## Sprint 2 Complete!
+
+All 20 stories completed:
+- S2-001: NCES data seed file for all 50 states
+- S2-002: Claude API service with rate limiting and caching
+- S2-003 to S2-012: Scoring service with all 9 ranking factors
+- S2-013, S2-014: Score calculation and weight update endpoints
+- S2-015: Ranking weights configuration UI
+- S2-016: State detail API endpoint
+- S2-017: State detail page
+- S2-018: Sorting and filtering for rankings
+- S2-019: NJ/LA ranking validation tests
+- S2-020: Ranking methodology documentation
+
+Ready for Sprint 3: Dashboard & Deep Analysis
+
+---
+
+## Sprint 3 Goals
+
+- Build executive dashboard with widgets
+- Implement tier classification (Tier 1/2/3)
+- Perform Tier 2 deep analysis for PA, TX, MD
+- Create state comparison view
+- Add data visualization (charts)
+- Implement simple password authentication
+
+---
+
+### Iteration 17
+- **Date**: 2026-01-29
+- **Story Completed**: S3-001 to S3-006 - Dashboard and models
+- **Notes**: Created /dashboard page with stats cards and top 10 widget. Added tier field to StateScore model. Created StateAnalysis model for deep analysis. Created TierBadge component with color-coded badges (green/yellow/red).
+
+### Iteration 18
+- **Date**: 2026-01-29
+- **Story Completed**: S3-007 to S3-010 - Analysis service and data
+- **Notes**: Created analysis_service.py with AI-powered state analysis. Created seed_analysis.py with comprehensive Tier 2 analysis for PA, TX, MD including competitive intel, certification, and implementation insights.
+
+### Iteration 19
+- **Date**: 2026-01-29
+- **Story Completed**: S3-011 to S3-014 - Analysis API and comparison
+- **Notes**: Added GET /api/states/{id}/analysis and /api/states/compare endpoints. Created /compare page for side-by-side state comparison. Added analysis tab to state detail page.
+
+### Iteration 20
+- **Date**: 2026-01-29
+- **Story Completed**: S3-015 to S3-017 - Chart components
+- **Notes**: Added Recharts dependency. Created ScoreRadarChart and TopStatesBarChart components. Added bar chart to dashboard, radar chart to state detail page.
+
+### Iteration 21
+- **Date**: 2026-01-29
+- **Story Completed**: S3-018 to S3-020 - Authentication
+- **Notes**: Created auth router with login/logout/status endpoints. Simple password auth with token-based sessions. Created /login page. Created AuthWrapper and AppShell components for protected routes with logout button.
+
+---
+
+## Sprint 3 Complete!
+
+All 20 stories completed:
+- S3-001 to S3-003: Dashboard with executive summary and top states widgets
+- S3-004 to S3-006: Tier classification model and StateAnalysis model
+- S3-007: Tier 2 analysis service with AI integration
+- S3-008 to S3-010: Tier 2 analysis data for PA, TX, MD
+- S3-011: State analysis API endpoint
+- S3-012: Analysis section on state detail page
+- S3-013 to S3-014: State comparison API and page
+- S3-015 to S3-017: Chart components (radar, bar) with Recharts
+- S3-018 to S3-020: Simple password authentication with protected routes
+
+Ready for Sprint 4: Gap Analysis & Validation
+
+---
+
+## Sprint 4 Goals
+
+- Create Gap and GapAnalysis models for tracking requirements gaps
+- Expand NJ and LA baselines with detailed capability mappings
+- Build gap detection service comparing states to baselines
+- Run gap analysis for PA, TX, MD
+- Create gap visualization with effort estimates
+- Add timeline projection view
+- Create executive summary report
+- Add CSV export functionality
+
+---
+
+### Iteration 22
+- **Date**: 2026-01-30
+- **Story Completed**: S4-001, S4-002 - Gap and GapAnalysis models
+- **Notes**: Created Gap and GapAnalysis models in models.py with full schema for tracking requirements gaps. Gap includes gap_code, severity, category, effort_hours, complexity. GapAnalysis includes effort estimates (total, dev, testing, certification hours), timeline projections, and executive summary fields. Added gap_analysis relationship to State model. Created Alembic migration 20260130_000003.
+
+### Iteration 23
+- **Date**: 2026-01-30
+- **Story Completed**: S4-003, S4-004 - Expand NJ/LA baselines
+- **Notes**: Massively expanded baselines.py with 50+ detailed capabilities per state organized by category (enrollment, attendance, grades, special_ed, assessments, staff, discipline, ell, cte, reporting, integration, certification). Each capability includes code, name, description, complexity, and effort_hours. Added helper functions: get_capability_count(), get_total_effort_hours(), find_matching_capability(), estimate_effort_from_la_benchmark(). LA capabilities include early_childhood category with CLASS observations and Pre-K tracking. LA expansion_metrics documents 30-month timeline and 15,000 development hours benchmark.
+
+### Iteration 24
+- **Date**: 2026-01-30
+- **Story Completed**: S4-005, S4-006, S4-007 - Gap service and API
+- **Notes**: Created gap_service.py with comprehensive gap detection and effort estimation. GapService class includes: select_baseline() (LA for county-based states), calculate_gap_severity(), estimate_gap_effort() with complexity multipliers, generate_state_specific_gaps() for PA/TX/MD-specific requirements (PIMS, PEIMS, MSDE), identify_baseline_gaps(), run_gap_analysis() main method. Created gap_analysis.py router with endpoints: POST /analyze, GET /{state_id}, GET /{state_id}/gaps, PATCH /gaps/{gap_id}/status, GET / (list all), GET /compare. Registered router in main.py.
+
+### Iteration 25
+- **Date**: 2026-01-30
+- **Story Completed**: S4-008, S4-009, S4-010 - Gap analysis for PA, TX, MD
+- **Notes**: Created seed_gap_analysis.py to run analysis for target states. PA uses NJ baseline with 8 PIMS-specific gaps (Act 158, Safe Schools, Keystone). TX uses NJ baseline with 10 PEIMS-specific gaps (TSDS integration, STAAR, TEA certification - highest effort). MD uses LA baseline with 6 MSDE-specific gaps (county model, MCAP, Bridge Plan - lowest effort). Effort estimation based on LA benchmark (15,000 hours / 30 months).
+
+### Iteration 26
+- **Date**: 2026-01-30
+- **Story Completed**: S4-011, S4-012, S4-014, S4-018 - Gap analysis UI and navigation
+- **Notes**: Created /gap-analysis page showing top 3 states with summary cards, recommendation banner, and full table. Created /gap-analysis/[id] detail page with effort breakdown bars, executive summary, recommendation, risk assessment, and filterable/sortable gaps table. Added Gap Analysis link to AppShell navigation.
+
+### Iteration 27
+- **Date**: 2026-01-30
+- **Story Completed**: S4-013, S4-015, S4-016, S4-017, S4-019, S4-020 - Charts, timeline, reports, export
+- **Notes**: Created GapCharts.tsx with category pie chart, severity bar chart, effort by category chart, and state comparison chart. Created TimelineProjection.tsx showing phases (Research, Dev, Testing, Cert) with LA benchmark comparison. Created ExecutiveSummary.tsx with print-friendly report and CSV export. Created ValidationChecklist.tsx with 11 items across 4 categories (Ranking, Gap, Effort, Data) with progress bar and export.
+
+---
+
+## Sprint 4 Complete!
+
+All 20 stories completed:
+- S4-001, S4-002: Gap and GapAnalysis models with Alembic migration
+- S4-003, S4-004: Expanded NJ/LA baselines with 50+ capabilities each
+- S4-005 to S4-007: Gap detection service and API endpoints
+- S4-008 to S4-010: Gap analysis for PA, TX, MD with state-specific gaps
+- S4-011, S4-012: Gap analysis list and detail pages
+- S4-013: Gap visualization charts (Recharts)
+- S4-014: Effort estimation display with breakdown
+- S4-015: Timeline projection component
+- S4-016: Gap comparison chart
+- S4-017: Executive summary report with print
+- S4-018: Gap Analysis in navigation
+- S4-019: Validation checklist for stakeholders
+- S4-020: CSV export functionality
+
+Ready for Sprint 5: Roadmap Generation & Knowledge Base
+
+---
+
+## Sprint 5 Goals
+
+- Create Roadmap and RoadmapPhase models
+- Build roadmap generation service using gap analysis data
+- Define standard phases: Discovery, Development, Testing, Certification, Pilot, Rollout
+- Generate roadmaps for MD (recommended) and PA
+- Create Gantt chart visualization for roadmaps
+- Create KnowledgeArticle model for state documentation
+- Build knowledge base service with search
+- Seed knowledge articles for PA, TX, MD
+- Create knowledge base pages with search and filtering
+- Add roadmap and knowledge to navigation
+- Create dashboard widgets for roadmaps
+
+---
+
+### Iteration 28
+- **Date**: 2026-01-30
+- **Story Completed**: S5-001 to S5-006 - Roadmap models, service, API, seed data
+- **Notes**: Created Roadmap, RoadmapPhase, RoadmapMilestone, KnowledgeArticle models. Created roadmap_service.py with 6 phases (Discovery, Development-Core, Development-Integration, Testing, Certification, Pilot). Created roadmaps.py router with generate, get, list, compare endpoints. Created seed_roadmaps.py for MD and PA. LA benchmark: 30 months, 15,000 hours, 5 FTE.
+
+### Iteration 29
+- **Date**: 2026-01-30
+- **Story Completed**: S5-007 to S5-009 - Roadmap UI and export
+- **Notes**: Created GanttChart.tsx component with phase bars and milestone markers. Created /roadmap page with state selector, Gantt visualization, phase details, milestones list, and CSV export.
+
+### Iteration 30
+- **Date**: 2026-01-30
+- **Story Completed**: S5-010 to S5-015 - Knowledge base models, service, API, pages
+- **Notes**: KnowledgeArticle model already created with roadmap migration. Created knowledge_service.py with CRUD, search, related articles, stats. Created knowledge.py router with articles CRUD, search, categories. Created seed_knowledge.py with 5 articles each for PA (PIMS), TX (PEIMS/TSDS), MD (MSDE). Created /knowledge page with search, state/category filtering. Created /knowledge/[id] with markdown rendering and related articles sidebar.
+
+### Iteration 31
+- **Date**: 2026-01-30
+- **Story Completed**: S5-016 to S5-020 - Navigation, dashboard widget, resources, comparison
+- **Notes**: Added Roadmap and Knowledge links to AppShell navigation. Added roadmap widget to dashboard showing active roadmaps with progress indicators. Created ResourceAllocation.tsx with FTE charts, skill requirements, LA benchmark comparison. Created RoadmapComparison.tsx for multi-state comparison with timeline, effort, and phase charts. Added tabs to roadmap page for Timeline, Resources, and Compare views.
+
+---
+
+## Sprint 5 Complete!
+
+All 20 stories completed:
+- S5-001 to S5-004: Roadmap models, service, phases definition, API endpoints
+- S5-005, S5-006: Roadmap generation for MD and PA
+- S5-007 to S5-009: Roadmap page, Gantt chart, CSV export
+- S5-010: KnowledgeArticle model (in roadmap migration)
+- S5-011, S5-012: Knowledge service and API endpoints
+- S5-013: Seed knowledge articles for PA, TX, MD (5 each)
+- S5-014, S5-015: Knowledge list and detail pages
+- S5-016, S5-017: Roadmap and Knowledge in navigation
+- S5-018: Dashboard roadmap widget with progress
+- S5-019: Resource allocation view with FTE charts and skill requirements
+- S5-020: Roadmap comparison view with multi-state timeline comparison
+
+Ready for Sprint 6: Polish & Deployment
+
+---
+
+## Sprint 6 Goals
+
+- Create unified seeding script for easy database initialization
+- Add Docker configuration for deployment
+- Create environment configuration templates
+- Add error handling middleware
+- Create loading skeletons and toast notifications
+- Add export functionality and print styles
+- Create unit and integration tests
+- Add deployment documentation
+
+---
+
+### Iteration 32
+- **Date**: 2026-01-30
+- **Stories Completed**: S6-001 to S6-006, S6-019
+- **Notes**: Created seed_all.py unified seeding script with dependency ordering and idempotent checks. Updated docker-compose.yml with backend and frontend services. Created Dockerfiles for both services. Expanded .env.example with comprehensive documentation. Created error handling middleware with custom exceptions (APIError, NotFoundError, ValidationError, etc.) and request logging. Created Skeleton.tsx with multiple pre-built skeleton components (TableSkeleton, DashboardSkeleton, RoadmapSkeleton, etc.). Created Toast.tsx with ToastProvider context and success/error/warning/info variants. Created DEPLOYMENT.md with comprehensive deployment guide.
+
+### Iteration 33
+- **Date**: 2026-01-30
+- **Stories Completed**: S6-011 to S6-013, S6-015
+- **Notes**: Enhanced /health endpoint with database connectivity check, latency measurement, uptime tracking, and version info. Added /api/admin/stats endpoint with record counts for all models. Created tests/unit with test_roadmap_service.py (phase calculations, LA benchmark, milestone tests) and test_gap_service.py (severity levels, effort estimation, baseline comparison). Created tests/integration with test_api.py (health, states, auth, rankings, knowledge, roadmaps endpoints). Added pytest.ini with async support and markers. Setup error handlers in main.py.
+
+---

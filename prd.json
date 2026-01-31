@@ -1,0 +1,2243 @@
+{
+  "project": "SISStateReportingManager",
+  "description": "AI-powered state expansion planning tool for OnCourse Systems for Education",
+  "current_sprint": 9,
+  "stories": [
+    {
+      "id": "S2-001",
+      "sprint": 2,
+      "title": "Create NCES data seed file",
+      "description": "Create src/backend/nces_data.py with real NCES data for all 50 states: total_districts, total_schools, total_students. Data year 2023.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "NCES_DATA list with all 50 states",
+        "Each state has district, school, student counts",
+        "seed_nces_data() async function created"
+      ]
+    },
+    {
+      "id": "S2-002",
+      "sprint": 2,
+      "title": "Create Claude API service",
+      "description": "Create src/backend/services/claude_service.py with async Claude API client for AI-powered analysis. Include rate limiting and error handling.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "src/backend/services/claude_service.py exists",
+        "ClaudeService class with async methods",
+        "analyze_state_complexity() method",
+        "Rate limiting implemented"
+      ]
+    },
+    {
+      "id": "S2-003",
+      "sprint": 2,
+      "title": "Create scoring service base",
+      "description": "Create src/backend/services/scoring_service.py with ScoringService class. Include methods to calculate and store scores for each factor.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "src/backend/services/scoring_service.py exists",
+        "ScoringService class created",
+        "calculate_all_scores() method",
+        "save_score() helper method"
+      ]
+    },
+    {
+      "id": "S2-004",
+      "sprint": 2,
+      "title": "Implement district structure scoring",
+      "description": "Add district_structure_score() to scoring service. Score based on county-based (like LA=64 parishes) vs fragmented districts (like NJ=600+). County-based scores higher.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "district_structure_score() method implemented",
+        "LA scores high (parish model)",
+        "NJ scores low (fragmented)",
+        "Scores 0-10 scale"
+      ]
+    },
+    {
+      "id": "S2-005",
+      "sprint": 2,
+      "title": "Implement average district size scoring",
+      "description": "Add avg_district_size_score() to scoring service. Calculate avg_district_size from NCES data, score higher for larger districts (higher ARPU potential).",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "avg_district_size_score() method implemented",
+        "Calculates from NCES total_students/total_districts",
+        "Larger districts score higher",
+        "Scores 0-10 scale"
+      ]
+    },
+    {
+      "id": "S2-006",
+      "sprint": 2,
+      "title": "Implement market opportunity scoring",
+      "description": "Add market_opportunity_score() to scoring service. Score based on total students and total districts from NCES data.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "market_opportunity_score() method implemented",
+        "Uses NCES student/district counts",
+        "Larger markets score higher",
+        "Scores 0-10 scale"
+      ]
+    },
+    {
+      "id": "S2-007",
+      "sprint": 2,
+      "title": "Add NJ and LA baseline capabilities",
+      "description": "Create src/backend/baselines.py with NJ_CAPABILITIES and LA_CAPABILITIES dictionaries describing current supported features, data elements, submission formats.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "src/backend/baselines.py exists",
+        "NJ_CAPABILITIES dictionary",
+        "LA_CAPABILITIES dictionary",
+        "Key features documented"
+      ]
+    },
+    {
+      "id": "S2-008",
+      "sprint": 2,
+      "title": "Implement technical fit scoring with AI",
+      "description": "Add technical_fit_score() to scoring service. Use Claude to analyze how closely a state's requirements match NJ/LA capabilities. Cache results.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "technical_fit_score() method implemented",
+        "Uses Claude API for analysis",
+        "Compares against NJ/LA baselines",
+        "Results cached in database"
+      ]
+    },
+    {
+      "id": "S2-009",
+      "sprint": 2,
+      "title": "Implement development effort scoring with AI",
+      "description": "Add development_effort_score() to scoring service. Use Claude to estimate effort based on DOE website complexity and existing capabilities. This is the PRIMARY factor.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "development_effort_score() method implemented",
+        "Uses Claude API for analysis",
+        "Lower effort = higher score",
+        "PRIMARY ranking factor (weight 3.0)"
+      ]
+    },
+    {
+      "id": "S2-010",
+      "sprint": 2,
+      "title": "Implement certification complexity scoring",
+      "description": "Add certification_complexity_score() to scoring service. Score based on whether state requires formal vendor certification vs open market.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "certification_complexity_score() method implemented",
+        "Open market scores higher",
+        "Formal certification scores lower",
+        "Scores 0-10 scale"
+      ]
+    },
+    {
+      "id": "S2-011",
+      "sprint": 2,
+      "title": "Implement competitive landscape scoring",
+      "description": "Add competitive_landscape_score() to scoring service. Score based on density of national/regional SIS competitors in state. Less competition = higher score.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitive_landscape_score() method implemented",
+        "Fewer competitors = higher score",
+        "Considers PowerSchool, Infinite Campus, Tyler",
+        "Scores 0-10 scale"
+      ]
+    },
+    {
+      "id": "S2-012",
+      "sprint": 2,
+      "title": "Implement geographic proximity scoring",
+      "description": "Add geographic_proximity_score() to scoring service. Score based on distance from NJ (current HQ). Closer states score slightly higher for support ease.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "geographic_proximity_score() method implemented",
+        "Closer to NJ = higher score",
+        "PA, MD, NY score high",
+        "West coast scores lower"
+      ]
+    },
+    {
+      "id": "S2-013",
+      "sprint": 2,
+      "title": "Create score calculation endpoint",
+      "description": "Add POST /api/rankings/calculate endpoint to trigger score calculation for all states. Returns job status.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/rankings/calculate endpoint exists",
+        "Triggers scoring service",
+        "Returns calculation status",
+        "Stores scores in database"
+      ]
+    },
+    {
+      "id": "S2-014",
+      "sprint": 2,
+      "title": "Add ranking factor weight update endpoint",
+      "description": "Add PATCH /api/rankings/factors/{id} endpoint to update factor weights. Allows configuring ranking importance.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "PATCH /api/rankings/factors/{id} endpoint exists",
+        "Updates factor weight",
+        "Validates weight is positive",
+        "Returns updated factor"
+      ]
+    },
+    {
+      "id": "S2-015",
+      "sprint": 2,
+      "title": "Create ranking weights configuration UI",
+      "description": "Add ranking factor weights configuration section to /rankings page. Allow adjusting weights with sliders or inputs.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Weights configuration UI on /rankings",
+        "Slider or number inputs for each factor",
+        "Save button calls PATCH endpoint",
+        "Updates trigger recalculation"
+      ]
+    },
+    {
+      "id": "S2-016",
+      "sprint": 2,
+      "title": "Add state detail API endpoint",
+      "description": "Add GET /api/states/{id}/detail endpoint returning full state data including NCES data, all scores, and requirements.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/detail endpoint exists",
+        "Returns state with NCES data",
+        "Includes all factor scores",
+        "Includes requirements if any"
+      ]
+    },
+    {
+      "id": "S2-017",
+      "sprint": 2,
+      "title": "Create state detail page",
+      "description": "Create /states/[id] page in frontend showing full state details, scores breakdown, and NCES data.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "/states/[id] page exists",
+        "Shows state name and DOE link",
+        "Displays NCES data",
+        "Shows score breakdown by factor"
+      ]
+    },
+    {
+      "id": "S2-018",
+      "sprint": 2,
+      "title": "Add sorting and filtering to rankings",
+      "description": "Update /rankings page with sorting by any column and filtering by minimum score threshold.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Click column header to sort",
+        "Filter by minimum total score",
+        "Sort ascending/descending toggle",
+        "Maintains state on page refresh"
+      ]
+    },
+    {
+      "id": "S2-019",
+      "sprint": 2,
+      "title": "Validate NJ and LA rankings",
+      "description": "Write validation test ensuring NJ and LA appear in appropriate positions (LA should rank favorably due to parish model). Add test file.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "tests/test_rankings.py exists",
+        "Test validates LA ranks favorably",
+        "Test validates NJ baseline",
+        "Documents expected behavior"
+      ]
+    },
+    {
+      "id": "S2-020",
+      "sprint": 2,
+      "title": "Create ranking methodology documentation",
+      "description": "Create /rankings/methodology page explaining all ranking factors, weights, and data sources. Include LA benchmark story.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "/rankings/methodology page exists",
+        "Documents all 9 factors",
+        "Explains weight system",
+        "Includes LA success story"
+      ]
+    },
+    {
+      "id": "S3-001",
+      "sprint": 3,
+      "title": "Create dashboard page layout",
+      "description": "Create /dashboard page with grid layout for widgets. Include header with navigation and main content area.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "/dashboard page exists",
+        "Grid layout for widgets",
+        "Navigation header",
+        "Responsive design"
+      ]
+    },
+    {
+      "id": "S3-002",
+      "sprint": 3,
+      "title": "Create executive summary widget",
+      "description": "Add executive summary widget to dashboard showing key metrics: total states analyzed, top 3 recommendations, and analysis status.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "Executive summary component",
+        "Shows total states analyzed",
+        "Shows top 3 state recommendations",
+        "Shows analysis completion status"
+      ]
+    },
+    {
+      "id": "S3-003",
+      "sprint": 3,
+      "title": "Create top states widget",
+      "description": "Add widget showing top 10 ranked states with scores. Link each state to detail page.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "Top states widget component",
+        "Shows top 10 states",
+        "Displays total score",
+        "Links to state detail page"
+      ]
+    },
+    {
+      "id": "S3-004",
+      "sprint": 3,
+      "title": "Create tier classification model",
+      "description": "Add tier field to StateScore model. Tier 1: scores > 70, Tier 2: 50-70, Tier 3: < 50. Create migration.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "tier field added to model",
+        "Tier calculation logic",
+        "Alembic migration created",
+        "Tiers assigned on score save"
+      ]
+    },
+    {
+      "id": "S3-005",
+      "sprint": 3,
+      "title": "Add tier indicators to UI",
+      "description": "Add color-coded tier badges to rankings table and state detail pages. Tier 1: green, Tier 2: yellow, Tier 3: red.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "Tier badge component",
+        "Color coding: green/yellow/red",
+        "Displayed on rankings table",
+        "Displayed on state detail page"
+      ]
+    },
+    {
+      "id": "S3-006",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis model",
+      "description": "Create StateAnalysis model for deep Tier 2/3 analysis. Include fields for detailed requirements, competitive intel, and AI insights.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateAnalysis model created",
+        "Fields for deep analysis data",
+        "Foreign key to State",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S3-007",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis service",
+      "description": "Create analysis_service.py with methods to perform deep analysis using Claude. Analyze reporting requirements, competitive landscape, certification process.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "analysis_service.py created",
+        "analyze_state_deep() method",
+        "Uses Claude for analysis",
+        "Saves to StateAnalysis model"
+      ]
+    },
+    {
+      "id": "S3-008",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Pennsylvania",
+      "description": "Run deep analysis for PA. Research PIMS reporting system, certification requirements, major competitors. Store results.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA analysis completed",
+        "PIMS system documented",
+        "Competitors identified",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-009",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Texas",
+      "description": "Run deep analysis for TX. Research PEIMS/TSDS reporting, TEA requirements, major competitors. Store results.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "TX analysis completed",
+        "PEIMS/TSDS documented",
+        "TEA requirements noted",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-010",
+      "sprint": 3,
+      "title": "Perform Tier 2 analysis for Maryland",
+      "description": "Run deep analysis for MD. Research county-based system (24 LEAs), MSDE requirements, competitors. Store results.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD analysis completed",
+        "County model documented",
+        "MSDE requirements noted",
+        "Results in database"
+      ]
+    },
+    {
+      "id": "S3-011",
+      "sprint": 3,
+      "title": "Create Tier 2 analysis API endpoint",
+      "description": "Add GET /api/states/{id}/analysis endpoint returning deep analysis data for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/analysis exists",
+        "Returns StateAnalysis data",
+        "404 if no analysis exists",
+        "Includes all analysis fields"
+      ]
+    },
+    {
+      "id": "S3-012",
+      "sprint": 3,
+      "title": "Add analysis section to state detail page",
+      "description": "Update /states/[id] page to show Tier 2 analysis data if available. Display competitive intel, requirements, and AI insights.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "Analysis section on detail page",
+        "Shows competitive intel",
+        "Shows detailed requirements",
+        "Shows AI insights"
+      ]
+    },
+    {
+      "id": "S3-013",
+      "sprint": 3,
+      "title": "Create state comparison API endpoint",
+      "description": "Add GET /api/states/compare?ids=1,2 endpoint returning side-by-side data for 2+ states.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/compare exists",
+        "Accepts multiple state IDs",
+        "Returns parallel data structure",
+        "Includes scores and NCES data"
+      ]
+    },
+    {
+      "id": "S3-014",
+      "sprint": 3,
+      "title": "Create state comparison page",
+      "description": "Create /compare page with side-by-side state comparison. Allow selecting 2-3 states to compare scores and data.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/compare page exists",
+        "State selection dropdowns",
+        "Side-by-side data display",
+        "Score comparison table"
+      ]
+    },
+    {
+      "id": "S3-015",
+      "sprint": 3,
+      "title": "Add radar chart component",
+      "description": "Create radar chart component using Recharts to visualize state scores across all 9 factors.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "RadarChart component created",
+        "Uses Recharts library",
+        "Shows all 9 factors",
+        "Supports multiple states overlay"
+      ]
+    },
+    {
+      "id": "S3-016",
+      "sprint": 3,
+      "title": "Add bar chart for rankings",
+      "description": "Create bar chart showing top 10 state scores on dashboard. Horizontal bars with state names and scores.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "BarChart component created",
+        "Shows top 10 states",
+        "Horizontal layout",
+        "Color-coded by tier"
+      ]
+    },
+    {
+      "id": "S3-017",
+      "sprint": 3,
+      "title": "Add charts to state detail page",
+      "description": "Add radar chart to state detail page showing score breakdown. Add comparison to NJ/LA baselines.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Radar chart on detail page",
+        "Shows state vs NJ baseline",
+        "Shows state vs LA baseline",
+        "Responsive sizing"
+      ]
+    },
+    {
+      "id": "S3-018",
+      "sprint": 3,
+      "title": "Implement simple password authentication",
+      "description": "Add /api/auth/login endpoint with simple password check from config. Return session token. Add middleware for protected routes.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/auth/login endpoint",
+        "Password from environment variable",
+        "Returns JWT or session token",
+        "Auth middleware created"
+      ]
+    },
+    {
+      "id": "S3-019",
+      "sprint": 3,
+      "title": "Create login page",
+      "description": "Create /login page with password input. Redirect to dashboard on success. Store token in localStorage.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "/login page exists",
+        "Password input field",
+        "Calls /api/auth/login",
+        "Redirects to dashboard on success"
+      ]
+    },
+    {
+      "id": "S3-020",
+      "sprint": 3,
+      "title": "Protect pages with auth check",
+      "description": "Add auth check to all pages except login. Redirect to login if not authenticated. Show loading state during check.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "Auth wrapper component",
+        "Checks token validity",
+        "Redirects unauthenticated users",
+        "Loading state during check"
+      ]
+    },
+    {
+      "id": "S4-001",
+      "sprint": 4,
+      "title": "Create Gap model for requirements gaps",
+      "description": "Create Gap model to track missing requirements between target state and NJ/LA baselines. Include fields for gap type, severity, effort estimate.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Gap model created in models.py",
+        "Fields: state_id, baseline_state, gap_type, description, severity, effort_hours",
+        "Alembic migration created",
+        "Foreign key to State"
+      ]
+    },
+    {
+      "id": "S4-002",
+      "sprint": 4,
+      "title": "Create GapAnalysis model for analysis results",
+      "description": "Create GapAnalysis model to store full gap analysis results for a state. Includes summary, total effort, timeline projection.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "GapAnalysis model created",
+        "Fields: state_id, baseline_used, total_gaps, critical_gaps, total_effort_hours, projected_months",
+        "Relationship to Gap model",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S4-003",
+      "sprint": 4,
+      "title": "Expand NJ baseline with detailed capabilities",
+      "description": "Expand baselines.py NJ_CAPABILITIES with detailed feature list including data elements, submission formats, integrations, and workflows.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "NJ_CAPABILITIES expanded with 50+ features",
+        "Categories: enrollment, attendance, grades, special_ed, assessments",
+        "Each feature has name, description, complexity",
+        "Documents NJ SMART integration"
+      ]
+    },
+    {
+      "id": "S4-004",
+      "sprint": 4,
+      "title": "Expand LA baseline with detailed capabilities",
+      "description": "Expand baselines.py LA_CAPABILITIES with detailed feature list. Document parish model specifics and what made LA expansion successful.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "LA_CAPABILITIES expanded with 50+ features",
+        "Documents parish-specific features",
+        "Includes SIS data submission details",
+        "Notes on 6x ARPU success factors"
+      ]
+    },
+    {
+      "id": "S4-005",
+      "sprint": 4,
+      "title": "Create gap detection service",
+      "description": "Create gap_service.py with methods to compare target state requirements against NJ/LA baselines and identify gaps.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "gap_service.py created",
+        "compare_to_baseline() method",
+        "identify_gaps() method",
+        "calculate_gap_severity() method"
+      ]
+    },
+    {
+      "id": "S4-006",
+      "sprint": 4,
+      "title": "Implement gap effort estimation",
+      "description": "Add effort estimation logic to gap service. Estimate hours based on gap type and complexity using LA benchmark data.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "estimate_gap_effort() method",
+        "Uses complexity multipliers",
+        "References LA timeline (30 months)",
+        "Returns effort in hours and FTE-months"
+      ]
+    },
+    {
+      "id": "S4-007",
+      "sprint": 4,
+      "title": "Create gap analysis API endpoints",
+      "description": "Add /api/gap-analysis endpoints for running analysis, retrieving results, and listing gaps for a state.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/gap-analysis/{state_id}/analyze",
+        "GET /api/gap-analysis/{state_id}",
+        "GET /api/gap-analysis/{state_id}/gaps",
+        "Returns structured gap data"
+      ]
+    },
+    {
+      "id": "S4-008",
+      "sprint": 4,
+      "title": "Run gap analysis for Pennsylvania",
+      "description": "Execute gap analysis for PA comparing against NJ baseline. Identify PIMS-specific gaps and estimate effort.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA gap analysis completed",
+        "PIMS gaps identified",
+        "Effort estimates calculated",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-009",
+      "sprint": 4,
+      "title": "Run gap analysis for Texas",
+      "description": "Execute gap analysis for TX comparing against NJ/LA baselines. Identify PEIMS-specific gaps and estimate effort.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "TX gap analysis completed",
+        "PEIMS/TSDS gaps identified",
+        "Effort estimates calculated",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-010",
+      "sprint": 4,
+      "title": "Run gap analysis for Maryland",
+      "description": "Execute gap analysis for MD comparing against LA baseline (county model). Identify MSDE gaps and estimate effort.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD gap analysis completed",
+        "Uses LA as primary baseline",
+        "County model gaps identified",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S4-011",
+      "sprint": 4,
+      "title": "Create gap analysis page",
+      "description": "Create /gap-analysis page showing gap analysis results for top states with summary cards and gap list.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "/gap-analysis page exists",
+        "Shows top 3 states summary",
+        "Displays gap counts by severity",
+        "Links to detailed gap view"
+      ]
+    },
+    {
+      "id": "S4-012",
+      "sprint": 4,
+      "title": "Create state gap detail page",
+      "description": "Create /gap-analysis/[id] page showing detailed gaps for a state with filtering and sorting.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "/gap-analysis/[id] page exists",
+        "Lists all gaps with details",
+        "Filter by severity/category",
+        "Sort by effort/priority"
+      ]
+    },
+    {
+      "id": "S4-013",
+      "sprint": 4,
+      "title": "Add gap visualization chart",
+      "description": "Add chart component showing gap distribution by category and severity using Recharts.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "GapChart component created",
+        "Pie/donut chart by category",
+        "Bar chart by severity",
+        "Interactive tooltips"
+      ]
+    },
+    {
+      "id": "S4-014",
+      "sprint": 4,
+      "title": "Implement effort estimation display",
+      "description": "Add effort estimation section to gap analysis page showing total hours, FTE-months, and timeline projection.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "Effort summary component",
+        "Shows total hours",
+        "Converts to FTE-months",
+        "Compares to LA benchmark"
+      ]
+    },
+    {
+      "id": "S4-015",
+      "sprint": 4,
+      "title": "Create timeline projection view",
+      "description": "Add timeline visualization showing projected implementation phases and milestones for each state.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Timeline component created",
+        "Shows phases: Research, Dev, Testing, Cert",
+        "Milestone markers",
+        "Total duration estimate"
+      ]
+    },
+    {
+      "id": "S4-016",
+      "sprint": 4,
+      "title": "Add gap comparison view",
+      "description": "Create view to compare gaps across multiple states side-by-side showing relative effort and complexity.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Multi-state gap comparison",
+        "Side-by-side effort display",
+        "Highlights easiest state",
+        "Recommendation summary"
+      ]
+    },
+    {
+      "id": "S4-017",
+      "sprint": 4,
+      "title": "Create executive summary report",
+      "description": "Create printable executive summary component with top 3 recommendations, key metrics, and action items.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Executive summary component",
+        "Top 3 state recommendations",
+        "Key decision metrics",
+        "Print-friendly styling"
+      ]
+    },
+    {
+      "id": "S4-018",
+      "sprint": 4,
+      "title": "Add gap analysis to navigation",
+      "description": "Add Gap Analysis link to main navigation and dashboard quick actions.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Gap Analysis in nav menu",
+        "Link on dashboard",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S4-019",
+      "sprint": 4,
+      "title": "Create validation checklist",
+      "description": "Create validation checklist component for stakeholder review of rankings and gap analysis results.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Validation checklist component",
+        "Ranking methodology check",
+        "Gap analysis check",
+        "Effort estimates check"
+      ]
+    },
+    {
+      "id": "S4-020",
+      "sprint": 4,
+      "title": "Add export functionality for reports",
+      "description": "Add ability to export gap analysis and rankings data as CSV for stakeholder review.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "Export to CSV button",
+        "Rankings export",
+        "Gap analysis export",
+        "Includes all key metrics"
+      ]
+    },
+    {
+      "id": "S5-001",
+      "sprint": 5,
+      "title": "Create Roadmap model",
+      "description": "Create Roadmap model to store implementation roadmaps for target states. Include phases, milestones, and dependencies.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap model in models.py",
+        "RoadmapPhase model for phases",
+        "RoadmapMilestone model",
+        "Alembic migration created"
+      ]
+    },
+    {
+      "id": "S5-002",
+      "sprint": 5,
+      "title": "Create roadmap service",
+      "description": "Create roadmap_service.py with methods to generate implementation roadmaps based on gap analysis results.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "roadmap_service.py created",
+        "generate_roadmap() method",
+        "calculate_phase_durations() method",
+        "Uses LA benchmark for estimates"
+      ]
+    },
+    {
+      "id": "S5-003",
+      "sprint": 5,
+      "title": "Define roadmap phases",
+      "description": "Define standard implementation phases: Discovery, Development, Testing, Certification, Pilot, Rollout.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "ROADMAP_PHASES constant defined",
+        "Each phase has duration formula",
+        "Dependencies between phases",
+        "Phase descriptions"
+      ]
+    },
+    {
+      "id": "S5-004",
+      "sprint": 5,
+      "title": "Create roadmap API endpoints",
+      "description": "Add /api/roadmaps endpoints for generating, retrieving, and updating roadmaps.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/roadmaps/{state_id}/generate",
+        "GET /api/roadmaps/{state_id}",
+        "PATCH /api/roadmaps/{id}/phases",
+        "Returns structured roadmap data"
+      ]
+    },
+    {
+      "id": "S5-005",
+      "sprint": 5,
+      "title": "Generate roadmap for Maryland",
+      "description": "Generate implementation roadmap for MD using LA baseline. MD recommended as first expansion target.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "MD roadmap generated",
+        "Phases calculated from gap analysis",
+        "Timeline starts from today",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S5-006",
+      "sprint": 5,
+      "title": "Generate roadmap for Pennsylvania",
+      "description": "Generate implementation roadmap for PA with PIMS-specific phases and milestones.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA roadmap generated",
+        "PIMS certification milestone",
+        "Keystone assessment integration phase",
+        "Results stored in database"
+      ]
+    },
+    {
+      "id": "S5-007",
+      "sprint": 5,
+      "title": "Create roadmap page",
+      "description": "Create /roadmap page showing generated roadmaps with Gantt-style visualization.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "/roadmap page exists",
+        "State selector dropdown",
+        "Gantt chart visualization",
+        "Phase details on click"
+      ]
+    },
+    {
+      "id": "S5-008",
+      "sprint": 5,
+      "title": "Create Gantt chart component",
+      "description": "Create GanttChart component using Recharts to visualize roadmap phases and milestones.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "GanttChart component created",
+        "Horizontal timeline view",
+        "Phase bars with colors",
+        "Milestone markers"
+      ]
+    },
+    {
+      "id": "S5-009",
+      "sprint": 5,
+      "title": "Add roadmap export",
+      "description": "Add ability to export roadmap as CSV and printable PDF-style view.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "Export to CSV button",
+        "Print-friendly layout",
+        "Includes all phases and dates",
+        "Includes resource estimates"
+      ]
+    },
+    {
+      "id": "S5-010",
+      "sprint": 5,
+      "title": "Create KnowledgeArticle model",
+      "description": "Create KnowledgeArticle model for storing state-specific documentation and insights.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "KnowledgeArticle model created",
+        "Fields: title, content, state_id, category, source_url",
+        "Tags support",
+        "Alembic migration"
+      ]
+    },
+    {
+      "id": "S5-011",
+      "sprint": 5,
+      "title": "Create knowledge base service",
+      "description": "Create knowledge_service.py with methods to manage knowledge articles and search.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "knowledge_service.py created",
+        "create_article() method",
+        "search_articles() method",
+        "get_articles_by_state() method"
+      ]
+    },
+    {
+      "id": "S5-012",
+      "sprint": 5,
+      "title": "Create knowledge base API endpoints",
+      "description": "Add /api/knowledge endpoints for CRUD operations on knowledge articles.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/knowledge/articles",
+        "GET /api/knowledge/articles",
+        "GET /api/knowledge/articles/{id}",
+        "GET /api/knowledge/search?q="
+      ]
+    },
+    {
+      "id": "S5-013",
+      "sprint": 5,
+      "title": "Seed knowledge articles for target states",
+      "description": "Create seed data with key documentation for PA, TX, MD reporting requirements.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "PA PIMS articles created",
+        "TX PEIMS articles created",
+        "MD MSDE articles created",
+        "Minimum 5 articles per state"
+      ]
+    },
+    {
+      "id": "S5-014",
+      "sprint": 5,
+      "title": "Create knowledge base page",
+      "description": "Create /knowledge page with article listing, search, and filtering by state.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/knowledge page exists",
+        "Search bar",
+        "Filter by state",
+        "Article cards with preview"
+      ]
+    },
+    {
+      "id": "S5-015",
+      "sprint": 5,
+      "title": "Create knowledge article detail page",
+      "description": "Create /knowledge/[id] page showing full article content with related articles.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "/knowledge/[id] page exists",
+        "Full article content",
+        "Related articles sidebar",
+        "Source link"
+      ]
+    },
+    {
+      "id": "S5-016",
+      "sprint": 5,
+      "title": "Add roadmap to navigation",
+      "description": "Add Roadmap link to main navigation alongside Gap Analysis.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap in nav menu",
+        "Active state highlighting",
+        "Between Gap Analysis and Logout"
+      ]
+    },
+    {
+      "id": "S5-017",
+      "sprint": 5,
+      "title": "Add knowledge to navigation",
+      "description": "Add Knowledge Base link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Knowledge in nav menu",
+        "Active state highlighting",
+        "Accessible from all pages"
+      ]
+    },
+    {
+      "id": "S5-018",
+      "sprint": 5,
+      "title": "Create dashboard roadmap widget",
+      "description": "Add widget to dashboard showing active roadmaps with progress indicators.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Roadmap widget on dashboard",
+        "Shows active state roadmaps",
+        "Progress percentage",
+        "Next milestone date"
+      ]
+    },
+    {
+      "id": "S5-019",
+      "sprint": 5,
+      "title": "Create resource allocation view",
+      "description": "Add resource allocation section to roadmap showing FTE requirements by phase.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Resource section on roadmap page",
+        "FTE by phase chart",
+        "Total team size estimate",
+        "Skill requirements list"
+      ]
+    },
+    {
+      "id": "S5-020",
+      "sprint": 5,
+      "title": "Create roadmap comparison view",
+      "description": "Add ability to compare roadmaps for multiple states side-by-side.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "Compare button on roadmap page",
+        "Multi-state selection",
+        "Timeline overlay",
+        "Resource comparison"
+      ]
+    },
+    {
+      "id": "S6-001",
+      "sprint": 6,
+      "title": "Create unified seeding script",
+      "description": "Create master seed script that runs all seeders in correct order: states, NCES, scores, analysis, gaps, roadmaps, knowledge.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "seed_all.py script created",
+        "Runs seeders in dependency order",
+        "Idempotent (can run multiple times)",
+        "Progress output for each step"
+      ]
+    },
+    {
+      "id": "S6-002",
+      "sprint": 6,
+      "title": "Add Docker configuration",
+      "description": "Create Dockerfile and docker-compose.yml for easy deployment of backend and frontend.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "Dockerfile for backend",
+        "Dockerfile for frontend",
+        "docker-compose.yml with services",
+        "PostgreSQL and Redis containers"
+      ]
+    },
+    {
+      "id": "S6-003",
+      "sprint": 6,
+      "title": "Create environment configuration",
+      "description": "Create .env.example files with documented environment variables for both backend and frontend.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        ".env.example for backend",
+        ".env.example for frontend",
+        "All variables documented",
+        "Sensible defaults where possible"
+      ]
+    },
+    {
+      "id": "S6-004",
+      "sprint": 6,
+      "title": "Add API error handling middleware",
+      "description": "Create centralized error handling middleware with consistent error response format.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "Error handler middleware created",
+        "Consistent error response format",
+        "Logging for errors",
+        "Client-friendly error messages"
+      ]
+    },
+    {
+      "id": "S6-005",
+      "sprint": 6,
+      "title": "Add loading skeletons to frontend",
+      "description": "Add skeleton loading states to main pages for better UX during data fetching.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "Skeleton component created",
+        "Dashboard loading skeleton",
+        "Rankings loading skeleton",
+        "Roadmap loading skeleton"
+      ]
+    },
+    {
+      "id": "S6-006",
+      "sprint": 6,
+      "title": "Implement toast notifications",
+      "description": "Add toast notification system for success/error feedback on user actions.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "Toast component created",
+        "Toast context/provider",
+        "Success/error/info variants",
+        "Auto-dismiss with manual close"
+      ]
+    },
+    {
+      "id": "S6-007",
+      "sprint": 6,
+      "title": "Add mobile responsive fixes",
+      "description": "Review and fix mobile responsiveness across all pages, especially tables and charts.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "Rankings table scrollable on mobile",
+        "Charts resize properly",
+        "Navigation mobile menu works",
+        "Forms usable on small screens"
+      ]
+    },
+    {
+      "id": "S6-008",
+      "sprint": 6,
+      "title": "Create API documentation page",
+      "description": "Add /docs page linking to FastAPI auto-docs and explaining key endpoints.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "/api-docs page created",
+        "Links to /docs (Swagger)",
+        "Key endpoints documented",
+        "Authentication explained"
+      ]
+    },
+    {
+      "id": "S6-009",
+      "sprint": 6,
+      "title": "Add data export for all views",
+      "description": "Add CSV export buttons to rankings, gap analysis, and knowledge base pages.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "Rankings CSV export",
+        "Gap analysis CSV export",
+        "Knowledge articles export",
+        "Consistent export format"
+      ]
+    },
+    {
+      "id": "S6-010",
+      "sprint": 6,
+      "title": "Create print-friendly views",
+      "description": "Add print stylesheets for executive summary, gap analysis, and roadmap pages.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "Print CSS for key pages",
+        "Hide navigation on print",
+        "Page breaks at logical points",
+        "Charts render for print"
+      ]
+    },
+    {
+      "id": "S6-011",
+      "sprint": 6,
+      "title": "Add unit tests for services",
+      "description": "Create unit tests for scoring, gap, and roadmap services.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "tests/unit directory created",
+        "Scoring service tests",
+        "Gap service tests",
+        "Roadmap service tests"
+      ]
+    },
+    {
+      "id": "S6-012",
+      "sprint": 6,
+      "title": "Add API integration tests",
+      "description": "Create integration tests for main API endpoints using pytest.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "tests/integration directory",
+        "States API tests",
+        "Rankings API tests",
+        "Auth flow tests"
+      ]
+    },
+    {
+      "id": "S6-013",
+      "sprint": 6,
+      "title": "Create health check endpoint enhancements",
+      "description": "Enhance /health endpoint to check database connectivity and return detailed status.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "Database connectivity check",
+        "Service status details",
+        "Response time metrics",
+        "Version information"
+      ]
+    },
+    {
+      "id": "S6-014",
+      "sprint": 6,
+      "title": "Add request logging middleware",
+      "description": "Add middleware to log all API requests with timing and user info.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "Request logging middleware",
+        "Response time logging",
+        "User identification",
+        "Configurable log level"
+      ]
+    },
+    {
+      "id": "S6-015",
+      "sprint": 6,
+      "title": "Create admin statistics endpoint",
+      "description": "Add /api/admin/stats endpoint returning system statistics for monitoring.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "/api/admin/stats endpoint",
+        "Database record counts",
+        "API usage stats",
+        "Last activity timestamps"
+      ]
+    },
+    {
+      "id": "S6-016",
+      "sprint": 6,
+      "title": "Add dark mode toggle persistence",
+      "description": "Persist dark mode preference in localStorage and apply on page load.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Dark mode preference saved",
+        "Applied on initial load",
+        "Toggle in navigation",
+        "System preference fallback"
+      ]
+    },
+    {
+      "id": "S6-017",
+      "sprint": 6,
+      "title": "Create onboarding tour",
+      "description": "Add optional guided tour for new users highlighting key features.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Tour component created",
+        "Highlights key features",
+        "Skip/dismiss option",
+        "Only shows once"
+      ]
+    },
+    {
+      "id": "S6-018",
+      "sprint": 6,
+      "title": "Add keyboard shortcuts",
+      "description": "Implement keyboard shortcuts for common actions (search, navigation).",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Cmd/Ctrl+K for search",
+        "Escape to close modals",
+        "Arrow keys for navigation",
+        "Shortcuts help modal"
+      ]
+    },
+    {
+      "id": "S6-019",
+      "sprint": 6,
+      "title": "Create deployment documentation",
+      "description": "Write deployment guide covering Docker, environment setup, and database migration.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "DEPLOYMENT.md created",
+        "Docker deployment steps",
+        "Environment configuration",
+        "Database setup instructions"
+      ]
+    },
+    {
+      "id": "S6-020",
+      "sprint": 6,
+      "title": "Final QA and bug fixes",
+      "description": "Perform final QA pass and fix any remaining bugs or UI issues.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "All pages tested",
+        "No console errors",
+        "Forms validate properly",
+        "Navigation works correctly"
+      ]
+    },
+    {
+      "id": "S7-001",
+      "sprint": 7,
+      "title": "Create ChatSession model",
+      "description": "Create ChatSession model to store conversation sessions with title, created_at, and user context.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "ChatSession model in models.py",
+        "Fields: id, title, context, created_at",
+        "Alembic migration created",
+        "Session can store state filter context"
+      ]
+    },
+    {
+      "id": "S7-002",
+      "sprint": 7,
+      "title": "Create ChatMessage model",
+      "description": "Create ChatMessage model to store individual messages in a chat session with role and content.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "ChatMessage model in models.py",
+        "Fields: id, session_id, role, content, created_at",
+        "Foreign key to ChatSession",
+        "Alembic migration created"
+      ]
+    },
+    {
+      "id": "S7-003",
+      "sprint": 7,
+      "title": "Create KnowledgeEmbedding model",
+      "description": "Create KnowledgeEmbedding model with pgvector for semantic search on knowledge articles.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "KnowledgeEmbedding model created",
+        "Vector field using pgvector",
+        "Foreign key to KnowledgeArticle",
+        "Index on vector field"
+      ]
+    },
+    {
+      "id": "S7-004",
+      "sprint": 7,
+      "title": "Create embedding service",
+      "description": "Create embedding_service.py to generate embeddings using Claude or voyage-embed for knowledge articles.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "embedding_service.py created",
+        "generate_embedding() method",
+        "Batch embedding support",
+        "Caching for repeated queries"
+      ]
+    },
+    {
+      "id": "S7-005",
+      "sprint": 7,
+      "title": "Create chat service",
+      "description": "Create chat_service.py with methods for RAG-based chat using knowledge base and Claude.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "chat_service.py created",
+        "send_message() method",
+        "retrieve_context() for RAG",
+        "format_response() with citations"
+      ]
+    },
+    {
+      "id": "S7-006",
+      "sprint": 7,
+      "title": "Implement semantic search",
+      "description": "Add semantic search to knowledge service using vector similarity for finding relevant articles.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "semantic_search() method added",
+        "Uses cosine similarity",
+        "Returns top-k results with scores",
+        "Filters by state if provided"
+      ]
+    },
+    {
+      "id": "S7-007",
+      "sprint": 7,
+      "title": "Create chat API endpoints",
+      "description": "Add /api/chat endpoints for creating sessions, sending messages, and retrieving history.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/chat/sessions",
+        "POST /api/chat/sessions/{id}/messages",
+        "GET /api/chat/sessions/{id}",
+        "GET /api/chat/sessions"
+      ]
+    },
+    {
+      "id": "S7-008",
+      "sprint": 7,
+      "title": "Add streaming response support",
+      "description": "Implement streaming responses for chat API using Server-Sent Events for real-time output.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "SSE endpoint for streaming",
+        "Tokens streamed as generated",
+        "Client can cancel stream",
+        "Final message saved to DB"
+      ]
+    },
+    {
+      "id": "S7-009",
+      "sprint": 7,
+      "title": "Generate embeddings for existing articles",
+      "description": "Create script to generate embeddings for all existing knowledge articles in the database.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "embed_articles.py script",
+        "Processes all articles",
+        "Progress logging",
+        "Idempotent execution"
+      ]
+    },
+    {
+      "id": "S7-010",
+      "sprint": 7,
+      "title": "Create chat page layout",
+      "description": "Create /chat page with chat interface layout including message list and input area.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "/chat page exists",
+        "Message list component",
+        "Input textarea with send button",
+        "Responsive layout"
+      ]
+    },
+    {
+      "id": "S7-011",
+      "sprint": 7,
+      "title": "Implement chat message components",
+      "description": "Create ChatMessage components for user and assistant messages with proper styling.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "UserMessage component",
+        "AssistantMessage component",
+        "Markdown rendering for responses",
+        "Copy button for messages"
+      ]
+    },
+    {
+      "id": "S7-012",
+      "sprint": 7,
+      "title": "Add citation display",
+      "description": "Display source citations in assistant messages linking to knowledge articles.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "Citation component",
+        "Links to knowledge articles",
+        "Shows article title and state",
+        "Collapsible citation list"
+      ]
+    },
+    {
+      "id": "S7-013",
+      "sprint": 7,
+      "title": "Implement streaming UI",
+      "description": "Add streaming message display that shows tokens as they arrive from the API.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "useChat hook for streaming",
+        "Typing indicator during stream",
+        "Smooth token rendering",
+        "Handle stream errors"
+      ]
+    },
+    {
+      "id": "S7-014",
+      "sprint": 7,
+      "title": "Add chat session sidebar",
+      "description": "Add sidebar showing chat history with session list and new chat button.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "Session list sidebar",
+        "New chat button",
+        "Session titles",
+        "Delete session option"
+      ]
+    },
+    {
+      "id": "S7-015",
+      "sprint": 7,
+      "title": "Add state context filter",
+      "description": "Add state filter dropdown to scope chat context to specific states.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "State filter dropdown",
+        "Filters knowledge retrieval",
+        "Shows current filter in UI",
+        "Persists in session"
+      ]
+    },
+    {
+      "id": "S7-016",
+      "sprint": 7,
+      "title": "Create suggested prompts",
+      "description": "Add suggested prompt chips for common questions about state requirements.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Suggested prompts component",
+        "State-specific suggestions",
+        "Click to fill input",
+        "Hide after first message"
+      ]
+    },
+    {
+      "id": "S7-017",
+      "sprint": 7,
+      "title": "Add chat to navigation",
+      "description": "Add Chat/Assistant link to main navigation bar.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat in nav menu",
+        "Active state highlighting",
+        "Keyboard shortcut Alt+A",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S7-018",
+      "sprint": 7,
+      "title": "Create chat widget for state detail",
+      "description": "Add mini chat widget on state detail page pre-filtered to that state.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat widget component",
+        "Auto-filtered to state",
+        "Expand to full chat",
+        "Quick question input"
+      ]
+    },
+    {
+      "id": "S7-019",
+      "sprint": 7,
+      "title": "Add chat tests",
+      "description": "Create unit and integration tests for chat service and API endpoints.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "Chat service unit tests",
+        "Chat API integration tests",
+        "RAG retrieval tests",
+        "Streaming tests"
+      ]
+    },
+    {
+      "id": "S7-020",
+      "sprint": 7,
+      "title": "Update PRD current_sprint",
+      "description": "Update prd.json current_sprint to 7 and verify all Sprint 7 stories pass.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "current_sprint set to 7",
+        "All S7 stories pass",
+        "Tests run successfully",
+        "Documentation updated"
+      ]
+    },
+    {
+      "id": "S8-001",
+      "sprint": 8,
+      "title": "Create Competitor model",
+      "description": "Create Competitor model to store SIS vendor information with name, type (national/regional), headquarters, and website.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitor model in models.py",
+        "Fields: id, name, type, headquarters, website, description",
+        "Type enum: national, regional, local",
+        "created_at, updated_at timestamps"
+      ]
+    },
+    {
+      "id": "S8-002",
+      "sprint": 8,
+      "title": "Create StateCompetitor model",
+      "description": "Create StateCompetitor junction model linking competitors to states with market share and presence data.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateCompetitor model in models.py",
+        "Fields: state_id, competitor_id, market_share, district_count",
+        "presence_level enum: dominant, strong, moderate, minimal",
+        "estimated_revenue, notes fields"
+      ]
+    },
+    {
+      "id": "S8-003",
+      "sprint": 8,
+      "title": "Create CompetitorStrength model",
+      "description": "Create model to track competitor strengths and weaknesses per category.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "CompetitorStrength model in models.py",
+        "Fields: competitor_id, category, rating, description",
+        "Categories: pricing, support, features, integration, reputation",
+        "Rating 1-5 scale"
+      ]
+    },
+    {
+      "id": "S8-004",
+      "sprint": 8,
+      "title": "Create competitor seed data",
+      "description": "Create seed file with major national and regional SIS competitors with known market presence.",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitor_data.py with COMPETITORS list",
+        "Include PowerSchool, Infinite Campus, Tyler SIS, Skyward",
+        "Include regional players by state",
+        "seed_competitors() async function"
+      ]
+    },
+    {
+      "id": "S8-005",
+      "sprint": 8,
+      "title": "Create competitive intelligence service",
+      "description": "Create competitive_service.py with methods for analyzing competitive landscape per state.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitive_service.py created",
+        "get_state_competitors() method",
+        "analyze_competitive_landscape() method",
+        "calculate_market_opportunity() method"
+      ]
+    },
+    {
+      "id": "S8-006",
+      "sprint": 8,
+      "title": "Implement competitor comparison",
+      "description": "Add methods to compare our capabilities against specific competitors.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "compare_with_competitor() method",
+        "Returns strength/weakness analysis",
+        "Identifies differentiation opportunities",
+        "Suggests competitive positioning"
+      ]
+    },
+    {
+      "id": "S8-007",
+      "sprint": 8,
+      "title": "Add AI competitive analysis",
+      "description": "Use Claude API to generate detailed competitive intelligence reports for states.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "generate_competitive_report() method",
+        "Uses Claude for market analysis",
+        "Includes entry strategy recommendations",
+        "Identifies partnership opportunities"
+      ]
+    },
+    {
+      "id": "S8-008",
+      "sprint": 8,
+      "title": "Calculate competitive score factor",
+      "description": "Integrate competitive landscape into state scoring with competitive_density factor.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "competitive_landscape_score() in scoring_service",
+        "Fewer/weaker competitors = higher score",
+        "Considers market concentration",
+        "Updates existing rankings"
+      ]
+    },
+    {
+      "id": "S8-009",
+      "sprint": 8,
+      "title": "Create competitors API router",
+      "description": "Create /api/competitors endpoints for CRUD operations on competitor data.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/competitors - list all",
+        "GET /api/competitors/{id} - get detail",
+        "GET /api/competitors/{id}/states - states present in",
+        "POST /api/competitors - create (admin)"
+      ]
+    },
+    {
+      "id": "S8-010",
+      "sprint": 8,
+      "title": "Add state competitor endpoints",
+      "description": "Add endpoints to get competitive data for specific states.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/competitors",
+        "Returns competitors with market share",
+        "Includes presence level",
+        "Sorted by market share descending"
+      ]
+    },
+    {
+      "id": "S8-011",
+      "sprint": 8,
+      "title": "Add competitive analysis endpoint",
+      "description": "Add endpoint to generate AI-powered competitive analysis for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "POST /api/states/{id}/competitive-analysis",
+        "Triggers AI analysis",
+        "Returns detailed report",
+        "Caches results in StateAnalysis"
+      ]
+    },
+    {
+      "id": "S8-012",
+      "sprint": 8,
+      "title": "Add market comparison endpoint",
+      "description": "Add endpoint to compare competitive landscape across multiple states.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/competitors/compare?states=1,2,3",
+        "Shows competitor overlap",
+        "Highlights market gaps",
+        "Returns opportunity matrix"
+      ]
+    },
+    {
+      "id": "S8-013",
+      "sprint": 8,
+      "title": "Create competitors list page",
+      "description": "Create /competitors page showing all known SIS competitors.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "/competitors page exists",
+        "Filterable by type (national/regional)",
+        "Shows state count per competitor",
+        "Links to competitor detail"
+      ]
+    },
+    {
+      "id": "S8-014",
+      "sprint": 8,
+      "title": "Create competitor detail page",
+      "description": "Create competitor detail page showing presence map and strengths.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/competitors/[id] page",
+        "Shows competitor info",
+        "State presence list",
+        "Strength/weakness radar chart"
+      ]
+    },
+    {
+      "id": "S8-015",
+      "sprint": 8,
+      "title": "Add competitive landscape to state detail",
+      "description": "Add competitive intelligence section to state detail page.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitors section on state detail",
+        "Market share pie chart",
+        "Competitor cards with key info",
+        "Generate analysis button"
+      ]
+    },
+    {
+      "id": "S8-016",
+      "sprint": 8,
+      "title": "Create market opportunity visualization",
+      "description": "Add visualization showing market opportunity based on competitive density.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Opportunity score visualization",
+        "Competitor density heat map",
+        "Market gap indicators",
+        "Integrates with rankings page"
+      ]
+    },
+    {
+      "id": "S8-017",
+      "sprint": 8,
+      "title": "Add competitors to navigation",
+      "description": "Add Competitors link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitors in nav menu",
+        "Keyboard shortcut Alt+I",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S8-018",
+      "sprint": 8,
+      "title": "Add competitive intelligence tests",
+      "description": "Create unit and integration tests for competitive intelligence features.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Competitor service unit tests",
+        "Competitor API integration tests",
+        "Market share calculation tests",
+        "Score factor tests"
+      ]
+    },
+    {
+      "id": "S8-019",
+      "sprint": 8,
+      "title": "Seed competitor data for all states",
+      "description": "Add competitor presence data for all 50 states based on known market data.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "STATE_COMPETITORS mapping",
+        "At least 3 competitors per state",
+        "Market share estimates",
+        "Source attribution where available"
+      ]
+    },
+    {
+      "id": "S8-020",
+      "sprint": 8,
+      "title": "Update PRD and documentation",
+      "description": "Update prd.json and CLAUDE.md to reflect Sprint 8 completion.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "All S8 stories pass",
+        "CLAUDE.md updated",
+        "API docs updated",
+        "Tests passing"
+      ]
+    },
+    {
+      "id": "S9-001",
+      "sprint": 9,
+      "title": "Create Product model",
+      "description": "Create Product model to store company products (Hub SIS and Spoke products) with name, type, description, and features.",
+      "priority": 1,
+      "passes": true,
+      "acceptance_criteria": [
+        "Product model in models.py",
+        "Fields: id, name, product_type, description, features",
+        "product_type enum: hub, spoke",
+        "is_core, launch_year fields"
+      ]
+    },
+    {
+      "id": "S9-002",
+      "sprint": 9,
+      "title": "Create ProductFeature model",
+      "description": "Create ProductFeature model to track individual features of each product with category and state applicability.",
+      "priority": 2,
+      "passes": true,
+      "acceptance_criteria": [
+        "ProductFeature model in models.py",
+        "Fields: product_id, name, category, description",
+        "state_specific boolean flag",
+        "complexity rating"
+      ]
+    },
+    {
+      "id": "S9-003",
+      "sprint": 9,
+      "title": "Create StateProductFit model",
+      "description": "Create junction model linking products to states with fit score and gap analysis.",
+      "priority": 3,
+      "passes": true,
+      "acceptance_criteria": [
+        "StateProductFit model in models.py",
+        "Fields: state_id, product_id, fit_score",
+        "gap_count, enhancement_opportunities",
+        "synergy_score for cross-sell"
+      ]
+    },
+    {
+      "id": "S9-004",
+      "sprint": 9,
+      "title": "Create product seed data",
+      "description": "Create seed file with OnCourse product portfolio: Hub SIS and Spoke products (LMS, Assessment, Finance, HR, etc.).",
+      "priority": 4,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_data.py with PRODUCTS list",
+        "Hub: OnCourse SIS with features",
+        "Spokes: LMS, Assessment, Special Ed, Finance, HR, Transportation",
+        "seed_products() async function"
+      ]
+    },
+    {
+      "id": "S9-005",
+      "sprint": 9,
+      "title": "Create product alignment service",
+      "description": "Create product_service.py with methods for analyzing product-state fit and alignment opportunities.",
+      "priority": 5,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_service.py created",
+        "calculate_product_fit() method",
+        "analyze_hub_spoke_synergy() method",
+        "get_cross_sell_opportunities() method"
+      ]
+    },
+    {
+      "id": "S9-006",
+      "sprint": 9,
+      "title": "Implement state product analysis",
+      "description": "Add methods to analyze which products fit best with specific state requirements.",
+      "priority": 6,
+      "passes": true,
+      "acceptance_criteria": [
+        "analyze_state_product_fit() method",
+        "Returns fit scores per product",
+        "Identifies required customizations",
+        "Estimates integration effort"
+      ]
+    },
+    {
+      "id": "S9-007",
+      "sprint": 9,
+      "title": "Add bundling strategy analysis",
+      "description": "Create methods to analyze optimal product bundling strategies per state.",
+      "priority": 7,
+      "passes": true,
+      "acceptance_criteria": [
+        "get_bundling_recommendations() method",
+        "Analyzes competitor bundles",
+        "Calculates bundle value proposition",
+        "Suggests pricing tiers"
+      ]
+    },
+    {
+      "id": "S9-008",
+      "sprint": 9,
+      "title": "Calculate product alignment score factor",
+      "description": "Integrate product alignment into state scoring with hub_spoke_alignment factor.",
+      "priority": 8,
+      "passes": true,
+      "acceptance_criteria": [
+        "product_alignment_score() in scoring_service",
+        "Higher score = more product opportunities",
+        "Considers spoke cross-sell potential",
+        "Updates existing rankings"
+      ]
+    },
+    {
+      "id": "S9-009",
+      "sprint": 9,
+      "title": "Create products API router",
+      "description": "Create /api/products endpoints for listing products and features.",
+      "priority": 9,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/products - list all products",
+        "GET /api/products/{id} - get detail with features",
+        "GET /api/products/{id}/states - states with fit data",
+        "GET /api/products/hub - get hub product"
+      ]
+    },
+    {
+      "id": "S9-010",
+      "sprint": 9,
+      "title": "Add state product endpoints",
+      "description": "Add endpoints to get product fit data for specific states.",
+      "priority": 10,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/products",
+        "Returns products with fit scores",
+        "Includes customization requirements",
+        "Sorted by fit score descending"
+      ]
+    },
+    {
+      "id": "S9-011",
+      "sprint": 9,
+      "title": "Add alignment analysis endpoint",
+      "description": "Add endpoint to generate comprehensive product alignment analysis for a state.",
+      "priority": 11,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/states/{id}/product-alignment",
+        "Returns hub fit analysis",
+        "Returns spoke opportunities",
+        "Includes bundling recommendations"
+      ]
+    },
+    {
+      "id": "S9-012",
+      "sprint": 9,
+      "title": "Add cross-sell opportunities endpoint",
+      "description": "Add endpoint to identify cross-sell opportunities based on product portfolio.",
+      "priority": 12,
+      "passes": true,
+      "acceptance_criteria": [
+        "GET /api/products/cross-sell?state_id=1",
+        "Lists spoke products by opportunity",
+        "Estimates revenue potential",
+        "Prioritizes by ease of sale"
+      ]
+    },
+    {
+      "id": "S9-013",
+      "sprint": 9,
+      "title": "Create products list page",
+      "description": "Create /products page showing company product portfolio with hub and spokes.",
+      "priority": 13,
+      "passes": true,
+      "acceptance_criteria": [
+        "/products page exists",
+        "Hub product highlighted",
+        "Spoke products listed",
+        "Links to product detail"
+      ]
+    },
+    {
+      "id": "S9-014",
+      "sprint": 9,
+      "title": "Create product detail page",
+      "description": "Create product detail page showing features and state fit analysis.",
+      "priority": 14,
+      "passes": true,
+      "acceptance_criteria": [
+        "/products/[id] page",
+        "Shows product features",
+        "State fit heatmap",
+        "Top states for this product"
+      ]
+    },
+    {
+      "id": "S9-015",
+      "sprint": 9,
+      "title": "Add product alignment to state detail",
+      "description": "Add product alignment section to state detail page showing fit scores.",
+      "priority": 15,
+      "passes": true,
+      "acceptance_criteria": [
+        "Products section on state detail",
+        "Hub fit score display",
+        "Spoke opportunity cards",
+        "Cross-sell recommendations"
+      ]
+    },
+    {
+      "id": "S9-016",
+      "sprint": 9,
+      "title": "Create hub-spoke visualization",
+      "description": "Add visualization showing hub-spoke product relationships and state opportunities.",
+      "priority": 16,
+      "passes": true,
+      "acceptance_criteria": [
+        "Hub-spoke diagram component",
+        "Shows product relationships",
+        "State opportunity indicators",
+        "Interactive product selection"
+      ]
+    },
+    {
+      "id": "S9-017",
+      "sprint": 9,
+      "title": "Add products to navigation",
+      "description": "Add Products link to main navigation.",
+      "priority": 17,
+      "passes": true,
+      "acceptance_criteria": [
+        "Products in nav menu",
+        "Active state highlighting",
+        "Mobile responsive"
+      ]
+    },
+    {
+      "id": "S9-018",
+      "sprint": 9,
+      "title": "Add product alignment tests",
+      "description": "Create unit tests for product alignment features.",
+      "priority": 18,
+      "passes": true,
+      "acceptance_criteria": [
+        "Product service unit tests",
+        "Fit score calculation tests",
+        "Cross-sell logic tests",
+        "Bundling recommendation tests"
+      ]
+    },
+    {
+      "id": "S9-019",
+      "sprint": 9,
+      "title": "Seed product data for all states",
+      "description": "Add product fit data for target states based on requirements analysis.",
+      "priority": 19,
+      "passes": true,
+      "acceptance_criteria": [
+        "STATE_PRODUCT_FIT mapping",
+        "Fit scores for top 10 states",
+        "Cross-sell opportunities identified",
+        "Integration estimates"
+      ]
+    },
+    {
+      "id": "S9-020",
+      "sprint": 9,
+      "title": "Final PRD and documentation update",
+      "description": "Update prd.json and CLAUDE.md to reflect Sprint 9 and project completion.",
+      "priority": 20,
+      "passes": true,
+      "acceptance_criteria": [
+        "All S9 stories pass",
+        "CLAUDE.md updated to Sprint 9",
+        "All 9 modules complete",
+        "160 stories total"
+      ]
+    }
+  ]
+}
